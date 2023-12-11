@@ -1,0 +1,6 @@
+.footer {
+  grid-column: span 12;
+  height: 3fr; /* Adjust height as needed */
+  background-color: #333; /* Example background color */
+  color: white; /* Example text color */
+}

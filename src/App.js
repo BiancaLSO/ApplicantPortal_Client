@@ -1,25 +1,9 @@
 import logo from "./logo.svg";
 import "./App.css";
+import MyApplications from "./pages/my-applications";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Applicant Portal Client
-        </a>
-      </header>
-    </div>
-  );
+  return <MyApplications />;
 }
 
 export default App;
