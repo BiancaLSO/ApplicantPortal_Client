@@ -1,0 +1,60 @@
+.tb-header {
+  width: 25rem;
+  padding-left: 2rem;
+  align-items: center;
+}
+
+.tb-header-row {
+  display: flex;
+  flex-direction: row;
+  height: 2rem;
+  column-gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tb-cell {
+  height: 3rem;
+  padding-left: 2rem;
+  width: 25rem;
+  align-items: center;
+}
+
+.tb-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.tb-row {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1rem;
+  align-content: center;
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
+  border-color: #4f4e50;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+}
+
+.arr:disabled {
+  cursor: none;
+}
+
+.sec-title {
+  font-family: "Red Hat Display";
+  font-size: 2.2rem;
+  color: #2b2b2b;
+}
+
+.sec-subtitle {
+  margin-top: -1.9rem;
+  font-size: 1.3rem;
+  color: #2b2b2b;
+}
+
+.form-div {
+  margin-top: 5rem;
+}
