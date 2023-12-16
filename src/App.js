@@ -21,7 +21,7 @@ function App() {
     fetchUser();
   }, []);
 
-  return <MyProfile />;
+  return <MyProfile refetch={fetchUser} />;
 }
 
 export default App;

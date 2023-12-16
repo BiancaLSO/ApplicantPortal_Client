@@ -1,12 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar"; // Import your Navbar component
 import Footer from "../components/footer"; // Import your Navbar component
 
 import "../css/layout.css"; // Import your custom styles
 import MyProfileForm from "../components/MyProfileForm";
 
-export default function MyProfile() {
+export default function MyProfile({ refetch }) {
   const [isSaved, setIsSaved] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    };
+
+    refetch();
+    fetchUserData();
+  }, [user]);
 
   const submitForm = (values) => {
     console.log(values);
@@ -58,7 +71,7 @@ export default function MyProfile() {
       <Navbar />
 
       <div className="content-container">
-        <MyProfileForm onSubmitForm={submitForm} />
+        <MyProfileForm onSubmitForm={submitForm} userDetails={user} />
       </div>
 
       <Footer />
