@@ -1,22 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/navbar"; // Import your Navbar component
 import Footer from "../components/footer"; // Import your Navbar component
 
 import "../css/layout.css"; // Import your custom styles
 import MyProfileForm from "../components/MyProfileForm";
 
-const MyProfile = () => {
+export default function MyProfile() {
+  const [isSaved, setIsSaved] = useState(false);
+
+  const submitForm = (values) => {
+    console.log(values);
+
+    const userData = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      phone: values.phone,
+      cpr: values.cpr,
+      email: values.email,
+    };
+
+    const addressData = {
+      street: values.street,
+      city: values.city,
+      zipCode: values.zipCode,
+    };
+
+    // Updated fetch calls with JSON.stringify for the body
+    fetch(`http://localhost:3005/user/${user.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then(() =>
+        fetch(`http://localhost:3005/address/${user.address.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(addressData),
+        })
+      )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setIsSaved(true);
+      })
+      .catch((err) => {
+        console.error(err);
+        // Handle errors
+      });
+  };
   return (
     <div className="app-container">
       <Navbar />
 
       <div className="content-container">
-        <MyProfileForm />
+        <MyProfileForm onSubmitForm={submitForm} />
       </div>
 
       <Footer />
     </div>
   );
-};
-
-export default MyProfile;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import "../css/application-form.css";
+import "../css/my-profile.css";
 import { Checkbox, FormControlLabel, TextField, styled } from "@mui/material";
 
 const CssTextField = styled(TextField)(({ theme }) => ({
@@ -112,20 +112,12 @@ export default function MyProfileForm({ onSubmitForm }) {
       formik.initialValues.zipCode = userDetails.address.zipCode;
   }
 
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1);
-  };
-
-  const prevStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
-
   return (
     <div className="form-div">
       <h2 className="sec-title" style={{ fontWeight: "500" }}>
         Application form
       </h2>
-      <p className="sec-subtitle">{grant && grant}</p>
+      <p className="sec-subtitle">subtitle</p>
       <form onSubmit={formik.handleSubmit} className="form">
         <div className="form-row">
           <div>

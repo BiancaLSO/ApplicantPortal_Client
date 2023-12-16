@@ -1,6 +1,5 @@
 import logo from "./logo.svg";
 import "./App.css";
-import ApplicationDetails from "./pages/application-details";
 import { useEffect, useState } from "react";
 import MyProfile from "./pages/my-profile";
 
