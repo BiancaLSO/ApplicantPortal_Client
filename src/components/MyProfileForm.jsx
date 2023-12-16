@@ -102,6 +102,16 @@ export default function MyProfileForm({ onSubmitForm, userDetails }) {
       formik.initialValues.zipCode = userDetails.address.zipCode;
   }
 
+  const isFormChanged =
+    formik.values.firstName !== userDetails?.firstName ||
+    formik.values.lastName !== userDetails?.lastName ||
+    formik.values.cpr !== userDetails?.cpr ||
+    formik.values.phone !== userDetails?.phone ||
+    formik.values.email !== userDetails?.email ||
+    formik.values.street !== userDetails?.address?.street ||
+    formik.values.city !== userDetails?.address?.city ||
+    formik.values.zipCode !== userDetails?.address?.zipCode;
+
   return (
     <div
       style={{
@@ -300,7 +310,29 @@ export default function MyProfileForm({ onSubmitForm, userDetails }) {
                 />
               </div>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button className="btn submit" type="submit">
+                <button
+                  className="btn submit"
+                  type="submit"
+                  disabled={
+                    Boolean(formik.errors.firstName) ||
+                    Boolean(formik.errors.lastName) ||
+                    Boolean(formik.errors.phone) ||
+                    Boolean(formik.errors.cpr) ||
+                    Boolean(formik.errors.email) ||
+                    Boolean(formik.errors.street) ||
+                    Boolean(formik.errors.city) ||
+                    Boolean(formik.errors.zipCode) ||
+                    !formik.values.firstName ||
+                    !formik.values.lastName ||
+                    !formik.values.cpr ||
+                    !formik.values.phone ||
+                    !formik.values.email ||
+                    !formik.values.street ||
+                    !formik.values.city ||
+                    !formik.values.zipCode ||
+                    !isFormChanged
+                  }
+                >
                   SAVE CHANGES
                 </button>
               </div>
