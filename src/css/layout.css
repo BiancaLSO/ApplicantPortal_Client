@@ -3,12 +3,13 @@
   grid-template-columns: repeat(12, 1fr);
   /* grid-template-rows: 1fr 2fr 2fr; */
   gap: 15px;
-  margin: 0px 50px 0px 50px; /* Set left and right margin */
+  /* margin: 0px 50px 0px 50px; */
   min-height: 100vh;
 }
 
 .content-container {
   grid-column: span 12; /* Take up all 12 columns */
+  margin: 0px 50px 0px 50px;
 }
 
 footer {

@@ -1,6 +1,64 @@
 .navbar {
-  grid-column: span 12;
-  height: 1fr; /* Adjust height as needed */
-  background-color: #333; /* Example background color */
-  color: white; /* Example text color */
+  /* grid-column: span 12; */
+  grid-column: 1 / -1;
+  height: 1fr;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px 0px 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  img {
+    width: 250px;
+    height: 100px;
+  }
+}
+
+.navbar-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 60%;
+  padding-top: 25px;
+}
+
+.navbar-menu a {
+  text-decoration: none;
+  padding: 10px;
+  margin: 0 10px;
+  border-bottom: 2px solid transparent;
+  color: black;
+}
+
+.navbar-menu a:hover {
+  border-bottom-color: #c0002a;
+}
+
+.navbar-menu a.selected {
+  border-bottom-color: #c0002a;
+}
+
+.logout-link {
+  display: flex;
+  align-items: center;
+}
+
+.logout-link span {
+  margin-right: 5px;
+  color: white;
+}
+
+.logout-link:hover {
+  border-bottom-color: transparent;
+}
+
+.logout-link.active {
+  border-bottom-color: transparent;
+}
+
+.logout-link.active span {
+  background-color: c0002a;
+  padding: 5px;
+  border-radius: 50%;
 }
