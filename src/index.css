@@ -4,6 +4,7 @@ body {
   display: grid;
   min-height: 100vh;
   grid-template-rows: 1fr auto; /* Create two rows, the first will take the available space, and the second will be the footer */
+  font-family: "Red Hat Display", sans-serif;
 }
 
 code {

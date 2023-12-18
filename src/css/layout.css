@@ -1,7 +1,7 @@
 .app-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 1fr 2fr 2fr;
+  /* grid-template-rows: 1fr 2fr 2fr; */
   gap: 15px;
   margin: 0px 50px 0px 50px; /* Set left and right margin */
   min-height: 100vh;
