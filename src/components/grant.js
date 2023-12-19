@@ -2,21 +2,8 @@ import React, { useState } from "react";
 import "../css/grant.css";
 
 const Grant = ({ grant }) => {
-  const [selectedGrant, setSelectedGrant] = useState([]);
-
-  const toggleGrant = (grant) => {
-    const isSelected = selectedGrant.includes(grant);
-    setSelectedGrant((prevSelectedGrant) => {
-      if (isSelected) {
-        return prevSelectedGrant.filter((box) => box !== grant);
-      } else {
-        return [...prevSelectedGrant, grant];
-      }
-    });
-  };
-
   return (
-    <div className="grant-card" onClick={() => toggleGrant(grant)}>
+    <div className="grant-card">
       <div className="grant-left">
         <p className="grant-title">{grant.title}</p>
         <a href="#" className="requirements-link">

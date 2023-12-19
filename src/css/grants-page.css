@@ -9,3 +9,13 @@
   font-weight: normal;
   margin-bottom: 60px;
 }
+
+.grants-page {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 15px;
+}
+
+.grants-list {
+  grid-column: span 12;
+}

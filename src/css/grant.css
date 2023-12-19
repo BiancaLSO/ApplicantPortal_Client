@@ -58,6 +58,6 @@
   padding: 30px 70px 20px 10px;
 }
 
-.grant.selected {
-  border: 1px solid #c0002a;
+.grant-card:hover {
+  border: 2px solid #c0002a;
 }

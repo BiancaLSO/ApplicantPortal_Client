@@ -13,9 +13,9 @@ const Navbar = () => {
         <p>MY APPLICATIONS</p>
         <p>CREATE APPLICATIONS</p>
         <p>MY PROFILE</p>
-        <p>
+        <div className="logout-icon-container">
           <span class="material-symbols-outlined">logout</span>
-        </p>
+        </div>
 
         {/* Uncomment these after the routing is done */}
         {/* <NavLink to="/my-applications" activeClassName="selected">

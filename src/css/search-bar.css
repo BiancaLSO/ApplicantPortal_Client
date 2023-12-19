@@ -1,5 +1,7 @@
-.searchbar-container {
+.search-container {
+  position: relative;
   display: flex;
+  flex-direction: row;
 }
 
 .searchbar {
@@ -14,7 +16,8 @@
 .material-icons {
   color: #c0002a;
   cursor: pointer;
-  left: 59%;
   position: absolute;
-  top: 51%;
+  top: 26%;
+  right: 468px;
+  transform: translateY(-50%);
 }

@@ -23,6 +23,20 @@ const Grants = () => {
       category: "Education",
       endDate: "2023-01-02",
     },
+    {
+      id: 3,
+      title:
+        "Special education support for folk high schools (SPS): Apply for grants for people with severe disabilities 2023",
+      category: "Education",
+      endDate: "2023-01-02",
+    },
+    {
+      id: 4,
+      title:
+        "Special education support for folk high schools (SPS): Apply for grants for people with severe disabilities 2023",
+      category: "Education",
+      endDate: "2023-01-02",
+    },
   ];
 
   const categories = [
