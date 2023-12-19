@@ -16,7 +16,7 @@ const Grant = ({ grant }) => {
   };
 
   return (
-    <href className="grant-card" onClick={() => toggleGrant(grant)}>
+    <div className="grant-card" onClick={() => toggleGrant(grant)}>
       <div className="grant-left">
         <p className="grant-title">{grant.title}</p>
         <a href="#" className="requirements-link">
@@ -27,7 +27,7 @@ const Grant = ({ grant }) => {
         <button className="apply-button">APPLY HERE</button>
         <p className="active-until">Active until {grant.endDate}</p>
       </div>
-    </href>
+    </div>
   );
 };
 
