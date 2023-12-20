@@ -3,6 +3,9 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import MyProfile from "./pages/my-profile";
 import Grants from "./pages/grants";
+import MyApplications from "./pages/my-applications";
+import LoginForm from "./components/LoginForm";
+import { useState, useEffect } from "react";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -25,6 +28,7 @@ function App() {
   /* return <MyProfile refetch={fetchUser} />; */
   return <MyApplications />;
   // return <Grants />;
+  return <LoginForm />;
 }
 
 export default App;
