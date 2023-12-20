@@ -6,6 +6,8 @@ import Grants from "./pages/grants";
 import MyApplications from "./pages/my-applications";
 import LoginForm from "./components/LoginForm";
 import { useState, useEffect } from "react";
+import ApplicationDetails from "./pages/application-details";
+import { useEffect, useState } from "react";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,7 +30,14 @@ function App() {
   /* return <MyProfile refetch={fetchUser} />; */
   return <MyApplications />;
   // return <Grants />;
-  return <LoginForm />;
+  /* return <LoginForm />;
+  return (
+    <ApplicationDetails
+      grantId={3}
+      deadline={new Date("November 24, 2023 23:59:00")}
+      applicationId={35}
+    />
+  ); */
 }
 
 export default App;
