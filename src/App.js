@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
 import MyProfile from "./pages/my-profile";
+import Grants from "./pages/grants";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -21,7 +22,9 @@ function App() {
     fetchUser();
   }, []);
 
-  return <MyProfile refetch={fetchUser} />;
+  /* return <MyProfile refetch={fetchUser} />; */
+  return <MyApplications />;
+  // return <Grants />;
 }
 
 export default App;
