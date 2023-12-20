@@ -9,6 +9,7 @@
 
 .content-container {
   grid-column: span 12; /* Take up all 12 columns */
+  margin: 0px 50px 0px 50px; /* Set left and right margin */
 }
 
 footer {
