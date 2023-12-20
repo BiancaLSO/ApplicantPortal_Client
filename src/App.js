@@ -40,8 +40,17 @@ function App() {
         <Route path="/auth/login" element={<LoginForm />} />
         <Route path="/applications" element={<MyApplications />} />
         <Route path="/grants" element={<Grants />} />
-        <Route path="/applications/details" element={<ApplicationDetails />} />
-        <Route path="/profile" element={<MyProfile />} />
+        <Route
+          path="/applications/details"
+          element={
+            <ApplicationDetails
+              grantId={2}
+              deadline={"2023-12-20"}
+              applicationId={37}
+            />
+          }
+        />
+        <Route path="/profile" element={<MyProfile refetch={fetchUser} />} />
       </Routes>
     </Router>
   );

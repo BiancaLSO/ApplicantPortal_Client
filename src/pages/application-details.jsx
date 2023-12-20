@@ -8,6 +8,7 @@ import ApplicationForm from "../components/ApplicationForm1";
 import Modal from "react-modal";
 import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
+import ApplicationForm2 from "../components/ApplicationForm2";
 
 export default function ApplicationDetails({
   grantId,
@@ -78,11 +79,14 @@ export default function ApplicationDetails({
     console.log(values);
 
     const applicationData = {
-      recedency_name: values.recedencyName,
-      project_description: values.projectDescription,
-      project_country: values.projectCountry,
-      recedency_start_date: values.recedencyStartDate,
-      recedency_end_date: values.recedencyEndDate,
+      traveler_name_and_position: values.travelerNameAndPosition,
+      purpose_description: values.purposeDescription,
+      departure_country: values.departureCountry,
+      departure_city: values.departureCity,
+      destination_country: values.destinationCountry,
+      destination_city: values.destinationCity,
+      trip_start_date: values.tripStartDate,
+      trip_end_date: values.tripEndDate,
       requested_amount: values.requestedAmount,
       overall_amount: values.overallAmount,
     };
@@ -271,7 +275,7 @@ export default function ApplicationDetails({
         </div>
         <div>
           {selectedPage === "form" && (
-            <ApplicationForm3
+            <ApplicationForm2
               grant={grantName}
               onSubmitForm={submitForm}
               applicationDetails={applicationForm}
