@@ -10,24 +10,28 @@ const Navbar = () => {
         <img src={logo} alt="logo" />
       </div>
       <div className="navbar-menu">
-        <p>MY APPLICATIONS</p>
+        {/* <p>MY APPLICATIONS</p>
         <p>CREATE APPLICATIONS</p>
         <p>MY PROFILE</p>
         <div className="logout-icon-container">
           <span class="material-symbols-outlined">logout</span>
-        </div>
+        </div> */}
 
         {/* Uncomment these after the routing is done */}
-        {/* <NavLink to="/my-applications" activeClassName="selected">
+        <NavLink to="/applications" activeClassName="selected">
           MY APPLICATIONS
         </NavLink>
-        <NavLink to="/create-applications" activeClassName="selected">
+        <NavLink to="/grants" activeClassName="selected">
           CREATE APPLICATIONS
         </NavLink>
-        <NavLink to="/my-profile" activeClassName="selected">
+        <NavLink to="/profile" activeClassName="selected">
           MY PROFILE
         </NavLink>
-        <NavLink to="/logout" activeClassName="selected" className="logout-link">
+        {/* <NavLink
+          to="/logout"
+          activeClassName="selected"
+          className="logout-link"
+        >
           <span className="material-symbols-outlined">logout</span>
         </NavLink> */}
       </div>

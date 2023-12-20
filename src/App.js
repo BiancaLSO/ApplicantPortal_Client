@@ -1,13 +1,18 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
 import MyProfile from "./pages/my-profile";
 import Grants from "./pages/grants";
 import MyApplications from "./pages/my-applications";
 import LoginForm from "./components/LoginForm";
-import { useState, useEffect } from "react";
+import SignUp from "./components/SignUpForm";
 import ApplicationDetails from "./pages/application-details";
-import { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Redirect,
+  Navigate,
+} from "react-router-dom";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -27,17 +32,19 @@ function App() {
     fetchUser();
   }, []);
 
-  /* return <MyProfile refetch={fetchUser} />; */
-  return <MyApplications />;
-  // return <Grants />;
-  /* return <LoginForm />;
   return (
-    <ApplicationDetails
-      grantId={3}
-      deadline={new Date("November 24, 2023 23:59:00")}
-      applicationId={35}
-    />
-  ); */
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/applications" />} />
+        <Route path="/auth/signup" element={<SignUp />} />
+        <Route path="/auth/login" element={<LoginForm />} />
+        <Route path="/applications" element={<MyApplications />} />
+        <Route path="/grants" element={<Grants />} />
+        <Route path="/applications/details" element={<ApplicationDetails />} />
+        <Route path="/profile" element={<MyProfile />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
