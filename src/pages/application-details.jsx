@@ -9,6 +9,7 @@ import Modal from "react-modal";
 import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
 import ApplicationForm2 from "../components/ApplicationForm2";
+import ApplicationForm4 from "../components/ApplicationForm4";
 
 export default function ApplicationDetails({
   grantId,
@@ -79,6 +80,18 @@ export default function ApplicationDetails({
     console.log(values);
 
     const applicationData = {
+      author_full: values.authorFullName,
+      event_location: values.eventLocation,
+      target_group: values.targetGroup,
+      purpose_description: values.purposeDescription,
+      is_catalog_used: values.isCatalogUsed,
+      requested_amount: values.requestedAmount,
+      overall_amount: values.overallAmount,
+      event_date: values.eventDate,
+      municipality: values.municipality,
+    };
+
+    /*  const applicationData = {
       traveler_name_and_position: values.travelerNameAndPosition,
       purpose_description: values.purposeDescription,
       departure_country: values.departureCountry,
@@ -89,7 +102,7 @@ export default function ApplicationDetails({
       trip_end_date: values.tripEndDate,
       requested_amount: values.requestedAmount,
       overall_amount: values.overallAmount,
-    };
+    }; */
 
     const userData = {
       firstName: values.firstName,
@@ -275,7 +288,7 @@ export default function ApplicationDetails({
         </div>
         <div>
           {selectedPage === "form" && (
-            <ApplicationForm2
+            <ApplicationForm4
               grant={grantName}
               onSubmitForm={submitForm}
               applicationDetails={applicationForm}

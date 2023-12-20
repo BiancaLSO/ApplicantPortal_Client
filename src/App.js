@@ -44,9 +44,9 @@ function App() {
           path="/applications/details"
           element={
             <ApplicationDetails
-              grantId={2}
+              grantId={4}
               deadline={"2023-12-20"}
-              applicationId={37}
+              applicationId={39}
             />
           }
         />
