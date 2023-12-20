@@ -23,9 +23,9 @@ function App() {
 
   return (
     <ApplicationDetails
-      grantId={1}
+      grantId={3}
       deadline={new Date("November 24, 2023 23:59:00")}
-      applicationId={22}
+      applicationId={35}
     />
   );
 }

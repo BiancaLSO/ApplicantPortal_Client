@@ -4,9 +4,10 @@ import Footer from "../components/footer"; // Import your Navbar component
 import "../css/application-details.css";
 import "../css/layout.css"; // Import your custom styles
 import DeleteButton from "../components/DeleteButton";
-import ApplicationForm from "../components/ApplicationForm";
+import ApplicationForm from "../components/ApplicationForm1";
 import Modal from "react-modal";
 import ActivityTable from "../components/ActivityTable";
+import ApplicationForm3 from "../components/ApplicationForm3";
 
 export default function ApplicationDetails({
   grantId,
@@ -77,11 +78,13 @@ export default function ApplicationDetails({
     console.log(values);
 
     const applicationData = {
-      project_title: values.projectTitle,
-      experience_description: values.experienceDescription,
-      benefit_description: values.benefitDescription,
-      future_vision_description: values.futureVisionDescription,
-      agreement_info: values.agreementInfo, // corrected typo
+      recedency_name: values.recedencyName,
+      project_description: values.projectDescription,
+      project_country: values.projectCountry,
+      recedency_start_date: values.recedencyStartDate,
+      recedency_end_date: values.recedencyEndDate,
+      requested_amount: values.requestedAmount,
+      overall_amount: values.overallAmount,
     };
 
     const userData = {
@@ -117,7 +120,8 @@ export default function ApplicationDetails({
         })
       )
       .then((response) => response.json())
-      .then(() =>
+      .then(
+        () => console.log(applicationData),
         fetch(
           `http://localhost:3005/application-form/call-stored-procedure/${user.id}/${grantId}`,
           {
@@ -267,7 +271,7 @@ export default function ApplicationDetails({
         </div>
         <div>
           {selectedPage === "form" && (
-            <ApplicationForm
+            <ApplicationForm3
               grant={grantName}
               onSubmitForm={submitForm}
               applicationDetails={applicationForm}
