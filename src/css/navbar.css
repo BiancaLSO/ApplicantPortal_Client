@@ -7,7 +7,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px 0px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
   img {
     width: 250px;
