@@ -13,9 +13,23 @@ import {
   Redirect,
   Navigate,
 } from "react-router-dom";
+import { getUserData, login } from "./redux/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.token);
+  const credentialsId = useSelector((state) => state.credentialsId);
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    // Example usage:
+    // 1. Login
+    dispatch(login({ username: "sandra.k", password: "123456789" }));
+    console.log(credentialsId); // Add this line
+  }, [dispatch]);
+
+  /*   const [user, setUser] = useState(null);
 
   const fetchUser = () => {
     fetch(`http://localhost:3005/user/3`)
@@ -30,7 +44,7 @@ function App() {
   };
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, []); */
 
   return (
     <Router>
@@ -40,7 +54,16 @@ function App() {
         <Route path="/auth/login" element={<LoginForm />} />
         <Route path="/applications" element={<MyApplications />} />
         <Route path="/grants" element={<Grants />} />
-        <Route path="/applications/details" element={<ApplicationDetails />} />
+        <Route
+          path="/applications/details"
+          element={
+            <ApplicationDetails
+              grantId={1}
+              deadline={"2023-12-21"}
+              applicationId={undefined}
+            />
+          }
+        />
         <Route path="/profile" element={<MyProfile />} />
       </Routes>
     </Router>

@@ -8,12 +8,15 @@ import ApplicationForm from "../components/ApplicationForm1";
 import Modal from "react-modal";
 import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
+import { getUserData } from "../redux/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ApplicationDetails({
   grantId,
   deadline,
   applicationId,
 }) {
+  const dispatch = useDispatch();
   const [grantName, setGrantname] = useState("");
   const [journalnr, setJournalNr] = useState("");
   const [user, setUser] = useState(null);
@@ -22,6 +25,7 @@ export default function ApplicationDetails({
   const [submitted, setSubmitted] = useState(true);
   const [applicationForm, setApplicationForm] = useState(null);
   const [application, setApplication] = useState(null);
+  const credentialsId = useSelector((state) => state.credentialsId);
 
   const fetchApplicationForm = () => {
     fetch(
@@ -49,7 +53,14 @@ export default function ApplicationDetails({
       });
   };
 
-  useEffect(() => {
+  const getUser = () => {
+    // 2. Fetch user data based on userId
+    if (credentialsId) {
+      dispatch(getUserData(credentialsId));
+    }
+  };
+
+  /*  useEffect(() => {
     const fetchUserData = () => {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -62,7 +73,7 @@ export default function ApplicationDetails({
       fetchApplication();
     }
     fetchUserData();
-  }, []);
+  }, []); */
 
   useEffect(() => {
     if (user) {
@@ -194,7 +205,7 @@ export default function ApplicationDetails({
   return (
     <div className="app-container">
       <Navbar />
-
+      <button onClick={() => getUser()}>click me</button>
       <div className="content-container">
         <div className="row">
           <p>Create application</p>
