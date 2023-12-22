@@ -43,7 +43,9 @@ const CssTextField = styled(TextField)(({ theme }) => ({
 export default function ApplicationForm3({
   grant,
   onSubmitForm,
+  onResubmitForm,
   applicationDetails,
+  applicationId,
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [userDetails, setUserDetails] = useState(null);
@@ -166,7 +168,11 @@ export default function ApplicationForm3({
         .integer("Must be a whole number"),
     }),
     onSubmit: (values, { resetForm }) => {
-      onSubmitForm(values);
+      if (applicationId) {
+        onResubmitForm(values);
+      } else {
+        onSubmitForm(values);
+      }
       resetForm();
       setCurrentStep(1);
       console.log(values);
@@ -218,6 +224,17 @@ export default function ApplicationForm3({
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
   };
+
+  const isFormChanged =
+    formik.values.recedencyName !== applicationDetails?.recedency_name ||
+    formik.values.projectDescription !==
+      applicationDetails?.project_description ||
+    formik.values.projectCountry !== applicationDetails?.project_country ||
+    formik.values.recedencyStartDate !==
+      applicationDetails?.recedency_start_date ||
+    formik.values.recedencyEndDate !== applicationDetails?.recedency_end_date ||
+    formik.values.requestedAmount !== applicationDetails?.requested_amount ||
+    formik.values.overallAmount !== applicationDetails?.overall_amount;
 
   return (
     <div className="form-div">
@@ -742,7 +759,17 @@ export default function ApplicationForm3({
             </button>
           )}
 
-          {currentStep === 3 && (
+          {currentStep === 3 && applicationId && (
+            <button
+              className="btn submit"
+              type="submit"
+              disabled={!isFormChanged}
+            >
+              RESUBMIT
+            </button>
+          )}
+
+          {currentStep === 3 && applicationId === undefined && (
             <button className="btn submit" type="submit">
               SUBMIT
             </button>

@@ -37,7 +37,9 @@ const CssTextField = styled(TextField)(({ theme }) => ({
 export default function ApplicationForm1({
   grant,
   onSubmitForm,
+  onResubmitForm,
   applicationDetails,
+  applicationId,
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [userDetails, setUserDetails] = useState(null);
@@ -123,7 +125,11 @@ export default function ApplicationForm1({
       ),
     }),
     onSubmit: (values, { resetForm }) => {
-      onSubmitForm(values);
+      if (applicationId) {
+        onResubmitForm(values);
+      } else {
+        onSubmitForm(values);
+      }
       resetForm();
       setCurrentStep(1);
       console.log(values);
@@ -169,6 +175,15 @@ export default function ApplicationForm1({
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
   };
+
+  const isFormChanged =
+    formik.values.projectTitle !== applicationDetails?.project_title ||
+    formik.values.experienceDescription !==
+      applicationDetails?.experience_description ||
+    formik.values.benefitDescription !==
+      applicationDetails?.benefit_description ||
+    formik.values.futureVisionDescription !==
+      applicationDetails?.future_vision_description;
 
   return (
     <div className="form-div">
@@ -598,7 +613,17 @@ export default function ApplicationForm1({
             </button>
           )}
 
-          {currentStep === 3 && (
+          {currentStep === 3 && applicationId && (
+            <button
+              className="btn submit"
+              type="submit"
+              disabled={!isFormChanged}
+            >
+              RESUBMIT
+            </button>
+          )}
+
+          {currentStep === 3 && applicationId === undefined && (
             <button className="btn submit" type="submit">
               SUBMIT
             </button>

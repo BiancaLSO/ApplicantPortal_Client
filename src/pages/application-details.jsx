@@ -10,11 +10,13 @@ import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
 import ApplicationForm2 from "../components/ApplicationForm2";
 import ApplicationForm4 from "../components/ApplicationForm4";
+import ApplicationForm1 from "../components/ApplicationForm1";
 
 export default function ApplicationDetails({
   grantId,
   deadline,
   applicationId,
+  setApplicationId,
 }) {
   const [grantName, setGrantname] = useState("");
   const [journalnr, setJournalNr] = useState("");
@@ -64,7 +66,7 @@ export default function ApplicationDetails({
       fetchApplication();
     }
     fetchUserData();
-  }, []);
+  }, [applicationId]);
 
   useEffect(() => {
     if (user) {
@@ -78,31 +80,58 @@ export default function ApplicationDetails({
 
   const submitForm = (values) => {
     console.log(values);
+    let applicationData;
 
-    const applicationData = {
-      author_full: values.authorFullName,
-      event_location: values.eventLocation,
-      target_group: values.targetGroup,
-      purpose_description: values.purposeDescription,
-      is_catalog_used: values.isCatalogUsed,
-      requested_amount: values.requestedAmount,
-      overall_amount: values.overallAmount,
-      event_date: values.eventDate,
-      municipality: values.municipality,
-    };
+    if (grantId === 1) {
+      applicationData = {
+        project_title: values.projectTitle,
+        experience_description: values.experienceDescription,
+        benefit_description: values.benefitDescription,
+        future_vision_description: values.futureVisionDescription,
+        agreement_info: values.agreementInfo,
+      };
+    }
 
-    /*  const applicationData = {
-      traveler_name_and_position: values.travelerNameAndPosition,
-      purpose_description: values.purposeDescription,
-      departure_country: values.departureCountry,
-      departure_city: values.departureCity,
-      destination_country: values.destinationCountry,
-      destination_city: values.destinationCity,
-      trip_start_date: values.tripStartDate,
-      trip_end_date: values.tripEndDate,
-      requested_amount: values.requestedAmount,
-      overall_amount: values.overallAmount,
-    }; */
+    if (grantId === 2) {
+      applicationData = {
+        traveler_name_and_position: values.travelerNameAndPosition,
+        purpose_description: values.purposeDescription,
+        departure_country: values.departureCountry,
+        departure_city: values.departureCity,
+        destination_country: values.destinationCountry,
+        destination_city: values.destinationCity,
+        trip_start_date: values.tripStartDate,
+        trip_end_date: values.tripEndDate,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+      };
+    }
+
+    if (grantId === 3) {
+      applicationData = {
+        recedency_name: values.recedency_name,
+        project_description: values.projectDescription,
+        project_country: values.destinationCountry,
+        recedency_start_date: values.recedencyStartDate,
+        recedency_end_date: values.recedencyEndDate,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+      };
+    }
+
+    if (grantId === 4) {
+      applicationData = {
+        author_full: values.authorFullName,
+        event_location: values.eventLocation,
+        target_group: values.targetGroup,
+        purpose_description: values.purposeDescription,
+        is_catalog_used: values.isCatalogUsed,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+        event_date: values.eventDate,
+        municipality: values.municipality,
+      };
+    }
 
     const userData = {
       firstName: values.firstName,
@@ -118,7 +147,6 @@ export default function ApplicationDetails({
       zipCode: values.zipCode,
     };
 
-    // Updated fetch calls with JSON.stringify for the body
     fetch(`http://localhost:3005/user/${user.id}`, {
       method: "PATCH",
       headers: {
@@ -137,8 +165,7 @@ export default function ApplicationDetails({
         })
       )
       .then((response) => response.json())
-      .then(
-        () => console.log(applicationData),
+      .then(() =>
         fetch(
           `http://localhost:3005/application-form/call-stored-procedure/${user.id}/${grantId}`,
           {
@@ -153,8 +180,84 @@ export default function ApplicationDetails({
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        setApplicationId(data);
         setSelectedPage("overview");
         setSubmitted(true);
+      })
+      .catch((err) => {
+        console.error(err);
+        // Handle errors
+      });
+  };
+
+  const resubmitForm = (values) => {
+    console.log("the resubmit");
+    let applicationData;
+
+    if (grantId === 1) {
+      applicationData = {
+        project_title: values.projectTitle,
+        experience_description: values.experienceDescription,
+        benefit_description: values.benefitDescription,
+        future_vision_description: values.futureVisionDescription,
+        agreement_info: values.agreementInfo,
+      };
+    }
+
+    if (grantId === 2) {
+      applicationData = {
+        traveler_name_and_position: values.travelerNameAndPosition,
+        purpose_description: values.purposeDescription,
+        departure_country: values.departureCountry,
+        departure_city: values.departureCity,
+        destination_country: values.destinationCountry,
+        destination_city: values.destinationCity,
+        trip_start_date: values.tripStartDate,
+        trip_end_date: values.tripEndDate,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+      };
+    }
+
+    if (grantId === 3) {
+      applicationData = {
+        recedency_name: values.recedency_name,
+        project_description: values.projectDescription,
+        project_country: values.destinationCountry,
+        recedency_start_date: values.recedencyStartDate,
+        recedency_end_date: values.recedencyEndDate,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+      };
+    }
+
+    if (grantId === 4) {
+      applicationData = {
+        author_full: values.authorFullName,
+        event_location: values.eventLocation,
+        target_group: values.targetGroup,
+        purpose_description: values.purposeDescription,
+        is_catalog_used: values.isCatalogUsed,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+        event_date: values.eventDate,
+        municipality: values.municipality,
+      };
+    }
+
+    fetch(`http://localhost:3005/application-form/${applicationId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(applicationData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setSelectedPage("overview");
+        setSubmitted(true);
+        fetchApplicationForm();
       })
       .catch((err) => {
         console.error(err);
@@ -287,11 +390,40 @@ export default function ApplicationDetails({
           </div>
         </div>
         <div>
-          {selectedPage === "form" && (
+          {selectedPage === "form" && grantId === 1 && (
+            <ApplicationForm1
+              grant={grantName}
+              onSubmitForm={submitForm}
+              onResubmitForm={resubmitForm}
+              applicationDetails={applicationForm}
+              applicationId={applicationId}
+            />
+          )}
+          {selectedPage === "form" && grantId === 2 && (
+            <ApplicationForm2
+              grant={grantName}
+              onSubmitForm={submitForm}
+              onResubmitForm={resubmitForm}
+              applicationDetails={applicationForm}
+              applicationId={applicationId}
+            />
+          )}
+          {selectedPage === "form" && grantId === 3 && (
+            <ApplicationForm3
+              grant={grantName}
+              onSubmitForm={submitForm}
+              onResubmitForm={resubmitForm}
+              applicationDetails={applicationForm}
+              applicationId={applicationId}
+            />
+          )}
+          {selectedPage === "form" && grantId === 4 && (
             <ApplicationForm4
               grant={grantName}
               onSubmitForm={submitForm}
+              onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
+              applicationId={applicationId}
             />
           )}
           {selectedPage === "overview" && (

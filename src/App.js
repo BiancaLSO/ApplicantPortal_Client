@@ -16,6 +16,7 @@ import {
 
 function App() {
   const [user, setUser] = useState(null);
+  const [applicationId, setApplicationId] = useState(undefined);
 
   const fetchUser = () => {
     fetch(`http://localhost:3005/user/3`)
@@ -46,7 +47,8 @@ function App() {
             <ApplicationDetails
               grantId={4}
               deadline={"2023-12-20"}
-              applicationId={39}
+              applicationId={applicationId}
+              setApplicationId={setApplicationId}
             />
           }
         />

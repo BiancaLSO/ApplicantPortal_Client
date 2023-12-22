@@ -43,7 +43,9 @@ const CssTextField = styled(TextField)(({ theme }) => ({
 export default function ApplicationForm2({
   grant,
   onSubmitForm,
+  onResubmitForm,
   applicationDetails,
+  applicationId,
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [userDetails, setUserDetails] = useState(null);
@@ -185,7 +187,11 @@ export default function ApplicationForm2({
         .integer("Must be a whole number"),
     }),
     onSubmit: (values, { resetForm }) => {
-      onSubmitForm(values);
+      if (applicationId) {
+        onResubmitForm(values);
+      } else {
+        onSubmitForm(values);
+      }
       resetForm();
       setCurrentStep(1);
       console.log(values);
@@ -244,6 +250,21 @@ export default function ApplicationForm2({
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
   };
+
+  const isFormChanged =
+    formik.values.travelerNameAndPosition !==
+      applicationDetails?.traveler_name_and_position ||
+    formik.values.purposeDescription !==
+      applicationDetails?.purpose_description ||
+    formik.values.departureCountry !== applicationDetails?.departure_country ||
+    formik.values.departureCity !== applicationDetails?.departure_city ||
+    formik.values.destinationCountry !==
+      applicationDetails?.destination_country ||
+    formik.values.destinationCity !== applicationDetails?.destination_city ||
+    formik.values.tripStartDate !== applicationDetails?.trip_start_date ||
+    formik.values.tripEndDate !== applicationDetails?.trip_end_date ||
+    formik.values.requestedAmount !== applicationDetails?.requested_amount ||
+    formik.values.overallAmount !== applicationDetails?.overall_amount;
 
   return (
     <div className="form-div">
@@ -870,7 +891,17 @@ export default function ApplicationForm2({
             </button>
           )}
 
-          {currentStep === 3 && (
+          {currentStep === 3 && applicationId && (
+            <button
+              className="btn submit"
+              type="submit"
+              disabled={!isFormChanged}
+            >
+              RESUBMIT
+            </button>
+          )}
+
+          {currentStep === 3 && applicationId === undefined && (
             <button className="btn submit" type="submit">
               SUBMIT
             </button>

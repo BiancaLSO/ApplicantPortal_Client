@@ -45,23 +45,12 @@ const CssTextField = styled(TextField)(({ theme }) => ({
 export default function ApplicationForm4({
   grant,
   onSubmitForm,
+  onResubmitForm,
   applicationDetails,
+  applicationId,
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [userDetails, setUserDetails] = useState(null);
-
-  const isValidCountry = async (value) => {
-    try {
-      const response = await fetch("https://restcountries.com/v2/all");
-      const countries = await response.json();
-      const countryNames = countries.map((country) => country.name);
-
-      return countryNames.includes(value);
-    } catch (error) {
-      console.error("Error fetching country data", error);
-      return false;
-    }
-  };
 
   useEffect(() => {
     const fetchUserData = () => {
@@ -175,7 +164,11 @@ export default function ApplicationForm4({
         .max(100, "Must be at most 100 characters"),
     }),
     onSubmit: (values, { resetForm }) => {
-      onSubmitForm(values);
+      if (applicationId) {
+        onResubmitForm(values);
+      } else {
+        onSubmitForm(values);
+      }
       resetForm();
       setCurrentStep(1);
       console.log(values);
@@ -228,6 +221,18 @@ export default function ApplicationForm4({
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
   };
+
+  const isFormChanged =
+    formik.values.authorFullName !== applicationDetails?.author_full ||
+    formik.values.eventLocation !== applicationDetails?.event_location ||
+    formik.values.targetGroup !== applicationDetails?.target_group ||
+    formik.values.purposeDescription !==
+      applicationDetails?.purpose_description ||
+    formik.values.isCatalogUsed !== applicationDetails?.is_catalog_used ||
+    formik.values.requestedAmount !== applicationDetails?.requested_amount ||
+    formik.values.overallAmount !== applicationDetails?.overall_amount ||
+    formik.values.eventDate !== applicationDetails?.event_date ||
+    formik.values.municipality !== applicationDetails?.municipality;
 
   return (
     <div className="form-div">
@@ -817,7 +822,17 @@ export default function ApplicationForm4({
             </button>
           )}
 
-          {currentStep === 3 && (
+          {currentStep === 3 && applicationId && (
+            <button
+              className="btn submit"
+              type="submit"
+              disabled={!isFormChanged}
+            >
+              RESUBMIT
+            </button>
+          )}
+
+          {currentStep === 3 && applicationId === undefined && (
             <button className="btn submit" type="submit">
               SUBMIT
             </button>
