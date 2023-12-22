@@ -10,13 +10,13 @@ import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
 import { getUserData } from "../redux/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import ApplicationForm1 from "../components/ApplicationForm1";
 
 export default function ApplicationDetails({
   grantId,
   deadline,
   applicationId,
 }) {
-  const dispatch = useDispatch();
   const [grantName, setGrantname] = useState("");
   const [journalnr, setJournalNr] = useState("");
   const [user, setUser] = useState(null);
@@ -25,7 +25,7 @@ export default function ApplicationDetails({
   const [submitted, setSubmitted] = useState(true);
   const [applicationForm, setApplicationForm] = useState(null);
   const [application, setApplication] = useState(null);
-  const credentialsId = useSelector((state) => state.credentialsId);
+  const userFromRedux = useSelector((state) => state.auth.user);
 
   const fetchApplicationForm = () => {
     fetch(
@@ -53,12 +53,9 @@ export default function ApplicationDetails({
       });
   };
 
-  const getUser = () => {
-    // 2. Fetch user data based on userId
-    if (credentialsId) {
-      dispatch(getUserData(credentialsId));
-    }
-  };
+  useEffect(() => {
+    setUser(userFromRedux);
+  }, [userFromRedux]);
 
   /*  useEffect(() => {
     const fetchUserData = () => {
@@ -205,7 +202,7 @@ export default function ApplicationDetails({
   return (
     <div className="app-container">
       <Navbar />
-      <button onClick={() => getUser()}>click me</button>
+      {user && <div>hello world</div>}
       <div className="content-container">
         <div className="row">
           <p>Create application</p>
@@ -282,10 +279,11 @@ export default function ApplicationDetails({
         </div>
         <div>
           {selectedPage === "form" && (
-            <ApplicationForm3
+            <ApplicationForm1
               grant={grantName}
               onSubmitForm={submitForm}
               applicationDetails={applicationForm}
+              userDetails={user}
             />
           )}
           {selectedPage === "overview" && (

@@ -38,20 +38,9 @@ export default function ApplicationForm1({
   grant,
   onSubmitForm,
   applicationDetails,
+  userDetails,
 }) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [userDetails, setUserDetails] = useState(null);
-
-  useEffect(() => {
-    const fetchUserData = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUserDetails(JSON.parse(storedUser));
-      }
-    };
-    fetchUserData();
-    console.log(applicationDetails);
-  }, []);
 
   const formik = useFormik({
     initialValues: {
