@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
+import Navbar from "../components/NavBar";
+import Footer from "../components/Footer";
 import "../css/layout.css";
 import "../css/my-applications-page.css";
-import SearchBarApplication from "../components/search-bar-application";
+import SearchBarApplication from "../components/SearchBarApplication";
 
 const headers = [
   { name: "JournalNr.", key: "note" },

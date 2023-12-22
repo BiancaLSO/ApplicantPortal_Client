@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/navbar"; // Import your Navbar component
-import Footer from "../components/footer"; // Import your Navbar component
+import Navbar from "../components/NavBar"; // Import your Navbar component
+import Footer from "../components/Footer"; // Import your Navbar component
 import "../css/application-details.css";
 import "../css/layout.css"; // Import your custom styles
 import DeleteButton from "../components/DeleteButton";
