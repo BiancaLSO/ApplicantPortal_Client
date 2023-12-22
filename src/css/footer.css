@@ -102,6 +102,8 @@
 .text-area {
   height: 150px;
   width: 350px;
+  border-radius: 15px;
+  padding: 10px;
 }
 
 .send-button {
@@ -120,4 +122,21 @@
   display: flex;
   flex-direction: column;
   color: white;
+  justify-content: space-between;
+}
+
+.footer-menu-links a {
+  text-decoration: none;
+  color: white;
+  margin-bottom: 15px;
+  border-bottom: 2px solid transparent;
+  transition: border-bottom 0.3s ease;
+}
+
+.footer-menu-links a:hover {
+  border-bottom-color: white;
+}
+
+.footer-menu-links a:last-child:hover {
+  border-bottom-color: transparent;
 }
