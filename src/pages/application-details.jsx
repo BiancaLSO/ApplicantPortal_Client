@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/navbar"; // Import your Navbar component
-import Footer from "../components/footer"; // Import your Navbar component
+import Navbar from "../components/NavBar"; // Import your Navbar component
+import Footer from "../components/Footer"; // Import your Navbar component
 import "../css/application-details.css";
 import "../css/layout.css"; // Import your custom styles
 import DeleteButton from "../components/DeleteButton";
@@ -8,9 +8,10 @@ import ApplicationForm from "../components/ApplicationForm1";
 import Modal from "react-modal";
 import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
-import ApplicationForm2 from "../components/ApplicationForm2";
-import ApplicationForm4 from "../components/ApplicationForm4";
+import { getUserData } from "../redux/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import ApplicationForm1 from "../components/ApplicationForm1";
+import ApplicationForm4 from "../components/ApplicationForm4";
 
 export default function ApplicationDetails({
   grantId,
@@ -26,6 +27,7 @@ export default function ApplicationDetails({
   const [submitted, setSubmitted] = useState(true);
   const [applicationForm, setApplicationForm] = useState(null);
   const [application, setApplication] = useState(null);
+  const userFromRedux = useSelector((state) => state.auth.user);
 
   const fetchApplicationForm = () => {
     fetch(
@@ -54,6 +56,10 @@ export default function ApplicationDetails({
   };
 
   useEffect(() => {
+    setUser(userFromRedux);
+  }, [userFromRedux]);
+
+  /*  useEffect(() => {
     const fetchUserData = () => {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -66,7 +72,7 @@ export default function ApplicationDetails({
       fetchApplication();
     }
     fetchUserData();
-  }, [applicationId]);
+  }, []); */
 
   useEffect(() => {
     if (user) {
@@ -314,7 +320,7 @@ export default function ApplicationDetails({
   return (
     <div className="app-container">
       <Navbar />
-
+      {user && <div>hello world</div>}
       <div className="content-container">
         <div className="row">
           <p>Create application</p>
@@ -397,6 +403,7 @@ export default function ApplicationDetails({
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
               applicationId={applicationId}
+              userDetails={user}
             />
           )}
           {selectedPage === "form" && grantId === 2 && (
@@ -406,6 +413,7 @@ export default function ApplicationDetails({
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
               applicationId={applicationId}
+              userDetails={user}
             />
           )}
           {selectedPage === "form" && grantId === 3 && (
@@ -415,6 +423,7 @@ export default function ApplicationDetails({
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
               applicationId={applicationId}
+              userDetails={user}
             />
           )}
           {selectedPage === "form" && grantId === 4 && (
@@ -424,6 +433,7 @@ export default function ApplicationDetails({
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
               applicationId={applicationId}
+              userDetails={user}
             />
           )}
           {selectedPage === "overview" && (

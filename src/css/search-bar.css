@@ -2,6 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: row;
+  margin-bottom: 30px;
 }
 
 .searchbar {
@@ -14,19 +15,13 @@
 
 .material-icons {
   color: #c0002a;
-  cursor: pointer;
-  position: absolute;
-  /* top: 26%;
-  right: 468px; */
-  top: 88%;
-  right: 231px;
-  transform: translateY(-50%);
 }
 
 .search-application-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 8px 12px 8px 12px;
   width: 45%;
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);

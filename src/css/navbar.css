@@ -1,5 +1,4 @@
 .navbar {
-  /* grid-column: span 12; */
   grid-column: 1 / -1;
   height: 1fr;
   display: flex;
@@ -19,13 +18,14 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   width: 60%;
   padding-top: 25px;
 }
 
 .navbar-menu a {
   text-decoration: none;
-  padding: 10px;
+  padding: 10px 10px 5px 10px;
   margin: 0 10px;
   border-bottom: 2px solid transparent;
   color: black;
@@ -39,30 +39,6 @@
   border-bottom-color: #c0002a;
 }
 
-.logout-link {
-  display: flex;
-  align-items: center;
-}
-
-.logout-link span {
-  margin-right: 5px;
-  color: white;
-}
-
-.logout-link:hover {
-  border-bottom-color: transparent;
-}
-
-.logout-link.active {
-  border-bottom-color: transparent;
-}
-
-.logout-link.active span {
-  background-color: c0002a;
-  padding: 5px;
-  border-radius: 50%;
-}
-
 .logout-icon-container {
   width: 45px;
   height: 45px;
@@ -71,4 +47,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.navbar-menu a:last-child:hover {
+  border-bottom-color: transparent;
 }

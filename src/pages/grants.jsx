@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import "../css/layout.css";
 import "../css/grants-page.css";
-import Grant from "../components/grant";
-import CategoryChips from "../components/category-chip";
-import SearchBar from "../components/search-bar";
+import Grant from "../components/GrantItem";
+import CategoryChips from "../components/CategoryChip";
+import SearchBar from "../components/SearchBar";
 
 const Grants = () => {
   const activeGrants = [
@@ -49,10 +49,10 @@ const Grants = () => {
 
   return (
     <div className="app-container">
-      <Navbar />
+      <NavBar />
       <div className="content-container">
-        <h1 className="title">Active Grants</h1>
-        <h2 className="subtitle">
+        <h1 className="title-grants">Active Grants</h1>
+        <h2 className="subtitle-grants">
           Choose and apply for one of the currently active grants.
         </h2>
 

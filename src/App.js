@@ -13,10 +13,23 @@ import {
   Redirect,
   Navigate,
 } from "react-router-dom";
+import { getUserData, login } from "./redux/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [applicationId, setApplicationId] = useState(undefined);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.token);
+  const credentialsId = useSelector((state) => state.credentialsId);
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    // Example usage:
+    // 1. Login
+    dispatch(login({ username: "sandra.k", password: "123456789" }));
+    console.log(credentialsId); // Add this line
+  }, [dispatch]);
+
+  /*   const [user, setUser] = useState(null);
 
   const fetchUser = () => {
     fetch(`http://localhost:3005/user/3`)
@@ -31,7 +44,7 @@ function App() {
   };
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, []); */
 
   return (
     <Router>
@@ -47,7 +60,7 @@ function App() {
             <ApplicationDetails
               grantId={4}
               deadline={"2023-12-20"}
-              applicationId={applicationId}
+              applicationId={undefined}
               setApplicationId={setApplicationId}
             />
           }
