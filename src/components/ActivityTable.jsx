@@ -59,27 +59,29 @@ export default function ActivityTable({ data }) {
           ))}
         </div>
         <div className="tb-column">
-          {currentItems.map((item, index) => (
-            <div className="tb-row" key={index}>
-              {headers.map((header) => (
-                <div className="tb-cell" key={header.key}>
-                  <p
-                    style={{
-                      fontWeight: "300",
-                      fontSize: "1.2rem",
-                      fontFamily: "Red Hat Display",
-                      alignSelf: "center",
-                      color: "#2b2b2b",
-                    }}
-                  >
-                    {header.key !== "status"
-                      ? item[header.key]
-                      : item[header.key]?.name}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ))}
+          {currentItems
+            .sort((a, b) => b.id - a.id)
+            .map((item, index) => (
+              <div className="tb-row" key={index}>
+                {headers.map((header) => (
+                  <div className="tb-cell" key={header.key}>
+                    <p
+                      style={{
+                        fontWeight: "300",
+                        fontSize: "1.2rem",
+                        fontFamily: "Red Hat Display",
+                        alignSelf: "center",
+                        color: "#2b2b2b",
+                      }}
+                    >
+                      {header.key !== "status"
+                        ? item[header.key]
+                        : item[header.key]?.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ))}
         </div>
       </div>
 

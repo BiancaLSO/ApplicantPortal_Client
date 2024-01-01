@@ -49,7 +49,13 @@ const Grants = () => {
 
   return (
     <div className="app-container">
-      <NavBar />
+      <NavBar
+        setOpenResubmitModal={undefined}
+        setOpenSaveModal={undefined}
+        setOpenSubmitModal={undefined}
+        hasFormChanged={undefined}
+        selectedPage={undefined}
+      />
       <div className="content-container">
         <h1 className="title-grants">Active Grants</h1>
         <h2 className="subtitle-grants">

@@ -11,6 +11,10 @@ import {
   RadioGroup,
   Radio,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDetails } from "../redux/auth/authSlice";
+import Modal from "react-modal";
+import moment from "moment";
 
 const CssTextField = styled(TextField)(({ theme }) => ({
   "& label.Mui-focused": {
@@ -48,20 +52,23 @@ export default function ApplicationForm4({
   onResubmitForm,
   applicationDetails,
   applicationId,
+  hasBeenSubmitted,
+  setHasFormChanged,
+  openSaveModal,
+  openResubmitModal,
+  setOpenSaveModal,
+  setOpenResubmitModal,
+  setOpenSubmitModal,
+  openSubmitModal,
+  setSelectedPage,
+  onUpdateForm,
+  onSaveApplication,
+  userDetails,
 }) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [userDetails, setUserDetails] = useState(null);
-
-  useEffect(() => {
-    const fetchUserData = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUserDetails(JSON.parse(storedUser));
-      }
-    };
-    fetchUserData();
-    console.log(applicationDetails);
-  }, []);
+  const [currentStep, setCurrentStep] = useState(
+    applicationDetails ? Number(applicationDetails.form_step) : 1
+  );
+  const application = useSelector((state) => state.application.application);
 
   const formik = useFormik({
     initialValues: {
@@ -79,10 +86,11 @@ export default function ApplicationForm4({
       targetGroup: "",
       purposeDescription: "",
       isCatalogUsed: "",
-      requestedAmount: "",
-      overallAmount: "",
-      eventDate: "",
+      requestedAmount: 0,
+      overallAmount: 0,
+      eventDate: moment().format("YYYY-MM-DD"),
       municipality: "",
+      formStep: currentStep,
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -164,10 +172,19 @@ export default function ApplicationForm4({
         .max(100, "Must be at most 100 characters"),
     }),
     onSubmit: (values, { resetForm }) => {
-      if (applicationId) {
+      if (hasBeenSubmitted) {
+        values.formStep = currentStep;
         onResubmitForm(values);
+      } else if (!hasBeenSubmitted && applicationId) {
+        values.formStep = currentStep;
+        onUpdateForm(values);
       } else {
-        onSubmitForm(values);
+        values.formStep = currentStep;
+        const body = {
+          values,
+          submission: true,
+        };
+        onSubmitForm(body);
       }
       resetForm();
       setCurrentStep(1);
@@ -233,6 +250,66 @@ export default function ApplicationForm4({
     formik.values.overallAmount !== applicationDetails?.overall_amount ||
     formik.values.eventDate !== applicationDetails?.event_date ||
     formik.values.municipality !== applicationDetails?.municipality;
+
+  useEffect(() => {
+    setHasFormChanged(isFormChanged);
+  }, [isFormChanged]);
+
+  const saveProgress = (values) => {
+    if (
+      application &&
+      application.activities !== null &&
+      application.activities?.length > 0
+    ) {
+      if (
+        values.authorFullName.length > 0 ||
+        values.eventLocation.length > 0 ||
+        values.targetGroup.length > 0 ||
+        values.purposeDescription.length > 0 ||
+        values.municipality.length > 0
+      ) {
+        values.formStep = 2;
+      } else {
+        if (values.formStep === 2) {
+          values.formStep = 1;
+        } else {
+          values.formStep = currentStep;
+        }
+      }
+      onSaveApplication(values);
+    } else {
+      if (
+        values.authorFullName.length > 0 ||
+        values.eventLocation.length > 0 ||
+        values.targetGroup.length > 0 ||
+        values.purposeDescription.length > 0 ||
+        values.municipality.length > 0
+      ) {
+        values.formStep = 2;
+      } else {
+        if (values.formStep === 2) {
+          values.formStep = 1;
+        } else {
+          values.formStep = currentStep;
+        }
+      }
+      const body = {
+        values,
+        submission: false,
+      };
+      onSubmitForm(body);
+    }
+  };
+
+  const customStyles = {
+    content: {
+      width: "50%", // Set your desired width
+      height: "25rem", // Set your desired height
+      margin: "auto", // Center the modal
+      zIndex: 50,
+      borderRadius: "10px",
+    },
+  };
 
   return (
     <div className="form-div">
@@ -822,7 +899,7 @@ export default function ApplicationForm4({
             </button>
           )}
 
-          {currentStep === 3 && applicationId && (
+          {currentStep === 3 && hasBeenSubmitted && (
             <button
               className="btn submit"
               type="submit"
@@ -837,8 +914,205 @@ export default function ApplicationForm4({
               SUBMIT
             </button>
           )}
+          {currentStep === 3 && !hasBeenSubmitted && applicationId && (
+            <button className="btn submit" type="submit">
+              SUBMIT
+            </button>
+          )}
         </div>
       </form>
+      <Modal
+        isOpen={openSaveModal}
+        onRequestClose={() => setOpenSaveModal(false)}
+        contentLabel="Save Modal"
+        style={customStyles}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            margin: "2rem 2rem 0 2rem",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "2rem",
+              fontWeight: "500",
+            }}
+          >
+            Would you like to save your progress?
+          </h3>
+          <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
+            We can see you haven't submitted the application. Would you like to
+            save this application draft and work on it later, or just descard
+            it?
+          </p>
+          <div className="popup-btns">
+            <button
+              style={{ backgroundColor: "#c0002a", color: "white" }}
+              onClick={() => saveProgress(formik.values)}
+              className="popup-btn"
+            >
+              Yes, save my progress.
+            </button>
+            <button
+              style={{
+                backgroundColor: "EFEFE9",
+                color: "#c0002a",
+                outlineColor: "#c0002a",
+                outlineStyle: "#c0002a",
+                outlineWidth: 2,
+              }}
+              onClick={() => setOpenSaveModal(false)}
+              className="popup-btn"
+            >
+              Countinue form fillout
+            </button>
+            <button
+              style={{
+                backgroundColor: "EFEFE9",
+                color: "#c0002a",
+                outlineColor: "#c0002a",
+                outlineStyle: "#c0002a",
+                outlineWidth: 2,
+              }}
+              onClick={() => {
+                setOpenSaveModal(false);
+                setSelectedPage("overview");
+              }}
+              className="popup-btn"
+            >
+              Discard this draft.
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={openResubmitModal}
+        onRequestClose={() => setOpenResubmitModal(false)}
+        contentLabel="Resubmit Modal"
+        style={customStyles}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            margin: "2rem 2rem 0 2rem",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "2rem",
+              fontWeight: "500",
+            }}
+          >
+            Would you like to resubmit your application?
+          </h3>
+          <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
+            We can see you have made some changes to your submitted
+            applications, but haven't resubmitted the form. If you continue back
+            to the 'Overview' of your application without resubmitting, all of
+            your changes will be descarded. Would you like to countinue filling
+            out the form or go back to the overview?
+          </p>
+          <div className="popup-btns">
+            <button
+              style={{ backgroundColor: "#c0002a", color: "white" }}
+              onClick={() => setOpenResubmitModal(false)}
+              className="popup-btn"
+            >
+              Yes, continue form fillout.
+            </button>
+            <button
+              style={{
+                backgroundColor: "EFEFE9",
+                color: "#c0002a",
+                outlineColor: "#c0002a",
+                outlineStyle: "#c0002a",
+                outlineWidth: 2,
+              }}
+              onClick={() => {
+                setOpenResubmitModal(false);
+                setSelectedPage("overview");
+              }}
+              className="popup-btn"
+            >
+              Back to 'Overview'
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={openSubmitModal}
+        onRequestClose={() => setOpenSubmitModal(false)}
+        contentLabel="Submit Modal"
+        style={customStyles}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            margin: "2rem 2rem 0 2rem",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "2rem",
+              fontWeight: "500",
+            }}
+          >
+            Would you like to continue working on your application?
+          </h3>
+          <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
+            We can see you have made some changes to your saved applications,
+            but haven't submitted the form. If you continue back to the
+            'Overview' of your application without aving or submitting, all of
+            your changes will be descarded. Would you like to save current
+            changes or go back to the overview?
+          </p>
+          <div className="popup-btns">
+            <button
+              style={{ backgroundColor: "#c0002a", color: "white" }}
+              onClick={() => saveProgress(formik.values)}
+              className="popup-btn"
+            >
+              Yes, save current changes.
+            </button>
+            <button
+              style={{
+                backgroundColor: "EFEFE9",
+                color: "#c0002a",
+                outlineColor: "#c0002a",
+                outlineStyle: "#c0002a",
+                outlineWidth: 2,
+              }}
+              onClick={() => setOpenSubmitModal(false)}
+              className="popup-btn"
+            >
+              Countinue form fillout.
+            </button>
+            <button
+              style={{
+                backgroundColor: "EFEFE9",
+                color: "#c0002a",
+                outlineColor: "#c0002a",
+                outlineStyle: "#c0002a",
+                outlineWidth: 2,
+              }}
+              onClick={() => {
+                setOpenSubmitModal(false);
+                setSelectedPage("overview");
+              }}
+              className="popup-btn"
+            >
+              Discard this draft.
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

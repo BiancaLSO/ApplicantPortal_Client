@@ -8,71 +8,70 @@ import ApplicationForm from "../components/ApplicationForm1";
 import Modal from "react-modal";
 import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
-import { getUserData } from "../redux/auth/authSlice";
+import { editUser, getUserData } from "../redux/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ApplicationForm1 from "../components/ApplicationForm1";
 import ApplicationForm4 from "../components/ApplicationForm4";
+import ApplicationForm2 from "../components/ApplicationForm2";
+import {
+  getApplication,
+  getApplicationForm,
+  isApplicationSubmitted,
+  resubmitApplication,
+  saveApplication,
+  setApplicationId,
+  setPopUpMsg,
+  updateApplication,
+} from "../redux/application/applicationSlice";
 
 export default function ApplicationDetails({
   grantId,
   deadline,
   applicationId,
-  setApplicationId,
 }) {
+  const dispatch = useDispatch();
   const [grantName, setGrantname] = useState("");
   const [journalnr, setJournalNr] = useState("");
-  const [user, setUser] = useState(null);
   const [selectedPage, setSelectedPage] = useState("overview");
   const [today, setToday] = useState(new Date());
   const [submitted, setSubmitted] = useState(true);
-  const [applicationForm, setApplicationForm] = useState(null);
-  const [application, setApplication] = useState(null);
-  const userFromRedux = useSelector((state) => state.auth.user);
-
-  const fetchApplicationForm = () => {
-    fetch(
-      `http://localhost:3005/application-form/applicationId/${applicationId}`
-    )
-      .then((response) => response.json())
-      .then((applicationData) => {
-        setApplicationForm(applicationData);
-        console.log(applicationData);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const fetchApplication = () => {
-    fetch(`http://localhost:3005/application/${applicationId}`)
-      .then((response) => response.json())
-      .then((applicationData) => {
-        setApplication(applicationData);
-        console.log(applicationData);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  const [openSaveModal, setOpenSaveModal] = useState(false);
+  const [openResubmitModal, setOpenResubmitModal] = useState(false);
+  const [openSubmitModal, setOpenSubmitModal] = useState(false);
+  const [hasFormChanged, setHasFormChanged] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+  const application = useSelector((state) => state.application.application);
+  const applicationForm = useSelector(
+    (state) => state.application.applicationForm
+  );
+  const hasBeenSubmitted = useSelector(
+    (state) => state.application.hasBeenSubmitted
+  );
+  const popUpMsg = useSelector((state) => state.application.error);
+  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
-    setUser(userFromRedux);
-  }, [userFromRedux]);
-
-  /*  useEffect(() => {
-    const fetchUserData = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    };
-
     if (applicationId) {
-      fetchApplicationForm();
-      fetchApplication();
+      dispatch(
+        getApplication({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
+      dispatch(
+        getApplicationForm({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
+      dispatch(
+        isApplicationSubmitted({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
     }
-    fetchUserData();
-  }, []); */
+  }, [dispatch, applicationId]);
 
   useEffect(() => {
     if (user) {
@@ -84,8 +83,156 @@ export default function ApplicationDetails({
     getGrantname();
   }, []);
 
-  const submitForm = (values) => {
-    console.log(values);
+  const submitForm = (body) => {
+    console.log(body);
+    let applicationData;
+
+    if (grantId === 1) {
+      applicationData = {
+        project_title: body.values?.projectTitle,
+        experience_description: body.values?.experienceDescription,
+        benefit_description: body.values?.benefitDescription,
+        future_vision_description: body.values?.futureVisionDescription,
+        agreement_info: body.values?.agreementInfo,
+        form_step: body.values?.formStep,
+      };
+    }
+
+    if (grantId === 2) {
+      applicationData = {
+        traveler_name_and_position: body.values?.travelerNameAndPosition,
+        purpose_description: body.values?.purposeDescription,
+        departure_country: body.values?.departureCountry,
+        departure_city: body.values?.departureCity,
+        destination_country: body.values?.destinationCountry,
+        destination_city: body.values?.destinationCity,
+        trip_start_date: body.values?.tripStartDate,
+        trip_end_date: body.values?.tripEndDate,
+        requested_amount: body.values?.requestedAmount,
+        overall_amount: body.values?.overallAmount,
+        form_step: body.values?.formStep,
+      };
+    }
+
+    if (grantId === 3) {
+      applicationData = {
+        recedency_name: body.values?.recedencyName,
+        project_description: body.values?.projectDescription,
+        project_country: body.values?.projectCountry,
+        recedency_start_date: body.values?.recedencyStartDate,
+        recedency_end_date: body.values?.recedencyEndDate,
+        requested_amount: body.values?.requestedAmount,
+        overall_amount: body.values?.overallAmount,
+        form_step: body.values?.formStep,
+      };
+    }
+
+    if (grantId === 4) {
+      applicationData = {
+        author_full: body.values?.authorFullName,
+        event_location: body.values?.eventLocation,
+        target_group: body.values?.targetGroup,
+        purpose_description: body.values?.purposeDescription,
+        is_catalog_used: body.values?.isCatalogUsed,
+        requested_amount: body.values?.requestedAmount,
+        overall_amount: body.values?.overallAmount,
+        event_date: body.values?.eventDate,
+        municipality: body.values?.municipality,
+        form_step: body.values?.formStep,
+      };
+    }
+
+    const userData = {
+      firstName: body.values?.firstName,
+      lastName: body.values?.lastName,
+      phone: body.values?.phone,
+      cpr: body.values?.cpr,
+      email: body.values?.email,
+    };
+
+    const addressData = {
+      street: body.values?.street,
+      city: body.values?.city,
+      zipCode: body.values?.zipCode,
+    };
+
+    dispatch(
+      editUser({
+        userId: user.id,
+        userBody: userData,
+        addressBody: addressData,
+        token: token,
+      })
+    );
+
+    console.log("this is the probelm", token);
+    fetch(
+      `http://localhost:3005/application-form/call-stored-procedure/${user.id}/${grantId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Include additional headers if needed
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          values: applicationData,
+          submission: body.submission,
+        }),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the response data
+        console.log("Success:", data);
+        dispatch(
+          getApplication({
+            applicationId: data,
+            token: token,
+          })
+        );
+        dispatch(
+          setApplicationId({
+            applicationId: data,
+            token: token,
+          })
+        );
+        dispatch(
+          getApplicationForm({
+            applicationId: data,
+            token: token,
+          })
+        );
+        dispatch(
+          isApplicationSubmitted({
+            applicationId: data,
+            token: token,
+          })
+        );
+        console.log("thhe body", body.submission);
+        dispatch(
+          setPopUpMsg(
+            body.submission === false
+              ? "Application successfully created!"
+              : "Application successfully submitted!"
+          )
+        );
+      })
+      .catch((error) => {
+        // Handle errors during the fetch
+        console.error("Error:", error);
+      });
+    setSelectedPage("overview");
+    setSubmitted(true);
+  };
+
+  const resubmitForm = (values) => {
+    console.log("the resubmit");
     let applicationData;
 
     if (grantId === 1) {
@@ -95,6 +242,7 @@ export default function ApplicationDetails({
         benefit_description: values.benefitDescription,
         future_vision_description: values.futureVisionDescription,
         agreement_info: values.agreementInfo,
+        form_step: values?.formStep,
       };
     }
 
@@ -110,18 +258,20 @@ export default function ApplicationDetails({
         trip_end_date: values.tripEndDate,
         requested_amount: values.requestedAmount,
         overall_amount: values.overallAmount,
+        form_step: values?.formStep,
       };
     }
 
     if (grantId === 3) {
       applicationData = {
-        recedency_name: values.recedency_name,
+        recedency_name: values.recedencyName,
         project_description: values.projectDescription,
-        project_country: values.destinationCountry,
+        project_country: values.projectCountry,
         recedency_start_date: values.recedencyStartDate,
         recedency_end_date: values.recedencyEndDate,
         requested_amount: values.requestedAmount,
         overall_amount: values.overallAmount,
+        form_step: values?.formStep,
       };
     }
 
@@ -136,6 +286,7 @@ export default function ApplicationDetails({
         overall_amount: values.overallAmount,
         event_date: values.eventDate,
         municipality: values.municipality,
+        form_step: values?.formStep,
       };
     }
 
@@ -153,51 +304,35 @@ export default function ApplicationDetails({
       zipCode: values.zipCode,
     };
 
-    fetch(`http://localhost:3005/user/${user.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    })
-      .then((response) => response.json())
-      .then(() =>
-        fetch(`http://localhost:3005/address/${user.address.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(addressData),
-        })
-      )
-      .then((response) => response.json())
-      .then(() =>
-        fetch(
-          `http://localhost:3005/application-form/call-stored-procedure/${user.id}/${grantId}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(applicationData),
-          }
-        )
-      )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setApplicationId(data);
-        setSelectedPage("overview");
-        setSubmitted(true);
+    dispatch(
+      editUser({
+        userId: user.id,
+        userBody: userData,
+        addressBody: addressData,
+        token: token,
       })
-      .catch((err) => {
-        console.error(err);
-        // Handle errors
-      });
+    );
+    dispatch(
+      resubmitApplication({
+        applicationId: applicationId,
+        application: applicationData,
+        token: token,
+      })
+    );
+
+    console.log("Action dispatched");
+
+    dispatch(
+      getApplication({
+        applicationId: applicationId,
+        token: token,
+      })
+    );
+    setSelectedPage("overview");
+    setSubmitted(true);
   };
 
-  const resubmitForm = (values) => {
-    console.log("the resubmit");
+  const onUpdateForm = (values) => {
     let applicationData;
 
     if (grantId === 1) {
@@ -207,6 +342,7 @@ export default function ApplicationDetails({
         benefit_description: values.benefitDescription,
         future_vision_description: values.futureVisionDescription,
         agreement_info: values.agreementInfo,
+        form_step: values?.formStep,
       };
     }
 
@@ -222,18 +358,20 @@ export default function ApplicationDetails({
         trip_end_date: values.tripEndDate,
         requested_amount: values.requestedAmount,
         overall_amount: values.overallAmount,
+        form_step: values?.formStep,
       };
     }
 
     if (grantId === 3) {
       applicationData = {
-        recedency_name: values.recedency_name,
+        recedency_name: values.recedencyName,
         project_description: values.projectDescription,
-        project_country: values.destinationCountry,
+        project_country: values.projectCountry,
         recedency_start_date: values.recedencyStartDate,
         recedency_end_date: values.recedencyEndDate,
         requested_amount: values.requestedAmount,
         overall_amount: values.overallAmount,
+        form_step: values?.formStep,
       };
     }
 
@@ -248,27 +386,152 @@ export default function ApplicationDetails({
         overall_amount: values.overallAmount,
         event_date: values.eventDate,
         municipality: values.municipality,
+        form_step: values?.formStep,
       };
     }
 
-    fetch(`http://localhost:3005/application-form/${applicationId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(applicationData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setSelectedPage("overview");
-        setSubmitted(true);
-        fetchApplicationForm();
+    const userData = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      phone: values.phone,
+      cpr: values.cpr,
+      email: values.email,
+    };
+
+    const addressData = {
+      street: values.street,
+      city: values.city,
+      zipCode: values.zipCode,
+    };
+
+    dispatch(
+      editUser({
+        userId: user.id,
+        userBody: userData,
+        addressBody: addressData,
+        token: token,
       })
-      .catch((err) => {
-        console.error(err);
-        // Handle errors
-      });
+    );
+    dispatch(
+      updateApplication({
+        applicationId: applicationId,
+        application: applicationData,
+        token: token,
+      })
+    );
+
+    console.log("Action dispatched again");
+
+    dispatch(
+      getApplication({
+        applicationId: applicationId,
+        token: token,
+      })
+    );
+    setSelectedPage("overview");
+    setSubmitted(true);
+  };
+
+  const onSaveApplication = (values) => {
+    console.log("the resubmit");
+    let applicationData;
+
+    if (grantId === 1) {
+      applicationData = {
+        project_title: values.projectTitle,
+        experience_description: values.experienceDescription,
+        benefit_description: values.benefitDescription,
+        future_vision_description: values.futureVisionDescription,
+        agreement_info: values.agreementInfo,
+        form_step: values?.formStep,
+      };
+    }
+
+    if (grantId === 2) {
+      applicationData = {
+        traveler_name_and_position: values.travelerNameAndPosition,
+        purpose_description: values.purposeDescription,
+        departure_country: values.departureCountry,
+        departure_city: values.departureCity,
+        destination_country: values.destinationCountry,
+        destination_city: values.destinationCity,
+        trip_start_date: values.tripStartDate,
+        trip_end_date: values.tripEndDate,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+        form_step: values?.formStep,
+      };
+    }
+
+    if (grantId === 3) {
+      console.log(values.projectDescription);
+      applicationData = {
+        recedency_name: values.recedencyName,
+        project_description: values.projectDescription,
+        project_country: values.projectCountry,
+        recedency_start_date: values.recedencyStartDate,
+        recedency_end_date: values.recedencyEndDate,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+        form_step: values?.formStep,
+      };
+    }
+
+    if (grantId === 4) {
+      applicationData = {
+        author_full: values.authorFullName,
+        event_location: values.eventLocation,
+        target_group: values.targetGroup,
+        purpose_description: values.purposeDescription,
+        is_catalog_used: values.isCatalogUsed,
+        requested_amount: values.requestedAmount,
+        overall_amount: values.overallAmount,
+        event_date: values.eventDate,
+        municipality: values.municipality,
+        form_step: values?.formStep,
+      };
+    }
+
+    const userData = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      phone: values.phone,
+      cpr: values.cpr,
+      email: values.email,
+    };
+
+    const addressData = {
+      street: values.street,
+      city: values.city,
+      zipCode: values.zipCode,
+    };
+
+    dispatch(
+      editUser({
+        userId: user.id,
+        userBody: userData,
+        addressBody: addressData,
+        token: token,
+      })
+    );
+    dispatch(
+      saveApplication({
+        applicationId: applicationId,
+        application: applicationData,
+        token: token,
+      })
+    );
+
+    console.log("Action dispatched");
+
+    dispatch(
+      getApplication({
+        applicationId: applicationId,
+        token: token,
+      })
+    );
+    setSelectedPage("overview");
+    setSubmitted(true);
   };
 
   const getGrantname = () => {
@@ -319,8 +582,13 @@ export default function ApplicationDetails({
 
   return (
     <div className="app-container">
-      <Navbar />
-      {user && <div>hello world</div>}
+      <Navbar
+        setOpenResubmitModal={setOpenResubmitModal}
+        setOpenSaveModal={setOpenSaveModal}
+        setOpenSubmitModal={setOpenSubmitModal}
+        hasFormChanged={hasFormChanged}
+        selectedPage={selectedPage}
+      />
       <div className="content-container">
         <div className="row">
           <p>Create application</p>
@@ -341,12 +609,31 @@ export default function ApplicationDetails({
               </p>
             </div>
           </div>
-          <DeleteButton />
+          {application && application.isActive === true ? <DeleteButton /> : ""}
         </div>
         <div className="overview-sec">
           <div className="tab-cards">
             <span
-              onClick={() => setSelectedPage("overview")}
+              onClick={() => {
+                if (applicationId && hasBeenSubmitted) {
+                  if (hasFormChanged) {
+                    setOpenResubmitModal(true);
+                  } else setSelectedPage("overview");
+                } else if (applicationId === undefined) {
+                  setOpenSaveModal(true);
+                } else if (!hasBeenSubmitted && hasFormChanged) {
+                  if (
+                    application?.activities &&
+                    application?.activities.length > 0
+                  ) {
+                    setOpenSubmitModal(true);
+                  } else {
+                    setOpenSaveModal(true);
+                  }
+                } else {
+                  setSelectedPage("overview");
+                }
+              }}
               className={`tab-card ${
                 selectedPage === "overview" ? "special-class" : ""
               }`}
@@ -357,7 +644,12 @@ export default function ApplicationDetails({
               <p>APPLICATION OVERVIEW</p>
             </span>
             <span
-              onClick={() => setSelectedPage("form")}
+              onClick={() => {
+                setOpenSaveModal(false);
+                setOpenResubmitModal(false);
+                setOpenSubmitModal(false);
+                setSelectedPage("form");
+              }}
               className={`tab-card ${
                 selectedPage === "form" ? "special-class" : ""
               }`}
@@ -403,6 +695,17 @@ export default function ApplicationDetails({
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
               applicationId={applicationId}
+              hasBeenSubmitted={hasBeenSubmitted}
+              openResubmitModal={openResubmitModal}
+              openSaveModal={openSaveModal}
+              setOpenSaveModal={setOpenSaveModal}
+              setOpenResubmitModal={setOpenResubmitModal}
+              setSelectedPage={setSelectedPage}
+              setHasFormChanged={setHasFormChanged}
+              onUpdateForm={onUpdateForm}
+              openSubmitModal={openSubmitModal}
+              setOpenSubmitModal={setOpenSubmitModal}
+              onSaveApplication={onSaveApplication}
               userDetails={user}
             />
           )}
@@ -413,6 +716,16 @@ export default function ApplicationDetails({
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
               applicationId={applicationId}
+              hasBeenSubmitted={hasBeenSubmitted}
+              setHasFormChanged={setHasFormChanged}
+              openResubmitModal={openResubmitModal}
+              openSaveModal={openSaveModal}
+              setOpenSaveModal={setOpenSaveModal}
+              setOpenResubmitModal={setOpenResubmitModal}
+              setSelectedPage={setSelectedPage}
+              openSubmitModal={openSubmitModal}
+              setOpenSubmitModal={setOpenSubmitModal}
+              onSaveApplication={onSaveApplication}
               userDetails={user}
             />
           )}
@@ -423,6 +736,16 @@ export default function ApplicationDetails({
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
               applicationId={applicationId}
+              hasBeenSubmitted={hasBeenSubmitted}
+              setHasFormChanged={setHasFormChanged}
+              openResubmitModal={openResubmitModal}
+              openSaveModal={openSaveModal}
+              setOpenSaveModal={setOpenSaveModal}
+              setOpenResubmitModal={setOpenResubmitModal}
+              setSelectedPage={setSelectedPage}
+              openSubmitModal={openSubmitModal}
+              setOpenSubmitModal={setOpenSubmitModal}
+              onSaveApplication={onSaveApplication}
               userDetails={user}
             />
           )}
@@ -433,6 +756,16 @@ export default function ApplicationDetails({
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
               applicationId={applicationId}
+              hasBeenSubmitted={hasBeenSubmitted}
+              setHasFormChanged={setHasFormChanged}
+              openResubmitModal={openResubmitModal}
+              openSaveModal={openSaveModal}
+              setOpenSaveModal={setOpenSaveModal}
+              setOpenResubmitModal={setOpenResubmitModal}
+              setSelectedPage={setSelectedPage}
+              openSubmitModal={openSubmitModal}
+              setOpenSubmitModal={setOpenSubmitModal}
+              onSaveApplication={onSaveApplication}
               userDetails={user}
             />
           )}
@@ -493,19 +826,52 @@ export default function ApplicationDetails({
               fontWeight: "500",
             }}
           >
-            Application successfully submitted!
+            {popUpMsg}
           </h3>
-          <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
-            The application for {grantName && grantName} has been submitted. It
-            may take us a few days to review your application. If you have any
-            questions about the process or your application contact the SLSK
-            Portal.
-          </p>
+          {popUpMsg === "Application successfully submitted!" && (
+            <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
+              The application for {grantName && grantName} has been submitted.
+              It may take us a few days to review your application. If you have
+              any questions about the process or your application contact the
+              SLSK Portal.
+            </p>
+          )}
+          {popUpMsg === "Application successfully resubmitted!" && (
+            <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
+              The application for {grantName && grantName} has been resubmitted.
+              The application processing time will be prolonged due to the
+              resubmission. The processing may take up to 14days, but if you
+              have any further questions, please contact the SLKS portal.
+            </p>
+          )}
+          {popUpMsg === "Your progress has been saved!" && (
+            <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
+              The changes in the form for the {grantName && grantName}{" "}
+              application have been saved. The application needs to be submitted
+              by {deadline}.
+            </p>
+          )}
+          {popUpMsg === "The application has now been archived." && (
+            <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
+              The application for {grantName && grantName} has been made
+              inactive and is now archived in our database. The application will
+              be deleted and all of the information will be removed
+              automatically in 6 months.
+            </p>
+          )}
+          {popUpMsg === "Application successfully created!" && (
+            <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
+              The application for {grantName && grantName} has now been created.
+              The application needs to be filled out and submitted by {deadline}
+              .
+            </p>
+          )}
           <button
-            style={{ width: "10rem" }}
+            style={{ backgroundColor: "#C0002A", color: "white" }}
+            className="popup-btn"
             onClick={() => setSubmitted(false)}
           >
-            Close X
+            X Close
           </button>
         </div>
       </Modal>

@@ -8,7 +8,13 @@ import LoginForm from "../components/LoginForm";
 const Login = () => {
   return (
     <div className="app-container">
-      <Navbar />
+      <Navbar
+        setOpenResubmitModal={undefined}
+        setOpenSaveModal={undefined}
+        setOpenSubmitModal={undefined}
+        hasFormChanged={undefined}
+        selectedPage={undefined}
+      />
 
       <div className="content-container">
         <LoginForm />

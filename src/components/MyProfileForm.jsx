@@ -194,7 +194,7 @@ export default function MyProfileForm({ onSubmitForm, userDetails }) {
         </div>
       </div>
       <div>
-        <form onSubmit={formik.handleSubmit} className="form">
+        <form onSubmit={formik.handleSubmit} className="profileForm">
           <div className="form-row">
             <div className="form-sec">
               <CssTextField
