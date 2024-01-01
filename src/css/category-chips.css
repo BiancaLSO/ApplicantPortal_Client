@@ -1,0 +1,25 @@
+.category-chips {
+  margin-bottom: 60px;
+}
+
+.chip {
+  background-color: white;
+  color: black;
+  padding: 8px 16px;
+  margin-left: 15px;
+  border: 1px solid;
+  border-radius: 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.chip.selected {
+  background-color: #c0002a;
+  color: white;
+}
+
+/* .chip:hover:not(.selected) {
+  background-color: #c0002a;
+  color: white;
+} */

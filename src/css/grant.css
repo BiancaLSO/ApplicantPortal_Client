@@ -1,0 +1,63 @@
+.grant-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #efefe9;
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.grant-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.requirements-link {
+  color: #c0002a;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.apply-button {
+  background-color: #c0002a;
+  color: white;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 194px;
+}
+
+.active-until {
+  font-size: 11px;
+  margin-top: 8px;
+  color: #4f4e50;
+  padding-right: 40px;
+}
+
+.grant-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 50%;
+}
+
+.grant-right {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 50%;
+  justify-items: center;
+  padding: 30px 70px 20px 10px;
+}
+
+.grant-card:hover {
+  border: 2px solid #c0002a;
+}

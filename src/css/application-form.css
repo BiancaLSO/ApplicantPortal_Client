@@ -1,0 +1,95 @@
+.form-row {
+  display: flex;
+  flex-direction: row;
+  gap: 5rem;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.first-step-align {
+  align-items: center;
+}
+
+.form {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3rem;
+  width: 90rem;
+  height: max-content;
+  background-color: #efefe9;
+  border-radius: 10px;
+}
+
+.step-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 4rem 2rem 4rem;
+}
+
+.justify {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.btn {
+  align-items: center;
+  color: white;
+  height: 4rem;
+  font-family: "Red Hat Display";
+  font-size: 1.2rem;
+  font-weight: 600;
+  justify-content: center;
+  border-radius: 10px;
+  border-style: none;
+  cursor: pointer;
+}
+
+.next {
+  width: 10rem;
+}
+
+.btn:enabled {
+  background-color: #c0002a;
+}
+
+.btn:disabled {
+  background-color: #2b2b2b; /* Change the background color */
+  color: #666; /* Change the text color */
+  cursor: not-allowed; /* Change the cursor */
+  /* Add any other styles for the disabled state */
+}
+
+.previous {
+  width: 15rem;
+}
+
+.submit {
+  width: 15rem;
+}
+
+.sec-title {
+  font-family: "Red Hat Display";
+  font-size: 2.2rem;
+  color: #2b2b2b;
+}
+
+.sec-subtitle {
+  margin-top: -1.9rem;
+  font-size: 1.3rem;
+  color: #2b2b2b;
+}
+
+.form-div {
+  margin-top: 5rem;
+}
+
+.summary-row {
+  display: flex;
+  flex-direction: row;
+  gap: 5rem;
+  justify-content: center;
+  margin-top: -2rem;
+  margin-bottom: 2rem;
+}

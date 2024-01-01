@@ -1,6 +1,54 @@
 .navbar {
-  grid-column: span 12;
-  height: 1fr; /* Adjust height as needed */
-  background-color: #333; /* Example background color */
-  color: white; /* Example text color */
+  grid-column: 1 / -1;
+  height: 1fr;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px 0px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  img {
+    width: 250px;
+    height: 100px;
+  }
+}
+
+.navbar-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+  padding-top: 25px;
+}
+
+.navbar-menu a {
+  text-decoration: none;
+  padding: 10px 10px 5px 10px;
+  margin: 0 10px;
+  border-bottom: 2px solid transparent;
+  color: black;
+}
+
+.navbar-menu a:hover {
+  border-bottom-color: #c0002a;
+}
+
+.navbar-menu a.selected {
+  border-bottom-color: #c0002a;
+}
+
+.logout-icon-container {
+  width: 45px;
+  height: 45px;
+  background-color: #c0002a;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-menu a:last-child:hover {
+  border-bottom-color: transparent;
 }
