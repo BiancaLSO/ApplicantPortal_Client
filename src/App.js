@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 import { getUserData, login } from "./redux/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Login from "./pages/login";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ function App() {
   useEffect(() => {
     // Example usage:
     // 1. Login
-    dispatch(login({ username: "sandra.k", password: "123456789" }));
+    dispatch(login({ username: "lukasf", password: "123456789" }));
     console.log(credentialsId); // Add this line
   }, [dispatch]);
 
@@ -51,7 +52,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/applications" />} />
         <Route path="/auth/signup" element={<SignUp />} />
-        <Route path="/auth/login" element={<LoginForm />} />
+        <Route path="/auth/login" element={<Login />} />
         <Route path="/applications" element={<MyApplications />} />
         <Route path="/grants" element={<Grants />} />
         <Route
