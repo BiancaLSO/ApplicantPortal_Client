@@ -8,7 +8,7 @@ import UsersAPI from "./authAPIs";
 
 // Define your initial state
 const initialState = {
-  token: null,
+  token: undefined,
   credentialsId: null,
   error: null,
 };
@@ -92,7 +92,7 @@ const authSlice = createSlice({
     });
 
     builder.addCase(login.fulfilled, (state, action) => {
-      state.token = action.payload.token;
+      state.token = action.payload.access_token;
       state.credentialsId = action.payload.id;
       console.log("the state", state.credentialsId);
       state.error = null;

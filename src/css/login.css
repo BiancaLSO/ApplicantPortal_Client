@@ -3,8 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px 30px 40px;
-  width: 69%;
+  padding: 20px 0px 20px 0px;
 }
 
 .tabs {
@@ -46,8 +45,6 @@
 
 .main-container {
   display: flex;
-  width: 69%;
-  padding: 0px 40px 0px 40px;
   align-items: start;
   gap: 40px;
 }
@@ -190,7 +187,6 @@
 .login-form {
   display: flex;
   flex-direction: column;
-
   background-color: #efefe9;
   border-radius: 10px;
   box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
@@ -199,8 +195,9 @@
 .mitid-form {
   display: flex;
   flex-direction: column;
-  height: max-content;
-  width: 20rem;
+  background-color: #efefe9;
+  border-radius: 10px;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
 }
 
 .form-title {
@@ -208,14 +205,13 @@
   font-size: 2rem;
   font-weight: 500;
   color: #2b2b2b;
-  margin-left: 2.5rem;
+  margin-left: 2rem;
   margin-top: 1rem;
 }
 
 .mitid-fields {
   display: flex;
   flex-direction: row;
-  align-items: baseline;
 
   margin-left: 0.5rem;
 }
@@ -235,16 +231,16 @@
 .form-button-div {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 3rem;
   margin-bottom: 2rem;
 }
 
-.button {
+.login-button {
   align-items: center;
   color: white;
   background-color: #c0002a;
   height: 3rem;
-  width: 21rem;
+  width: 15rem;
   font-family: "Red Hat Display";
   font-size: 1.2rem;
   font-weight: 600;

@@ -40,14 +40,20 @@ const CssTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export default function LoginForm({ onSubmitForm, userDetails }) {
+export default function LoginForm({ onSubmitLoginForm, userDetails }) {
+  const [activeTab, setActiveTab] = useState("User");
+
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName);
+  };
+
   const formik = useFormik({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email").required("Required"),
+      username: Yup.string().required("Required"),
       password: Yup.string()
         .required("No password provided.")
         .min(8, "Password is too short - should be 8 chars minimum.")
@@ -56,7 +62,7 @@ export default function LoginForm({ onSubmitForm, userDetails }) {
 
     onSubmit: (values, { resetForm }) => {
       console.log("hello", values);
-      onSubmitForm(values);
+      onSubmitLoginForm(values);
       resetForm();
       console.log(values);
     },
@@ -70,18 +76,21 @@ export default function LoginForm({ onSubmitForm, userDetails }) {
             <h2 className="form-title">Login</h2>
             <div>
               <CssTextField
-                id="email"
-                name="email"
-                label="Email"
+                id="username"
+                name="username"
+                label="Username"
                 variant="outlined"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.email}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
+                value={formik.values.username}
+                error={
+                  formik.touched.username && Boolean(formik.errors.username)
+                }
+                helperText={formik.touched.username && formik.errors.username}
                 style={{
                   marginLeft: "2rem",
-                  width: "25rem",
+                  marginRight: "2rem",
+                  width: "22rem",
                 }}
               />
             </div>
@@ -91,6 +100,7 @@ export default function LoginForm({ onSubmitForm, userDetails }) {
                 name="password"
                 label="Password"
                 variant="outlined"
+                type="password"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
@@ -100,14 +110,14 @@ export default function LoginForm({ onSubmitForm, userDetails }) {
                 helperText={formik.touched.password && formik.errors.password}
                 style={{
                   marginLeft: "2rem",
-                  width: "25rem",
-                  marginBottom: "2rem",
+                  width: "22rem",
+                  marginBottom: "3rem",
                 }}
               />
             </div>
           </div>
           <div className="form-button-div">
-            <button className="button" type="submit">
+            <button className="login-button" type="submit">
               LOG IN
             </button>
           </div>

@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
-import LoginForm from "../components/LoginForm";
 
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import "../css/layout.css"; // Import your custom styles
 import "../css/login.css"; // Import your custom styles
@@ -12,22 +11,55 @@ import PhoneIcon from "../images/contact-us.svg";
 import LogoIcon from "../images/logo2.svg";
 
 import { login } from "../redux/auth/authSlice";
+import { signup } from "../redux/auth/authSlice";
+
+import LoginForm from "../components/LoginForm";
 import SignUp from "../components/SignUpForm";
+
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [selectedPage, setSelectedPage] = useState("MitID");
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.token);
+  const [selectedPage, setSelectedPage] = useState("User");
 
   const handleTabClick = (tabName) => {
+    console.log(tabName);
     setSelectedPage(tabName);
   };
 
-  const onSubmitForm = (values) => {
-    dispatch(login({ username: values.email, password: values.password }));
+  const onSubmitLoginForm = (values) => {
+    dispatch(login({ username: values.username, password: values.password }));
+  };
+
+  useEffect(() => {
+    console.log("token", token);
+    if (token) {
+      navigate("/applications");
+    }
+  }, [token]);
+
+  const onSubmitSignUpForm = (values) => {
+    dispatch(
+      signup({
+        username: values.username,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        cpr: values.cpr,
+        phone: values.phone,
+        email: values.email,
+        street: values.street,
+        city: values.city,
+        zipCode: values.zipCode,
+      })
+    );
   };
 
   return (
     <div className="app-container">
+      <Navbar />
       <div className="content-container">
         <div className="top-container">
           <div className="tabs">
@@ -61,11 +93,7 @@ const Login = () => {
           </div>
         </div>
 
-        <div
-          className={`main-container ${
-            selectedPage === "MitID" ? "start" : "space-between"
-          }`}
-        >
+        <div className="main-container">
           <div className="address-contact-div">
             <div className="address-div">
               <img
@@ -107,8 +135,12 @@ const Login = () => {
               </div>
             </div>
           </div>
-          {selectedPage === "User" && <LoginForm onSubmitForm={onSubmitForm} />}
-          {selectedPage === "MitID" && <SignUp />}
+          {selectedPage === "User" && (
+            <LoginForm onSubmitLoginForm={onSubmitLoginForm} />
+          )}
+          {selectedPage === "MitID" && (
+            <SignUp onSubmitSignUpForm={onSubmitSignUpForm} />
+          )}
         </div>
       </div>
     </div>
