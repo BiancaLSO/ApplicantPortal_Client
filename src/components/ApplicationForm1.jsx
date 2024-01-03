@@ -856,7 +856,7 @@ export default function ApplicationForm1({
           <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
             We can see you have made some changes to your saved applications,
             but haven't submitted the form. If you continue back to the
-            'Overview' of your application without aving or submitting, all of
+            'Overview' of your application without saving or submitting, all of
             your changes will be descarded. Would you like to save current
             changes or go back to the overview?
           </p>

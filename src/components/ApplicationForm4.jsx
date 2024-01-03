@@ -58,10 +58,10 @@ export default function ApplicationForm4({
   openResubmitModal,
   setOpenSaveModal,
   setOpenResubmitModal,
-  setOpenSubmitModal,
-  openSubmitModal,
   setSelectedPage,
   onUpdateForm,
+  openSubmitModal,
+  setOpenSubmitModal,
   onSaveApplication,
   userDetails,
 }) {

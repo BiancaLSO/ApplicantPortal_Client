@@ -55,10 +55,10 @@ export default function ApplicationForm3({
   openResubmitModal,
   setOpenSaveModal,
   setOpenResubmitModal,
-  openSubmitModal,
-  setOpenSubmitModal,
   setSelectedPage,
   onUpdateForm,
+  openSubmitModal,
+  setOpenSubmitModal,
   onSaveApplication,
   userDetails,
 }) {

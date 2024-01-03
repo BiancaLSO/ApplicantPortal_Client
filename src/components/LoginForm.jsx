@@ -64,7 +64,6 @@ export default function LoginForm({ onSubmitForm }) {
         .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
     }),
     onsubmit: (values, { resetForm }) => {
-      onSubmitForm(values);
       resetForm();
       console.log(values);
     },
@@ -228,7 +227,7 @@ export default function LoginForm({ onSubmitForm }) {
                 marginBottom: "3 rem",
               }}
             >
-              <button className="btn login" type="login">
+              <button className="btn login" type="submit">
                 LOG IN
               </button>
             </div>
