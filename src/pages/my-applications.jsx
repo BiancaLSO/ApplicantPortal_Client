@@ -7,17 +7,17 @@ import SearchBarApplication from "../components/SearchBarApplication";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import ApplicationTable from "../components/ApplicationTable";
 
-const headers = [
+const data = [
   { name: "JournalNr.", key: "note" },
   { name: "Application Name", key: "name" },
   { name: "Grant", key: "date" },
   { name: "Status", key: "status" },
   { name: "Last Activity", key: "attachments" },
 ];
-let itemsPerPageOptions = [5, 10, 20];
 
-const MyApplications = ({ data }) => {
+const MyApplications = () => {
   return (
     <div className="app-container">
       <Navbar />
@@ -42,7 +42,7 @@ const MyApplications = ({ data }) => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  // value={active}
+                  defaultValue={true}
                   // onChange={handleChange}
                 >
                   <MenuItem value={true}>Active</MenuItem>
@@ -52,6 +52,7 @@ const MyApplications = ({ data }) => {
             </div>
           </div>
         </div>
+        <ApplicationTable data={data} />
       </div>
       <Footer />
     </div>
