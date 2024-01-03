@@ -32,13 +32,10 @@ export const signup = createAsyncThunk(
 
 export const getUserData = createAsyncThunk(
   "users/getUserData",
-  async (credentialsId, { dispatch }) => {
+  async (credentialsId) => {
     try {
       // Call your API to fetch user data using userId
       const user = await UsersAPI.getUser(credentialsId);
-
-      // Dispatch an action to store the user data in the Redux store
-      dispatch(setUser(user));
 
       // Return the user data
       return user;
@@ -72,18 +69,68 @@ export const login = createAsyncThunk(
   }
 );
 
+export const getUserDetails = createAsyncThunk("users/id", async (userId) => {
+  try {
+    // Call your login API here and return the response
+    const response = await UsersAPI.getUserDetails(userId);
+
+    // Return both the token and credentialsId
+    return response;
+  } catch (error) {
+    // Handle errors here
+    throw new Error("Fetching user details failed");
+  }
+});
+
+export const editUser = createAsyncThunk(
+  "users/edit",
+  async ({ userId, userBody, addressBody }, { dispatch }) => {
+    try {
+      console.log("hi there");
+      // Call your login API here and return the response
+      const response = await UsersAPI.editUserDetails(userId, userBody);
+      console.log(response.address);
+      // Dispatch another action after updating the state
+      dispatch(
+        editAddress({
+          userId: response.id,
+          addressId: response.address.id,
+          addressBody: addressBody,
+        })
+      );
+
+      // Return both the token and credentialsId
+      return response;
+    } catch (error) {
+      // Handle errors here
+      throw new Error("Editing user failed");
+    }
+  }
+);
+
+export const editAddress = createAsyncThunk(
+  "users/address",
+  async ({ userId, addressId, addressBody }, { dispatch }) => {
+    try {
+      // Call your API to fetch user data using userId
+      const response = await UsersAPI.editUserAddress(addressId, addressBody);
+
+      dispatch(getUserDetails(userId));
+
+      return response;
+    } catch (error) {
+      // Handle errors here
+      throw new Error("Error editing user address data");
+    }
+  }
+);
 // Thunk to fetch user data based on userId
 
 // Create a slice to manage the state
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    setUser: (state, action) => {
-      state.user = action.payload;
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(signup.fulfilled, (state, action) => {
@@ -103,6 +150,11 @@ const authSlice = createSlice({
       state.error = null;
     });
 
+    builder.addCase(getUserDetails.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.error = null;
+    });
+
     builder.addCase(signup.rejected, (state, action) => {
       state.error = "Signup failed";
     });
@@ -114,9 +166,12 @@ const authSlice = createSlice({
     builder.addCase(getUserData.rejected, (state, action) => {
       state.error = "Error fetching user data";
     });
+
+    builder.addCase(getUserDetails.rejected, (state, action) => {
+      state.error = "Error fetching user deyails";
+    });
   },
 });
 
 export const { reducer: authReducer, actions } = authSlice;
-export const { setUser } = actions;
 export default authSlice.reducer;

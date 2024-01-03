@@ -2,9 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "../css/application-form.css";
-import { Checkbox, FormControlLabel, TextField, styled } from "@mui/material";
+import {
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  styled,
+  DatePicker,
+  RadioGroup,
+  Radio,
+} from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDetails } from "../redux/auth/authSlice";
 import Modal from "react-modal";
-import { useSelector } from "react-redux";
+import moment from "moment";
 
 const CssTextField = styled(TextField)(({ theme }) => ({
   "& label.Mui-focused": {
@@ -36,7 +46,7 @@ const CssTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export default function ApplicationForm1({
+export default function ApplicationForm4({
   grant,
   onSubmitForm,
   onResubmitForm,
@@ -71,11 +81,15 @@ export default function ApplicationForm1({
       city: "",
       zipCode: "",
 
-      projectTitle: "",
-      experienceDescription: "",
-      benefitDescription: "",
-      futureVisionDescription: "",
-      agreementInfo: false,
+      authorFullName: "",
+      eventLocation: "",
+      targetGroup: "",
+      purposeDescription: "",
+      isCatalogUsed: "",
+      requestedAmount: 0,
+      overallAmount: 0,
+      eventDate: moment().format("YYYY-MM-DD"),
+      municipality: "",
       formStep: currentStep,
     },
     validationSchema: Yup.object({
@@ -109,26 +123,53 @@ export default function ApplicationForm1({
         .matches(/^[0-9]{4}$/, "Must be a valid Danish zip code")
         .required("Required"),
 
-      projectTitle: Yup.string()
+      authorFullName: Yup.string()
         .required("Required")
         .min(10, "Must be at least 10 characters")
         .max(100, "Must be at most 100 characters"),
-      experienceDescription: Yup.string()
+
+      eventLocation: Yup.string()
+        .required("Required")
+        .min(10, "Must be at least 10 characters")
+        .max(100, "Must be at most 100 characters"),
+
+      targetGroup: Yup.string()
+        .required("Required")
+        .min(100, "Must be at least 10 characters")
+        .max(1000, "Must be at most 100 characters"),
+
+      purposeDescription: Yup.string()
         .required("Required")
         .min(100, "Must be at least 100 characters")
         .max(1000, "Must be at most 1000 characters"),
-      benefitDescription: Yup.string()
+
+      isCatalogUsed: Yup.boolean().required("Please select one of the options"),
+
+      eventDate: Yup.date()
         .required("Required")
-        .min(100, "Must be at least 100 characters")
-        .max(1000, "Must be at most 1000 characters"),
-      futureVisionDescription: Yup.string()
+        .min(
+          new Date("2023-01-01"),
+          "Date must be after or on January 01, 2023"
+        )
+        .max(
+          new Date("2023-12-31"),
+          "Date must be before or on December 31, 2023"
+        ),
+
+      requestedAmount: Yup.number()
         .required("Required")
-        .min(100, "Must be at least 100 characters")
-        .max(1000, "Must be at most 1000 characters"),
-      agreementInfo: Yup.boolean().oneOf(
-        [true],
-        "You must accept the terms and conditions"
-      ),
+        .min(0, "Must be greater than or equal to 0")
+        .integer("Must be a whole number"),
+
+      overallAmount: Yup.number()
+        .required("Required")
+        .min(0, "Must be greater than or equal to 0")
+        .integer("Must be a whole number"),
+
+      municipality: Yup.string()
+        .required("Required")
+        .min(10, "Must be at least 10 characters")
+        .max(100, "Must be at most 100 characters"),
     }),
     onSubmit: (values, { resetForm }) => {
       if (hasBeenSubmitted) {
@@ -167,19 +208,26 @@ export default function ApplicationForm1({
       formik.initialValues.zipCode = userDetails.address.zipCode;
 
     if (applicationDetails) {
-      if (applicationDetails.project_title)
-        formik.initialValues.projectTitle = applicationDetails.project_title;
-      if (applicationDetails.experience_description)
-        formik.initialValues.experienceDescription =
-          applicationDetails.experience_description;
-      if (applicationDetails.benefit_description)
-        formik.initialValues.benefitDescription =
-          applicationDetails.benefit_description;
-      if (applicationDetails.future_vision_description)
-        formik.initialValues.futureVisionDescription =
-          applicationDetails.future_vision_description;
-      if (applicationDetails.agreement_info)
-        formik.initialValues.agreementInfo = applicationDetails.agreement_info;
+      if (applicationDetails.author_full)
+        formik.initialValues.authorFullName = applicationDetails.author_full;
+      if (applicationDetails.purpose_description)
+        formik.initialValues.purposeDescription =
+          applicationDetails.purpose_description;
+      if (applicationDetails.event_location)
+        formik.initialValues.eventLocation = applicationDetails.event_location;
+      if (applicationDetails.target_group)
+        formik.initialValues.targetGroup = applicationDetails.target_group;
+      if (applicationDetails.is_catalog_used)
+        formik.initialValues.isCatalogUsed = applicationDetails.is_catalog_used;
+      if (applicationDetails.event_date)
+        formik.initialValues.eventDate = applicationDetails.event_date;
+      if (applicationDetails.requested_amount)
+        formik.initialValues.requestedAmount =
+          applicationDetails.requested_amount;
+      if (applicationDetails.overall_amount)
+        formik.initialValues.overallAmount = applicationDetails.overall_amount;
+      if (applicationDetails.municipality)
+        formik.initialValues.municipality = applicationDetails.municipality;
     }
   }
 
@@ -192,13 +240,16 @@ export default function ApplicationForm1({
   };
 
   const isFormChanged =
-    formik.values.projectTitle !== applicationDetails?.project_title ||
-    formik.values.experienceDescription !==
-      applicationDetails?.experience_description ||
-    formik.values.benefitDescription !==
-      applicationDetails?.benefit_description ||
-    formik.values.futureVisionDescription !==
-      applicationDetails?.future_vision_description;
+    formik.values.authorFullName !== applicationDetails?.author_full ||
+    formik.values.eventLocation !== applicationDetails?.event_location ||
+    formik.values.targetGroup !== applicationDetails?.target_group ||
+    formik.values.purposeDescription !==
+      applicationDetails?.purpose_description ||
+    formik.values.isCatalogUsed !== applicationDetails?.is_catalog_used ||
+    formik.values.requestedAmount !== applicationDetails?.requested_amount ||
+    formik.values.overallAmount !== applicationDetails?.overall_amount ||
+    formik.values.eventDate !== applicationDetails?.event_date ||
+    formik.values.municipality !== applicationDetails?.municipality;
 
   useEffect(() => {
     setHasFormChanged(isFormChanged);
@@ -211,10 +262,11 @@ export default function ApplicationForm1({
       application.activities?.length > 0
     ) {
       if (
-        values.projectTitle.length > 0 ||
-        values.experienceDescription.length > 0 ||
-        values.benefitDescription.length > 0 ||
-        values.futureVisionDescription.length > 0
+        values.authorFullName.length > 0 ||
+        values.eventLocation.length > 0 ||
+        values.targetGroup.length > 0 ||
+        values.purposeDescription.length > 0 ||
+        values.municipality.length > 0
       ) {
         values.formStep = 2;
       } else {
@@ -227,10 +279,11 @@ export default function ApplicationForm1({
       onSaveApplication(values);
     } else {
       if (
-        values.projectTitle.length > 0 ||
-        values.experienceDescription.length > 0 ||
-        values.benefitDescription.length > 0 ||
-        values.futureVisionDescription.length > 0
+        values.authorFullName.length > 0 ||
+        values.eventLocation.length > 0 ||
+        values.targetGroup.length > 0 ||
+        values.purposeDescription.length > 0 ||
+        values.municipality.length > 0
       ) {
         values.formStep = 2;
       } else {
@@ -385,123 +438,217 @@ export default function ApplicationForm1({
             <div className="form-row">
               <div className="">
                 <CssTextField
-                  id="projectTitle"
-                  name="projectTitle"
-                  label="Project title"
+                  id="authorFullName"
+                  name="authorFullName"
+                  label="Author's full name"
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.projectTitle}
+                  value={formik.values.authorFullName}
                   error={
-                    formik.touched.projectTitle &&
-                    Boolean(formik.errors.projectTitle)
+                    formik.touched.authorFullName &&
+                    Boolean(formik.errors.authorFullName)
                   }
                   helperText={
-                    formik.touched.projectTitle && formik.errors.projectTitle
+                    formik.touched.authorFullName &&
+                    formik.errors.authorFullName
                   }
                   style={{ margin: "1rem", width: "35rem" }}
                 />
 
                 <CssTextField
-                  id="experienceDescription"
-                  name="experienceDescription"
-                  label="Experience description"
+                  id="targetGroup"
+                  name="targetGroup"
+                  label="Target audience & event description"
                   multiline
-                  rows={7}
+                  rows={4}
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.experienceDescription}
+                  value={formik.values.targetGroup}
                   error={
-                    formik.touched.experienceDescription &&
-                    Boolean(formik.errors.experienceDescription)
+                    formik.touched.targetGroup &&
+                    Boolean(formik.errors.targetGroup)
                   }
                   helperText={
-                    formik.touched.experienceDescription &&
-                    formik.errors.experienceDescription
+                    formik.touched.targetGroup && formik.errors.targetGroup
                   }
                   style={{ margin: "1rem", width: "35rem" }}
                 />
+
+                <CssTextField
+                  id="purposeDescription"
+                  name="purposeDescription"
+                  label="Purpose description"
+                  multiline
+                  rows={4}
+                  variant="outlined"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.purposeDescription}
+                  error={
+                    formik.touched.purposeDescription &&
+                    Boolean(formik.errors.purposeDescription)
+                  }
+                  helperText={
+                    formik.touched.purposeDescription &&
+                    formik.errors.purposeDescription
+                  }
+                  style={{ margin: "1rem", width: "35rem" }}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    margin: "1rem",
+                    width: "35rem",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <label style={{ width: "70%" }} htmlFor="isCatalogUsed">
+                    Have you made use of the Statens Kunstfonds' author catalog
+                    (kunst.dk/forfatter) when working on your application?
+                  </label>
+                  <RadioGroup
+                    id="isCatalogUsed"
+                    name="isCatalogUsed"
+                    value={formik.values.isCatalogUsed}
+                    onChange={formik.handleChange}
+                  >
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio style={{ color: "#c0002a" }} />}
+                      label="Yes"
+                    />
+                    <FormControlLabel
+                      value={false}
+                      control={<Radio style={{ color: "#c0002a" }} />}
+                      label="No"
+                    />
+                  </RadioGroup>
+                </div>
+
+                {formik.errors.isCatalogUsed && (
+                  <div style={{ color: "red" }}>
+                    {formik.errors.isCatalogUsed}
+                  </div>
+                )}
               </div>
 
               <div className="justify">
                 <CssTextField
-                  id="benefitDescription"
-                  name="benefitDescription"
-                  label="Benefit description"
-                  multiline
-                  rows={4}
+                  id="eventLocation"
+                  name="eventLocation"
+                  label="Event location"
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.benefitDescription}
+                  value={formik.values.eventLocation}
                   error={
-                    formik.touched.benefitDescription &&
-                    Boolean(formik.errors.benefitDescription)
+                    formik.touched.eventLocation &&
+                    Boolean(formik.errors.eventLocation)
                   }
                   helperText={
-                    formik.touched.benefitDescription &&
-                    formik.errors.benefitDescription
+                    formik.touched.eventLocation && formik.errors.eventLocation
                   }
                   style={{ margin: "1rem", width: "35rem" }}
                 />
-
                 <CssTextField
-                  id="futureVisionDescription"
-                  name="futureVisionDescription"
-                  label="Future vision description"
-                  multiline
-                  rows={4}
+                  id="requestedAmount"
+                  name="requestedAmount"
+                  label="Requested amount"
+                  type="number" // Add this line
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.futureVisionDescription}
+                  value={formik.values.requestedAmount}
                   error={
-                    formik.touched.futureVisionDescription &&
-                    Boolean(formik.errors.futureVisionDescription)
+                    formik.touched.requestedAmount &&
+                    Boolean(formik.errors.requestedAmount)
                   }
                   helperText={
-                    formik.touched.futureVisionDescription &&
-                    formik.errors.futureVisionDescription
+                    formik.touched.requestedAmount &&
+                    formik.errors.requestedAmount
                   }
                   style={{
                     margin: "1rem",
                     width: "35rem",
                   }}
+                  inputProps={{
+                    step: 1, // Add this line to enforce whole numbers
+                  }}
+                />
+
+                <CssTextField
+                  id="overallAmount"
+                  name="overallAmount"
+                  label="Overall amount"
+                  type="number" // Add this line
+                  variant="outlined"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.overallAmount}
+                  error={
+                    formik.touched.overallAmount &&
+                    Boolean(formik.errors.overallAmount)
+                  }
+                  helperText={
+                    formik.touched.overallAmount && formik.errors.overallAmount
+                  }
+                  style={{
+                    margin: "1rem",
+                    width: "35rem",
+                  }}
+                  inputProps={{
+                    step: 1, // Add this line to enforce whole numbers
+                  }}
+                />
+
+                <CssTextField
+                  id="eventDate"
+                  name="eventDate"
+                  label="Event date"
+                  type="date"
+                  variant="outlined"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.eventDate}
+                  error={
+                    formik.touched.eventDate && Boolean(formik.errors.eventDate)
+                  }
+                  helperText={
+                    formik.touched.eventDate && formik.errors.eventDate
+                  }
+                  inputProps={{
+                    min: new Date("2023-01-01").toISOString().split("T")[0], // Set the minimum date
+                    max: "2023-12-31", // Set the maximum date
+                  }}
+                  style={{ margin: "1rem", width: "35rem" }}
+                />
+
+                <CssTextField
+                  id="municipality"
+                  name="municipality"
+                  label="Municipality "
+                  variant="outlined"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.municipality}
+                  error={
+                    formik.touched.municipality &&
+                    Boolean(formik.errors.municipality)
+                  }
+                  helperText={
+                    formik.touched.municipality && formik.errors.municipality
+                  }
+                  style={{ margin: "1rem", width: "35rem" }}
                 />
               </div>
             </div>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  id="agreementInfo"
-                  name="agreementInfo"
-                  checked={formik.values.agreementInfo}
-                  onChange={formik.handleChange}
-                  helperText={
-                    formik.touched.agreementInfo && formik.errors.agreementInfo
-                  }
-                  error={
-                    formik.touched.agreementInfo &&
-                    Boolean(formik.errors.agreementInfo)
-                  }
-                  style={{
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    color: "#c0002a",
-                  }}
-                />
-              }
-              style={{
-                marginLeft: "6rem",
-                marginRight: "4rem",
-                marginTop: "-2rem",
-                padding: "2rem 0 2rem 0",
-              }}
-              label="I agree that the information I have provided in my application is
-   shared with Arts Council England, Arts Council Norway and Julies
-   Bicycle. CPR will not be shared.(Required *)"
-            />
           </div>
         )}
 
@@ -570,7 +717,9 @@ export default function ApplicationForm1({
                   Project information
                 </h4>
                 <div>
-                  <p style={{ fontWeight: "600" }}>Project title:</p>
+                  <p style={{ fontWeight: "600" }}>
+                    Author's/ Illustrator's full name:
+                  </p>
                   <p
                     style={{
                       width: "50rem",
@@ -578,12 +727,12 @@ export default function ApplicationForm1({
                       marginTop: "-0.7rem",
                     }}
                   >
-                    {formik.values.projectTitle}
+                    {formik.values.authorFullName}
                   </p>
                 </div>
                 <div>
                   <p style={{ fontWeight: "600" }}>
-                    Description of your experience:
+                    Description of the target audience & the event:
                   </p>
                   <p
                     style={{
@@ -592,12 +741,12 @@ export default function ApplicationForm1({
                       marginTop: "-0.7rem",
                     }}
                   >
-                    {formik.values.experienceDescription}
+                    {formik.values.targetGroup}
                   </p>
                 </div>
                 <div>
                   <p style={{ fontWeight: "600" }}>
-                    Description of the project benefits:
+                    Description of the project's purpose:
                   </p>
                   <p
                     style={{
@@ -606,12 +755,40 @@ export default function ApplicationForm1({
                       marginTop: "-0.7rem",
                     }}
                   >
-                    {formik.values.benefitDescription}
+                    {formik.values.purposeDescription}
+                  </p>
+                </div>
+
+                <div>
+                  <p style={{ fontWeight: "600" }}>
+                    Have you made use of the Statens Kunstfonds' author catalog
+                    (kunst.dk/forfatter) when working on your application?
+                  </p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {formik.values.isCatalogUsed === "true" ? "Yes" : "No"}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>The amount you requested:</p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {formik.values.requestedAmount}
                   </p>
                 </div>
                 <div>
                   <p style={{ fontWeight: "600" }}>
-                    Description of the project's future vision:{" "}
+                    The overall amount needed:
                   </p>
                   <p
                     style={{
@@ -620,7 +797,35 @@ export default function ApplicationForm1({
                       marginTop: "-0.7rem",
                     }}
                   >
-                    {formik.values.futureVisionDescription}
+                    {formik.values.overallAmount}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>Event date:</p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {new Date(formik.values.eventDate).toLocaleDateString(
+                      "en-GB"
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>
+                    The municipality you belong to:
+                  </p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {formik.values.municipality}
                   </p>
                 </div>
               </div>
@@ -671,15 +876,23 @@ export default function ApplicationForm1({
               type="button"
               onClick={nextStep}
               disabled={
-                Boolean(formik.errors.projectTitle) ||
-                Boolean(formik.errors.experienceDescription) ||
-                Boolean(formik.errors.benefitDescription) ||
-                Boolean(formik.errors.futureVisionDescription) ||
-                !formik.values.agreementInfo ||
-                !formik.values.projectTitle ||
-                !formik.values.experienceDescription ||
-                !formik.values.benefitDescription ||
-                !formik.values.futureVisionDescription
+                Boolean(formik.errors.authorFullName) ||
+                Boolean(formik.errors.purposeDescription) ||
+                Boolean(formik.errors.eventLocation) ||
+                Boolean(formik.errors.targetGroup) ||
+                Boolean(formik.errors.eventDate) ||
+                Boolean(formik.errors.municipality) ||
+                Boolean(formik.errors.requestedAmount) ||
+                Boolean(formik.errors.overallAmount) ||
+                !formik.values.authorFullName ||
+                !formik.values.purposeDescription ||
+                !formik.values.eventLocation ||
+                !formik.values.targetGroup ||
+                !formik.values.eventDate ||
+                !formik.values.municipality ||
+                formik.values.isCatalogUsed === "" ||
+                formik.values.requestedAmount === "" ||
+                formik.values.overallAmount === ""
               }
             >
               NEXT
@@ -856,7 +1069,7 @@ export default function ApplicationForm1({
           <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
             We can see you have made some changes to your saved applications,
             but haven't submitted the form. If you continue back to the
-            'Overview' of your application without saving or submitting, all of
+            'Overview' of your application without aving or submitting, all of
             your changes will be descarded. Would you like to save current
             changes or go back to the overview?
           </p>

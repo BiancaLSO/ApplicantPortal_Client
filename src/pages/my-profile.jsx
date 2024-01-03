@@ -4,22 +4,12 @@ import Footer from "../components/Footer";
 
 import "../css/layout.css"; // Import your custom styles
 import MyProfileForm from "../components/MyProfileForm";
+import { useDispatch } from "react-redux";
+import { editUser, getUserDetails } from "../redux/auth/authSlice";
 
-export default function MyProfile({ refetch }) {
+export default function MyProfile({ user }) {
+  const dispatch = useDispatch();
   const [isSaved, setIsSaved] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUserData = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    };
-
-    refetch();
-    fetchUserData();
-  }, [user]);
 
   const submitForm = (values) => {
     console.log(values);
@@ -38,37 +28,24 @@ export default function MyProfile({ refetch }) {
       zipCode: values.zipCode,
     };
 
-    // Updated fetch calls with JSON.stringify for the body
-    fetch(`http://localhost:3005/user/${user.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    })
-      .then((response) => response.json())
-      .then(() =>
-        fetch(`http://localhost:3005/address/${user.address.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(addressData),
-        })
-      )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setIsSaved(true);
+    dispatch(
+      editUser({
+        userId: user.id,
+        userBody: userData,
+        addressBody: addressData,
       })
-      .catch((err) => {
-        console.error(err);
-        // Handle errors
-      });
+    );
+    setIsSaved(true);
   };
   return (
     <div className="app-container">
-      <Navbar />
+      <Navbar
+        setOpenResubmitModal={undefined}
+        setOpenSaveModal={undefined}
+        setOpenSubmitModal={undefined}
+        hasFormChanged={undefined}
+        selectedPage={undefined}
+      />
 
       <div className="content-container">
         <MyProfileForm onSubmitForm={submitForm} userDetails={user} />

@@ -14,29 +14,30 @@ import {
 import { getUserData, login } from "./redux/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Login from "./pages/login";
+import { getNotifications } from "./redux/notifications/notificationsSlice";
 
 function App() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const credentialsId = useSelector((state) => state.credentialsId);
   const user = useSelector((state) => state.user);
+  const applicationIdRedux = useSelector(
+    (state) => state.application.applicationId
+  );
 
-  /*   const [user, setUser] = useState(null);
-
-  const fetchUser = () => {
-    fetch(`http://localhost:3005/user/3`)
-      .then((response) => response.json())
-      .then((userData) => {
-        setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
   useEffect(() => {
-    fetchUser();
-  }, []); */
+    // Example usage:
+    // 1. Login
+    dispatch(login({ username: "emilie123", password: "123456789" }));
+    /* dispatch(setApplicationId(applicationIdRedux)) */
+    console.log(token); // Add this line
+  }, [dispatch, applicationIdRedux, token]);
+
+  useEffect(() => {
+    if (user !== null) {
+      dispatch(getNotifications({ userId: user.id, token: token }));
+    }
+  }, [dispatch, user]);
 
   return (
     <Router>
@@ -52,13 +53,13 @@ function App() {
           path="/applications/details"
           element={
             <ApplicationDetails
-              grantId={1}
-              deadline={"2023-12-21"}
-              applicationId={undefined}
+              grantId={3}
+              deadline={"2023-12-20"}
+              applicationId={applicationIdRedux}
             />
           }
         />
-        <Route path="/profile" element={<MyProfile />} />
+        <Route path="/profile" element={<MyProfile user={user} />} />
       </Routes>
     </Router>
   );

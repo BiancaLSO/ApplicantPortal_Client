@@ -50,8 +50,14 @@ const data = [
 
 const MyApplications = () => {
   return (
-    <div className="app-container">
-      <Navbar />
+    <div className="app-container" style={{ zIndex: 1 }}>
+      <Navbar
+        setOpenResubmitModal={undefined}
+        setOpenSaveModal={undefined}
+        setOpenSubmitModal={undefined}
+        hasFormChanged={undefined}
+        selectedPage={undefined}
+      />
       <div className="content-container">
         <p className="title-page">My Applications</p>
         <p className="subtitle-page">

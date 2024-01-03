@@ -2,8 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "../css/application-form.css";
-import { Checkbox, FormControlLabel, TextField, styled } from "@mui/material";
+import {
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  styled,
+  DatePicker,
+} from "@mui/material";
 import Modal from "react-modal";
+import moment from "moment";
 import { useSelector } from "react-redux";
 
 const CssTextField = styled(TextField)(({ theme }) => ({
@@ -36,7 +43,7 @@ const CssTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export default function ApplicationForm1({
+export default function ApplicationForm2({
   grant,
   onSubmitForm,
   onResubmitForm,
@@ -60,6 +67,19 @@ export default function ApplicationForm1({
   );
   const application = useSelector((state) => state.application.application);
 
+  const isValidCountry = async (value) => {
+    try {
+      const response = await fetch("https://restcountries.com/v2/all");
+      const countries = await response.json();
+      const countryNames = countries.map((country) => country.name);
+
+      return countryNames.includes(value);
+    } catch (error) {
+      console.error("Error fetching country data", error);
+      return false;
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -71,11 +91,16 @@ export default function ApplicationForm1({
       city: "",
       zipCode: "",
 
-      projectTitle: "",
-      experienceDescription: "",
-      benefitDescription: "",
-      futureVisionDescription: "",
-      agreementInfo: false,
+      travelerNameAndPosition: "",
+      purposeDescription: "",
+      departureCountry: "",
+      departureCity: "",
+      destinationCountry: "",
+      destinationCity: "",
+      tripStartDate: moment().format("YYYY-MM-DD"),
+      tripEndDate: moment().format("YYYY-MM-DD"),
+      requestedAmount: 0,
+      overallAmount: 0,
       formStep: currentStep,
     },
     validationSchema: Yup.object({
@@ -109,26 +134,64 @@ export default function ApplicationForm1({
         .matches(/^[0-9]{4}$/, "Must be a valid Danish zip code")
         .required("Required"),
 
-      projectTitle: Yup.string()
+      travelerNameAndPosition: Yup.string()
         .required("Required")
         .min(10, "Must be at least 10 characters")
         .max(100, "Must be at most 100 characters"),
-      experienceDescription: Yup.string()
+      purposeDescription: Yup.string()
         .required("Required")
         .min(100, "Must be at least 100 characters")
         .max(1000, "Must be at most 1000 characters"),
-      benefitDescription: Yup.string()
+      // Then use this function in your Yup validation schema
+      departureCountry: Yup.string()
         .required("Required")
-        .min(100, "Must be at least 100 characters")
-        .max(1000, "Must be at most 1000 characters"),
-      futureVisionDescription: Yup.string()
+        .min(3, "Must be at least 3 characters")
+        .max(100, "Must be at most 100 characters")
+        .test("isValidCountry", "Invalid country", isValidCountry),
+
+      departureCity: Yup.string()
         .required("Required")
-        .min(100, "Must be at least 100 characters")
-        .max(1000, "Must be at most 1000 characters"),
-      agreementInfo: Yup.boolean().oneOf(
-        [true],
-        "You must accept the terms and conditions"
-      ),
+        .min(3, "Must be at least 3 characters")
+        .max(100, "Must be at most 100 characters"),
+
+      destinationCountry: Yup.string()
+        .required("Required")
+        .min(3, "Must be at least 3 characters")
+        .max(100, "Must be at most 100 characters")
+        .test("isValidCountry", "Invalid country", isValidCountry),
+
+      destinationCity: Yup.string()
+        .required("Required")
+        .min(3, "Must be at least 3 characters")
+        .max(100, "Must be at most 100 characters"),
+
+      tripStartDate: Yup.date()
+        .required("Required")
+        .min(
+          new Date("2023-01-01"),
+          "Date must be after or on January 01, 2023"
+        )
+        .max(
+          new Date("2023-12-31"),
+          "Date must be before or on December 31, 2023"
+        ),
+
+      tripEndDate: Yup.date()
+        .required("Required")
+        .min(Yup.ref("tripStartDate"), "End date must be after start date")
+        .max(
+          new Date("2023-12-31"),
+          "Date must be before or on December 31, 2023"
+        ),
+      requestedAmount: Yup.number()
+        .required("Required")
+        .min(0, "Must be greater than or equal to 0")
+        .integer("Must be a whole number"),
+
+      overallAmount: Yup.number()
+        .required("Required")
+        .min(0, "Must be greater than or equal to 0")
+        .integer("Must be a whole number"),
     }),
     onSubmit: (values, { resetForm }) => {
       if (hasBeenSubmitted) {
@@ -167,19 +230,32 @@ export default function ApplicationForm1({
       formik.initialValues.zipCode = userDetails.address.zipCode;
 
     if (applicationDetails) {
-      if (applicationDetails.project_title)
-        formik.initialValues.projectTitle = applicationDetails.project_title;
-      if (applicationDetails.experience_description)
-        formik.initialValues.experienceDescription =
-          applicationDetails.experience_description;
-      if (applicationDetails.benefit_description)
-        formik.initialValues.benefitDescription =
-          applicationDetails.benefit_description;
-      if (applicationDetails.future_vision_description)
-        formik.initialValues.futureVisionDescription =
-          applicationDetails.future_vision_description;
-      if (applicationDetails.agreement_info)
-        formik.initialValues.agreementInfo = applicationDetails.agreement_info;
+      if (applicationDetails.traveler_name_and_position)
+        formik.initialValues.travelerNameAndPosition =
+          applicationDetails.traveler_name_and_position;
+      if (applicationDetails.purpose_description)
+        formik.initialValues.purposeDescription =
+          applicationDetails.purpose_description;
+      if (applicationDetails.departure_country)
+        formik.initialValues.departureCountry =
+          applicationDetails.departure_country;
+      if (applicationDetails.departure_city)
+        formik.initialValues.departureCity = applicationDetails.departure_city;
+      if (applicationDetails.destination_country)
+        formik.initialValues.destinationCountry =
+          applicationDetails.destination_country;
+      if (applicationDetails.destination_city)
+        formik.initialValues.destinationCity =
+          applicationDetails.destination_city;
+      if (applicationDetails.trip_start_date)
+        formik.initialValues.tripStartDate = applicationDetails.trip_start_date;
+      if (applicationDetails.trip_end_date)
+        formik.initialValues.tripEndDate = applicationDetails.trip_end_date;
+      if (applicationDetails.requested_amount)
+        formik.initialValues.requestedAmount =
+          applicationDetails.requested_amount;
+      if (applicationDetails.overall_amount)
+        formik.initialValues.overallAmount = applicationDetails.overall_amount;
     }
   }
 
@@ -192,13 +268,19 @@ export default function ApplicationForm1({
   };
 
   const isFormChanged =
-    formik.values.projectTitle !== applicationDetails?.project_title ||
-    formik.values.experienceDescription !==
-      applicationDetails?.experience_description ||
-    formik.values.benefitDescription !==
-      applicationDetails?.benefit_description ||
-    formik.values.futureVisionDescription !==
-      applicationDetails?.future_vision_description;
+    formik.values.travelerNameAndPosition !==
+      applicationDetails?.traveler_name_and_position ||
+    formik.values.purposeDescription !==
+      applicationDetails?.purpose_description ||
+    formik.values.departureCountry !== applicationDetails?.departure_country ||
+    formik.values.departureCity !== applicationDetails?.departure_city ||
+    formik.values.destinationCountry !==
+      applicationDetails?.destination_country ||
+    formik.values.destinationCity !== applicationDetails?.destination_city ||
+    formik.values.tripStartDate !== applicationDetails?.trip_start_date ||
+    formik.values.tripEndDate !== applicationDetails?.trip_end_date ||
+    formik.values.requestedAmount !== applicationDetails?.requested_amount ||
+    formik.values.overallAmount !== applicationDetails?.overall_amount;
 
   useEffect(() => {
     setHasFormChanged(isFormChanged);
@@ -211,10 +293,12 @@ export default function ApplicationForm1({
       application.activities?.length > 0
     ) {
       if (
-        values.projectTitle.length > 0 ||
-        values.experienceDescription.length > 0 ||
-        values.benefitDescription.length > 0 ||
-        values.futureVisionDescription.length > 0
+        values.travelerNameAndPosition.length > 0 ||
+        values.purposeDescription.length > 0 ||
+        values.departureCountry.length > 0 ||
+        values.departureCity.length > 0 ||
+        values.destinationCountry.length > 0 ||
+        values.destinationCity.length > 0
       ) {
         values.formStep = 2;
       } else {
@@ -227,10 +311,12 @@ export default function ApplicationForm1({
       onSaveApplication(values);
     } else {
       if (
-        values.projectTitle.length > 0 ||
-        values.experienceDescription.length > 0 ||
-        values.benefitDescription.length > 0 ||
-        values.futureVisionDescription.length > 0
+        values.travelerNameAndPosition.length > 0 ||
+        values.purposeDescription.length > 0 ||
+        values.departureCountry.length > 0 ||
+        values.departureCity.length > 0 ||
+        values.destinationCountry.length > 0 ||
+        values.destinationCity.length > 0
       ) {
         values.formStep = 2;
       } else {
@@ -385,40 +471,77 @@ export default function ApplicationForm1({
             <div className="form-row">
               <div className="">
                 <CssTextField
-                  id="projectTitle"
-                  name="projectTitle"
-                  label="Project title"
+                  id="travelerNameAndPosition"
+                  name="travelerNameAndPosition"
+                  label="Traveler name & position"
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.projectTitle}
+                  value={formik.values.travelerNameAndPosition}
                   error={
-                    formik.touched.projectTitle &&
-                    Boolean(formik.errors.projectTitle)
+                    formik.touched.travelerNameAndPosition &&
+                    Boolean(formik.errors.travelerNameAndPosition)
                   }
                   helperText={
-                    formik.touched.projectTitle && formik.errors.projectTitle
+                    formik.touched.travelerNameAndPosition &&
+                    formik.errors.travelerNameAndPosition
                   }
                   style={{ margin: "1rem", width: "35rem" }}
                 />
 
                 <CssTextField
-                  id="experienceDescription"
-                  name="experienceDescription"
-                  label="Experience description"
+                  id="purposeDescription"
+                  name="purposeDescription"
+                  label="Purpose description"
                   multiline
-                  rows={7}
+                  rows={8}
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.experienceDescription}
+                  value={formik.values.purposeDescription}
                   error={
-                    formik.touched.experienceDescription &&
-                    Boolean(formik.errors.experienceDescription)
+                    formik.touched.purposeDescription &&
+                    Boolean(formik.errors.purposeDescription)
                   }
                   helperText={
-                    formik.touched.experienceDescription &&
-                    formik.errors.experienceDescription
+                    formik.touched.purposeDescription &&
+                    formik.errors.purposeDescription
+                  }
+                  style={{ margin: "1rem", width: "35rem" }}
+                />
+                <CssTextField
+                  id="departureCountry"
+                  name="departureCountry"
+                  label="Departure country"
+                  variant="outlined"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.departureCountry}
+                  error={
+                    formik.touched.departureCountry &&
+                    Boolean(formik.errors.departureCountry)
+                  }
+                  helperText={
+                    formik.touched.departureCountry &&
+                    formik.errors.departureCountry
+                  }
+                  style={{ margin: "1rem", width: "35rem" }}
+                />
+
+                <CssTextField
+                  id="departureCity"
+                  name="departureCity"
+                  label="Departure city"
+                  variant="outlined"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.departureCity}
+                  error={
+                    formik.touched.departureCity &&
+                    Boolean(formik.errors.departureCity)
+                  }
+                  helperText={
+                    formik.touched.departureCity && formik.errors.departureCity
                   }
                   style={{ margin: "1rem", width: "35rem" }}
                 />
@@ -426,82 +549,149 @@ export default function ApplicationForm1({
 
               <div className="justify">
                 <CssTextField
-                  id="benefitDescription"
-                  name="benefitDescription"
-                  label="Benefit description"
-                  multiline
-                  rows={4}
+                  id="destinationCountry"
+                  name="destinationCountry"
+                  label="Destination country"
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.benefitDescription}
+                  value={formik.values.destinationCountry}
                   error={
-                    formik.touched.benefitDescription &&
-                    Boolean(formik.errors.benefitDescription)
+                    formik.touched.destinationCountry &&
+                    Boolean(formik.errors.destinationCountry)
                   }
                   helperText={
-                    formik.touched.benefitDescription &&
-                    formik.errors.benefitDescription
+                    formik.touched.destinationCountry &&
+                    formik.errors.destinationCountry
                   }
                   style={{ margin: "1rem", width: "35rem" }}
                 />
 
                 <CssTextField
-                  id="futureVisionDescription"
-                  name="futureVisionDescription"
-                  label="Future vision description"
-                  multiline
-                  rows={4}
+                  id="destinationCity"
+                  name="destinationCity"
+                  label="Destination city"
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.futureVisionDescription}
+                  value={formik.values.destinationCity}
                   error={
-                    formik.touched.futureVisionDescription &&
-                    Boolean(formik.errors.futureVisionDescription)
+                    formik.touched.destinationCity &&
+                    Boolean(formik.errors.destinationCity)
                   }
                   helperText={
-                    formik.touched.futureVisionDescription &&
-                    formik.errors.futureVisionDescription
+                    formik.touched.destinationCity &&
+                    formik.errors.destinationCity
+                  }
+                  style={{ margin: "1rem", width: "35rem" }}
+                />
+
+                <CssTextField
+                  id="tripStartDate"
+                  name="tripStartDate"
+                  label="Trip start date"
+                  type="date"
+                  variant="outlined"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.tripStartDate}
+                  error={
+                    formik.touched.tripStartDate &&
+                    Boolean(formik.errors.tripStartDate)
+                  }
+                  helperText={
+                    formik.touched.tripStartDate && formik.errors.tripStartDate
+                  }
+                  inputProps={{
+                    min: new Date("2023-01-01").toISOString().split("T")[0], // Set the minimum date
+                    max: "2023-12-31", // Set the maximum date
+                  }}
+                  style={{ margin: "1rem", width: "35rem" }}
+                />
+
+                <CssTextField
+                  id="tripEndDate"
+                  name="tripEndDate"
+                  label="Trip end date"
+                  type="date"
+                  variant="outlined"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.tripEndDate}
+                  error={
+                    formik.touched.tripEndDate &&
+                    Boolean(formik.errors.tripEndDate)
+                  }
+                  helperText={
+                    formik.touched.tripEndDate && formik.errors.tripEndDate
+                  }
+                  inputProps={{
+                    min: formik.values.tripStartDate, // Set the minimum date
+                    max: "2023-12-31", // Set the maximum date
+                  }}
+                  style={{ margin: "1rem", width: "35rem" }}
+                />
+
+                <CssTextField
+                  id="requestedAmount"
+                  name="requestedAmount"
+                  label="Requested amount"
+                  type="number" // Add this line
+                  variant="outlined"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.requestedAmount}
+                  error={
+                    formik.touched.requestedAmount &&
+                    Boolean(formik.errors.requestedAmount)
+                  }
+                  helperText={
+                    formik.touched.requestedAmount &&
+                    formik.errors.requestedAmount
                   }
                   style={{
                     margin: "1rem",
                     width: "35rem",
                   }}
+                  inputProps={{
+                    step: 1, // Add this line to enforce whole numbers
+                  }}
+                />
+
+                <CssTextField
+                  id="overallAmount"
+                  name="overallAmount"
+                  label="Overall amount"
+                  type="number" // Add this line
+                  variant="outlined"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.overallAmount}
+                  error={
+                    formik.touched.overallAmount &&
+                    Boolean(formik.errors.overallAmount)
+                  }
+                  helperText={
+                    formik.touched.overallAmount && formik.errors.overallAmount
+                  }
+                  style={{
+                    margin: "1rem",
+                    width: "35rem",
+                  }}
+                  inputProps={{
+                    step: 1, // Add this line to enforce whole numbers
+                  }}
                 />
               </div>
             </div>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  id="agreementInfo"
-                  name="agreementInfo"
-                  checked={formik.values.agreementInfo}
-                  onChange={formik.handleChange}
-                  helperText={
-                    formik.touched.agreementInfo && formik.errors.agreementInfo
-                  }
-                  error={
-                    formik.touched.agreementInfo &&
-                    Boolean(formik.errors.agreementInfo)
-                  }
-                  style={{
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    color: "#c0002a",
-                  }}
-                />
-              }
-              style={{
-                marginLeft: "6rem",
-                marginRight: "4rem",
-                marginTop: "-2rem",
-                padding: "2rem 0 2rem 0",
-              }}
-              label="I agree that the information I have provided in my application is
-   shared with Arts Council England, Arts Council Norway and Julies
-   Bicycle. CPR will not be shared.(Required *)"
-            />
           </div>
         )}
 
@@ -570,7 +760,7 @@ export default function ApplicationForm1({
                   Project information
                 </h4>
                 <div>
-                  <p style={{ fontWeight: "600" }}>Project title:</p>
+                  <p style={{ fontWeight: "600" }}>Traveler name & position:</p>
                   <p
                     style={{
                       width: "50rem",
@@ -578,12 +768,12 @@ export default function ApplicationForm1({
                       marginTop: "-0.7rem",
                     }}
                   >
-                    {formik.values.projectTitle}
+                    {formik.values.travelerNameAndPosition}
                   </p>
                 </div>
                 <div>
                   <p style={{ fontWeight: "600" }}>
-                    Description of your experience:
+                    Description of the project's purpose:
                   </p>
                   <p
                     style={{
@@ -592,12 +782,12 @@ export default function ApplicationForm1({
                       marginTop: "-0.7rem",
                     }}
                   >
-                    {formik.values.experienceDescription}
+                    {formik.values.purposeDescription}
                   </p>
                 </div>
                 <div>
                   <p style={{ fontWeight: "600" }}>
-                    Description of the project benefits:
+                    The country of your departure:
                   </p>
                   <p
                     style={{
@@ -606,12 +796,12 @@ export default function ApplicationForm1({
                       marginTop: "-0.7rem",
                     }}
                   >
-                    {formik.values.benefitDescription}
+                    {formik.values.departureCountry}
                   </p>
                 </div>
                 <div>
                   <p style={{ fontWeight: "600" }}>
-                    Description of the project's future vision:{" "}
+                    The city of your departure:
                   </p>
                   <p
                     style={{
@@ -620,7 +810,89 @@ export default function ApplicationForm1({
                       marginTop: "-0.7rem",
                     }}
                   >
-                    {formik.values.futureVisionDescription}
+                    {formik.values.departureCity}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>
+                    The country of your destination:
+                  </p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {formik.values.destinationCountry}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>
+                    The city of your destination:
+                  </p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {formik.values.destinationCity}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>Trip start date:</p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {new Date(formik.values.tripStartDate).toLocaleDateString(
+                      "en-GB"
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>Trip end date:</p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {new Date(formik.values.tripEndDate).toLocaleDateString(
+                      "en-GB"
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>The amount you requested:</p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {formik.values.requestedAmount}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: "600" }}>
+                    The overall amount needed:
+                  </p>
+                  <p
+                    style={{
+                      width: "50rem",
+                      fontSize: "1.3rem",
+                      marginTop: "-0.7rem",
+                    }}
+                  >
+                    {formik.values.overallAmount}
                   </p>
                 </div>
               </div>
@@ -671,15 +943,26 @@ export default function ApplicationForm1({
               type="button"
               onClick={nextStep}
               disabled={
-                Boolean(formik.errors.projectTitle) ||
-                Boolean(formik.errors.experienceDescription) ||
-                Boolean(formik.errors.benefitDescription) ||
-                Boolean(formik.errors.futureVisionDescription) ||
-                !formik.values.agreementInfo ||
-                !formik.values.projectTitle ||
-                !formik.values.experienceDescription ||
-                !formik.values.benefitDescription ||
-                !formik.values.futureVisionDescription
+                Boolean(formik.errors.travelerNameAndPosition) ||
+                Boolean(formik.errors.purposeDescription) ||
+                Boolean(formik.errors.departureCountry) ||
+                Boolean(formik.errors.departureCity) ||
+                Boolean(formik.errors.destinationCountry) ||
+                Boolean(formik.errors.destinationCity) ||
+                Boolean(formik.errors.tripStartDate) ||
+                Boolean(formik.errors.tripEndDate) ||
+                Boolean(formik.errors.requestedAmount) ||
+                Boolean(formik.errors.overallAmount) ||
+                !formik.values.travelerNameAndPosition ||
+                !formik.values.purposeDescription ||
+                !formik.values.departureCountry ||
+                !formik.values.departureCity ||
+                !formik.values.destinationCountry ||
+                !formik.values.destinationCity ||
+                !formik.values.tripStartDate ||
+                !formik.values.tripEndDate ||
+                formik.values.requestedAmount === "" ||
+                !formik.values.overallAmount === ""
               }
             >
               NEXT
@@ -856,7 +1139,7 @@ export default function ApplicationForm1({
           <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
             We can see you have made some changes to your saved applications,
             but haven't submitted the form. If you continue back to the
-            'Overview' of your application without saving or submitting, all of
+            'Overview' of your application without aving or submitting, all of
             your changes will be descarded. Would you like to save current
             changes or go back to the overview?
           </p>
