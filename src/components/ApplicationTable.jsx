@@ -7,10 +7,10 @@ import ArrowL from "../images/single_left.svg";
 
 const headers = [
   { name: "JournalNr.", key: "journalNr" },
-  { name: "Application Name", key: "name" },
-  { name: "Grant", key: "grant.name" },
+  { name: "Application Name", key: "applicationName" },
+  { name: "Grant", key: "grant" },
   { name: "Status", key: "status" },
-  { name: "Last Activity", key: "activity.date" },
+  { name: "Last Activity", key: "lastActivity" },
   { name: "", key: "iconColumn" },
 ];
 let itemsPerPageOptions = [5, 10, 20];
@@ -49,19 +49,17 @@ export default function ApplicationTable({ data }) {
             <div className="tb-row-application" key={index}>
               {headers.map((header) => (
                 <div className="tb-cell-application" key={header.key}>
-                  <p
-                    style={{
-                      fontWeight: "300",
-                      fontSize: "1.2rem",
-                      fontFamily: "Red Hat Display",
-                      alignSelf: "center",
-                      color: "#2b2b2b",
-                    }}
-                  >
-                    {header.key !== "status"
-                      ? item[header.key]
-                      : item[header.key]?.name}
-                  </p>
+                  {header.key === "iconColumn" ? (
+                    <span class="material-symbols-outlined edit-icon-container">
+                      edit_square
+                    </span>
+                  ) : (
+                    <p className="tb-cell-text">
+                      {header.key !== "status"
+                        ? item[header.key]
+                        : item[header.key]?.name}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -69,29 +67,11 @@ export default function ApplicationTable({ data }) {
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          gap: "2rem",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
-          <p style={{ fontSize: "0.9rem", fontWeight: "500" }}>Show</p>
+      <div className="pagination">
+        <div className="pagination-container">
+          <p className="pagination-text">Show</p>
           <select
-            style={{
-              padding: "0.3rem",
-              borderColor: "#C0002A",
-              outlineColor: "#C0002A",
-              borderStyle: "solid",
-              borderWidth: 2,
-              borderRadius: 10,
-              fontSize: "0.9rem",
-              fontWeight: "500",
-              cursor: "pointer",
-            }}
+            className="pagination-select"
             onChange={(e) => handleItemsPerPageChange(e.target.value)}
           >
             {itemsPerPageOptions.map((option) => (
@@ -102,55 +82,26 @@ export default function ApplicationTable({ data }) {
           </select>
           <p>items per page</p>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignContent: "center",
-            marginBottom: -5,
-          }}
-        >
+        <div className="pagination-arrows-container">
           <button
             onClick={() => handlePageChange(currentPage - 2)}
             disabled={currentPage === 1 || currentPage === 2}
-            style={{
-              borderStyle: "none",
-              backgroundColor: "transparent",
-              cursor: "pointer",
-            }}
-            className="arr"
+            className="arr pagination-button"
           >
             <img src={DoubleArrowL} alt="Left double arrow svg" />
           </button>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            style={{
-              borderStyle: "none",
-              backgroundColor: "transparent",
-              cursor: "pointer",
-            }}
+            className="pagination-button"
           >
             <img src={ArrowL} alt="Left arrow svg" />
           </button>
-          <span
-            style={{
-              fontSize: "1.4rem",
-              marginLeft: "0.4rem",
-              marginRight: "0.4rem",
-              marginBottom: 4,
-            }}
-          >
-            {currentPage}
-          </span>
+          <span className="pagination-current">{currentPage}</span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            style={{
-              borderStyle: "none",
-              backgroundColor: "transparent",
-              cursor: "pointer",
-            }}
+            className="pagination-button"
           >
             <img src={ArrowR} alt="Right arrow svg" />
           </button>
@@ -159,11 +110,7 @@ export default function ApplicationTable({ data }) {
             disabled={
               currentPage === totalPages || currentPage === totalPages - 1
             }
-            style={{
-              borderStyle: "none",
-              backgroundColor: "transparent",
-              cursor: "pointer",
-            }}
+            className="pagination-button"
           >
             <img src={DoubleArrowR} alt="Right double arrow svg" />
           </button>

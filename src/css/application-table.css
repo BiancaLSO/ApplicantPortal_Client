@@ -22,9 +22,9 @@
 }
 
 .header-name {
-  font-size: "1.2rem";
+  font-size: 1.1rem;
   font-weight: 600;
-  color: "#2b2b2b";
+  color: #2b2b2b;
 }
 
 .tb-column-application {
@@ -33,7 +33,7 @@
 }
 
 .tb-cell-application {
-  height: 3rem;
+  height: 5rem;
   padding-left: 2rem;
   width: 25rem;
   align-items: center;
@@ -53,4 +53,76 @@
   margin-bottom: 2rem;
   background-color: #efefe9;
   transition: background-color 0.3s;
+}
+
+.tb-cell-text {
+  display: flex;
+  justify-content: center;
+  font-weight: 300;
+  font-size: 14px;
+  font-family: "Red Hat Display";
+  align-self: center;
+  color: #2b2b2b;
+}
+
+.pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pagination-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.pagination-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.pagination-select {
+  padding: 0.3rem;
+  border-color: #c0002a;
+  outline-color: #c0002a;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 15%;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pagination-arrows-container {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  margin-bottom: -5;
+}
+
+.pagination-button {
+  border-style: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.pagination-current {
+  font-size: 1.4rem;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+  margin-bottom: 4;
+}
+
+.edit-icon-container {
+  width: 45px;
+  height: 45px;
+  background-color: #c0002a;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }

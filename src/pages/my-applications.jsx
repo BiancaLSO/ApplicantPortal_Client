@@ -10,11 +10,42 @@ import Select from "@mui/material/Select";
 import ApplicationTable from "../components/ApplicationTable";
 
 const data = [
-  { name: "JournalNr.", key: "note" },
-  { name: "Application Name", key: "name" },
-  { name: "Grant", key: "date" },
-  { name: "Status", key: "status" },
-  { name: "Last Activity", key: "attachments" },
+  {
+    journalNr: "SKBP36W.2023-0155",
+    applicationName:
+      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
+    grant:
+      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
+    status: {
+      name: "Closed without submission",
+    },
+    lastActivity: "09-11-2023 at 20:02:57",
+    iconColumn: true,
+  },
+  {
+    journalNr: "SKBP36W.2023-0155",
+    applicationName:
+      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
+    grant:
+      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
+    status: {
+      name: "Closed without submission",
+    },
+    lastActivity: "09-11-2023 at 20:02:57",
+    iconColumn: true,
+  },
+  {
+    journalNr: "SKBP36W.2023-0155",
+    applicationName:
+      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
+    grant:
+      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
+    status: {
+      name: "Closed without submission",
+    },
+    lastActivity: "09-11-2023 at 20:02:57",
+    iconColumn: true,
+  },
 ];
 
 const MyApplications = () => {
