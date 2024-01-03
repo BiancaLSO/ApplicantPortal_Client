@@ -1,51 +1,246 @@
-form-row {
+.top-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0px 20px 0px;
+}
+
+.tabs {
   display: flex;
   flex-direction: row;
-  gap: 5rem;
-  justify-content: center;
-}
-
-.first-step-align {
-  align-items: center;
-}
-
-.form {
-  margin-left: auto;
   margin-right: auto;
-  height: max-content;
+  background-color: #d3d0d0;
+  border-radius: 5px 5px 0 0;
+}
+
+.tab {
+  cursor: pointer;
+  color: #ffff;
+  width: 8rem;
+  padding: 10px 20px;
+  border-radius: 5px 5px 0 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.tab.active {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
+  background-color: #efefe9;
+  color: #c0002a;
+}
+
+/* margin-right is doing the thing i was trying to figure out */
+.text-box {
+  border-radius: 0px 10px 10px 10px;
+  background-color: #efefe9;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
+}
+
+.text-box-paragraph {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 20px;
+  font: 400 16px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.main-container {
+  display: flex;
+  align-items: start;
+  gap: 40px;
+}
+@media (max-width: 991px) {
+  .main-container {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+}
+
+.main-container.start {
+  justify-content: space-between;
+}
+
+.main-container.space-between {
+  justify-content: space-between;
+}
+
+.address-contact-div {
+  display: flex;
+  margin-top: 2rem;
+  gap: 5rem;
+}
+@media (max-width: 991px) {
+  .address-contact-div {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0px;
+  }
+}
+
+.address-div {
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+}
+@media (max-width: 991px) {
+  .address-div {
+    margin-top: 40px;
+  }
+}
+.img-logo {
+  object-fit: contain;
+  object-position: center;
+  width: 85px;
+  overflow: hidden;
+  align-self: center;
+  max-width: 100%;
+}
+
+.address-title {
+  justify-content: center;
+  color: #282828;
+  text-align: center;
+  margin-top: 19px;
+  font: 500 18px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
+}
+.address-address {
+  justify-content: center;
+  color: #282828;
+  text-align: center;
+  margin-top: 34px;
+  font: 400 14px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
+}
+.contact-div {
+  display: flex;
+  flex-direction: column;
+  line-height: normal;
+  width: 42%;
+  margin-left: 20px;
+}
+@media (max-width: 991px) {
+  .contact-div {
+    width: 100%;
+    margin-top: 40px;
+  }
+}
+
+.contact-div-title {
+  color: #282828;
+  font: 500 16px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
+}
+.contact-div-link {
+  color: #282828;
+  text-decoration-line: underline;
+  margin-top: 19px;
+  white-space: nowrap;
+  font: 500 18px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
+}
+@media (max-width: 991px) {
+  .contact-div-link {
+    white-space: initial;
+  }
+}
+.contact-div-contact-us {
+  color: #282828;
+  margin-top: 52px;
+  font: 500 16px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
+}
+@media (max-width: 991px) {
+  .contact-div-contact-us {
+    margin-top: 40px;
+  }
+}
+.contact-div-hours-text {
+  color: #282828;
+  margin-top: 19px;
+  font: 500 16px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.contact-div-img-phone-text {
+  display: flex;
+  margin-top: 10px;
+}
+.img-phone {
+  display: flex;
+  margin-top: 10px;
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  width: 55px;
+  overflow: hidden;
+  max-width: 100%;
+}
+.contact-div-phone-text {
+  color: #282828;
+  text-decoration-line: underline;
+  align-self: center;
+  flex-grow: 1;
+  white-space: nowrap;
+
+  font: 500 16px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
+}
+@media (max-width: 991px) {
+  .contact-div-phone-text {
+    white-space: initial;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
   background-color: #efefe9;
   border-radius: 10px;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
 }
 
-.a {
-  color: #c0002a;
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
-.space-btw {
+.mitid-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  background-color: #efefe9;
+  border-radius: 10px;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
 }
 
-.step-buttons {
+.form-title {
+  font-family: "Red Hat Display";
+  font-size: 2rem;
+  font-weight: 500;
+  color: #2b2b2b;
+  margin-left: 2rem;
+  margin-top: 1rem;
+}
+
+.mitid-fields {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  padding: 0 4rem 2rem 4rem;
+
+  margin-left: 0.5rem;
 }
 
-.justify {
+.mitid-column {
+  width: calc(50% - 1rem);
+}
+
+.form-rows {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+  margin-left: 0.5rem;
   justify-content: center;
 }
 
-.btn {
+.form-button-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+.login-button {
   align-items: center;
   color: white;
-  height: 4rem;
+  background-color: #c0002a;
+  height: 3rem;
+  width: 15rem;
   font-family: "Red Hat Display";
   font-size: 1.2rem;
   font-weight: 600;
@@ -55,43 +250,7 @@ form-row {
   cursor: pointer;
 }
 
-.p {
-  font-family: "Red Hat Display";
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #2b2b2b;
-}
-
-.next {
-  width: 10rem;
-}
-
-.btn:enabled {
+button:hover {
   background-color: #c0002a;
-}
-
-.btn:disabled {
-  background-color: #2b2b2b; /* Change the background color */
-  color: #666; /* Change the text color */
-  cursor: not-allowed; /* Change the cursor */
-  /* Add any other styles for the disabled state */
-}
-
-.previous {
-  width: 15rem;
-}
-
-.login {
-  width: 15rem;
-  align-self: flex-end;
-}
-
-.sec-title {
-  font-family: "Red Hat Display";
-  font-size: 2.2rem;
-  color: #2b2b2b;
-}
-
-.form-div {
-  margin-top: 5rem;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
 }
