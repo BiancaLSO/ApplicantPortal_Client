@@ -26,15 +26,7 @@ function App() {
   );
 
   useEffect(() => {
-    // Example usage:
-    // 1. Login
-    dispatch(login({ username: "emilie123", password: "123456789" }));
-    /* dispatch(setApplicationId(applicationIdRedux)) */
-    console.log(token); // Add this line
-  }, [dispatch, applicationIdRedux, token]);
-
-  useEffect(() => {
-    if (user !== null) {
+    if (user !== null && user !== undefined) {
       dispatch(getNotifications({ userId: user.id, token: token }));
     }
   }, [dispatch, user]);
@@ -42,10 +34,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={<Navigate to={token ? "/applications" : "/auth/login"} />}
-        />
+      <Route
+  path="/"
+  element={token ? <Navigate to="/applications" /> : <Navigate to="/auth/login" />}
+/>
         <Route path="/auth/login" element={<Login />} />
         <Route path="/applications" element={<MyApplications />} />
         <Route path="/grants" element={<Grants />} />
