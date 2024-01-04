@@ -4,6 +4,7 @@ import { authReducer } from "./redux/auth/authSlice";
 import { applicationReducer } from "./redux/application/applicationSlice";
 import { notificationReducer } from "./redux/notifications/notificationsSlice";
 import { grantReducer } from "./redux/grant/grantSlice";
+import { categoryReducer } from "./redux/category/categorySlice";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     application: applicationReducer,
     notifications: notificationReducer,
     grants: grantReducer,
+    categories: categoryReducer,
     // Add other reducers if needed
   },
 });

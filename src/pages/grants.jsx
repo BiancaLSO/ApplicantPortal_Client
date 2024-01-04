@@ -9,23 +9,17 @@ import SearchBar from "../components/SearchBar";
 import { useSelector, useDispatch } from "react-redux";
 import { getGrants } from "../redux/grant/grantSlice";
 import { useEffect } from "react";
+import { getCategories } from "../redux/category/categorySlice";
 
 const Grants = () => {
   const dispatch = useDispatch();
   const grants = useSelector((state) => state.grants);
+  const categories = useSelector((state) => state.categories.categories);
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
-    dispatch(getGrants(token));
+    dispatch(getCategories({ token }));
   }, [dispatch, token]);
-
-  const categories = [
-    "Education",
-    "Design&Crafts",
-    "Visual Arts",
-    "Research",
-    "Documentation",
-  ];
 
   return (
     <div className="app-container">

@@ -1,34 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/category-chips.css";
 
 const CategoryChips = ({ categories }) => {
   const [selectedChip, setSelectedChip] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  console.log("Categories in CategoryChips:", categories);
 
-  const toggleChip = (category) => {
-    const isSelected = selectedChip.includes(category);
-    setSelectedChip((prevSelectedChip) => {
-      if (isSelected) {
-        return prevSelectedChip.filter((chip) => chip !== category);
-      } else {
-        return [...prevSelectedChip, category];
-      }
-    });
-  };
+  useEffect(() => {
+    setIsLoading(true);
+    if (categories && categories.length > 0) {
+      setIsLoading(false);
+    }
+  }, [categories]);
 
   return (
     <div className="category-chips">
       <span className="category">Categories:</span>
-      {categories.map((category) => (
-        <span
-          key={category}
-          className={`chip ${
-            selectedChip.includes(category) ? "selected" : ""
-          }`}
-          onClick={() => toggleChip(category)}
-        >
-          {category}
-        </span>
-      ))}
+      {isLoading ? (
+        <p>Loading categories...</p>
+      ) : categories && categories.length > 0 ? (
+        categories.map((category) => (
+          <span
+            key={category.id}
+            className={`chip ${
+              selectedChip.includes(category) ? "selected" : ""
+            }`}
+            onClick={() =>
+              setSelectedChip((prevSelectedChip) => {
+                const isSelected = prevSelectedChip.includes(category);
+                return isSelected
+                  ? prevSelectedChip.filter((chip) => chip !== category)
+                  : [...prevSelectedChip, category];
+              })
+            }
+          >
+            {category.name}
+          </span>
+        ))
+      ) : (
+        <p>No categories available.</p>
+      )}
     </div>
   );
 };

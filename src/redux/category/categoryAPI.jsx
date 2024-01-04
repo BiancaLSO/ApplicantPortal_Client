@@ -1,24 +1,24 @@
 import axios from "axios";
 
-class GrantAPI {
-  static async getGrants(token) {
+class CategoryAPI {
+  static async getCategories(token) {
     try {
-      const result = await axios.get(`http://localhost:3005/grant`, {
+      const result = await axios.get(`http://localhost:3005/category`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
       const errorResponse = error.response.data;
       const errorMessage =
-        errorResponse.message || "Fetching grant failed. Please try again.";
+        errorResponse.message ||
+        "Fetching categories failed. Please try again.";
       throw new Error(errorMessage);
     }
   }
 }
 
-export default GrantAPI;
+export default CategoryAPI;
