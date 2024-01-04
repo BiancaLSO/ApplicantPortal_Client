@@ -6,38 +6,18 @@ import "../css/grants-page.css";
 import Grant from "../components/GrantItem";
 import CategoryChips from "../components/CategoryChip";
 import SearchBar from "../components/SearchBar";
+import { useSelector, useDispatch } from "react-redux";
+import { getGrants } from "../redux/grant/grantSlice";
+import { useEffect } from "react";
 
 const Grants = () => {
-  const activeGrants = [
-    {
-      id: 1,
-      title:
-        "Special education support for folk high schools (SPS): Apply for grants for people with severe disabilities 2023",
-      category: "Technology",
-      endDate: "2023-01-02",
-    },
-    {
-      id: 2,
-      title:
-        "Special education support for folk high schools (SPS): Apply for grants for people with severe disabilities 2023",
-      category: "Education",
-      endDate: "2023-01-02",
-    },
-    {
-      id: 3,
-      title:
-        "Special education support for folk high schools (SPS): Apply for grants for people with severe disabilities 2023",
-      category: "Education",
-      endDate: "2023-01-02",
-    },
-    {
-      id: 4,
-      title:
-        "Special education support for folk high schools (SPS): Apply for grants for people with severe disabilities 2023",
-      category: "Education",
-      endDate: "2023-01-02",
-    },
-  ];
+  const dispatch = useDispatch();
+  const grants = useSelector((state) => state.grants);
+  const token = useSelector((state) => state.auth.token);
+
+  useEffect(() => {
+    dispatch(getGrants(token));
+  }, [dispatch, token]);
 
   const categories = [
     "Education",
@@ -67,9 +47,11 @@ const Grants = () => {
         <CategoryChips categories={categories} />
 
         <div className="grants-list">
-          {activeGrants.map((grant) => (
-            <Grant key={grant.id} grant={grant} />
-          ))}
+          {grants.length > 0 ? (
+            grants.map((grant) => <Grant key={grant.id} grant={grant} />)
+          ) : (
+            <p>No grants available.</p>
+          )}
         </div>
       </div>
       <Footer />
