@@ -11,7 +11,8 @@ class UsersAPI {
 
       return result.data;
     } catch (error) {
-      const errorResponse = error.response.data;
+      console.error("Error during signupUser request:", error);
+      const errorResponse = error.response.data || {};
       const errorMessage =
         errorResponse.message || "Sign-up failed. Please try again.";
       throw new Error(errorMessage);

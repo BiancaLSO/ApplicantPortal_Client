@@ -6,8 +6,7 @@ import { useDispatch } from "react-redux";
 import { Checkbox, FormControlLabel, TextField, styled } from "@mui/material";
 
 import "../css/login.css";
-import PhoneIcon from "../images/contact-us.svg";
-import LogoIcon from "../images/logo2.svg";
+import "../css/signup.css";
 import { login } from "../redux/auth/authSlice";
 
 const CssTextField = styled(TextField)(({ theme }) => ({
@@ -40,7 +39,7 @@ const CssTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export default function SignUp({ onSubmitSignUpForm }) {
+export default function SignUpForm({ onSubmitSignUpForm }) {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("MitID");
 
@@ -84,6 +83,14 @@ export default function SignUp({ onSubmitSignUpForm }) {
         )
         .required("Required"),
       email: Yup.string().email("Invalid email").required("Required"),
+
+      username: Yup.string().required("Required"),
+
+      password: Yup.string()
+        .required("No password provided.")
+        .min(8, "Password is too short - should be 8 chars minimum.")
+        .matches(/^[A-Za-z]+$/, "Alphabetical characters only"),
+
       street: Yup.string().required("Required"),
       city: Yup.string()
         .matches(/^[a-zA-ZæøåÆØÅ\s-]+$/, "Must be a valid Danish city name")
@@ -101,231 +108,238 @@ export default function SignUp({ onSubmitSignUpForm }) {
   });
 
   return (
-    <div className="mitid-form">
-      <form onSubmit={formik.handleSubmit}>
-        <div className="mitid-fields">
-          <h2 className="form-title">MitID Sign Up</h2>
-          <div className="mitid-column">
-            <div>
-              <CssTextField
-                id="username"
-                name="username"
-                label="User Name"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.username}
-                error={
-                  formik.touched.username && Boolean(formik.errors.username)
-                }
-                helperText={formik.touched.username && formik.errors.username}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
+    <>
+      <div className="mitid-form">
+        <form onSubmit={formik.handleSubmit}>
+          <div className="mitid-fields">
+            <h2 className="form-title">MitID Sign Up</h2>
+            <div className="form-container">
+              <div className="mitid-column">
+                <div>
+                  <CssTextField
+                    id="username"
+                    name="username"
+                    label="Username"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.username}
+                    error={
+                      formik.touched.username && Boolean(formik.errors.username)
+                    }
+                    helperText={
+                      formik.touched.username && formik.errors.username
+                    }
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <CssTextField
+                    id="password"
+                    name="password"
+                    label="Password"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
+                    error={
+                      formik.touched.password && Boolean(formik.errors.password)
+                    }
+                    helperText={
+                      formik.touched.password && formik.errors.password
+                    }
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <CssTextField
+                    id="firstName"
+                    name="firstName"
+                    label="First Name"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.firstName}
+                    error={
+                      formik.touched.firstName &&
+                      Boolean(formik.errors.firstName)
+                    }
+                    helperText={
+                      formik.touched.firstName && formik.errors.firstName
+                    }
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <CssTextField
+                    id="lastName"
+                    name="lastName"
+                    label="Last Name"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.lastName}
+                    error={
+                      formik.touched.lastName && Boolean(formik.errors.lastName)
+                    }
+                    helperText={
+                      formik.touched.lastName && formik.errors.lastName
+                    }
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <CssTextField
+                    id="cpr"
+                    name="cpr"
+                    label="CPR"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.cpr}
+                    error={formik.touched.cpr && Boolean(formik.errors.cpr)}
+                    helperText={formik.touched.cpr && formik.errors.cpr}
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+              </div>
 
-            <div>
-              <CssTextField
-                id="password"
-                name="password"
-                label="Password"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
+              <div className="mitid-column">
+                <div>
+                  <CssTextField
+                    id="phone"
+                    name="phone"
+                    label="Phone"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.phone}
+                    error={formik.touched.phone && Boolean(formik.errors.phone)}
+                    helperText={formik.touched.phone && formik.errors.phone}
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <CssTextField
+                    id="email"
+                    name="email"
+                    label="Email"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.email}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <CssTextField
+                    id="street"
+                    name="street"
+                    label="Street"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.street}
+                    error={
+                      formik.touched.street && Boolean(formik.errors.street)
+                    }
+                    helperText={formik.touched.street && formik.errors.street}
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <CssTextField
+                    id="city"
+                    name="city"
+                    label="City"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.city}
+                    error={formik.touched.city && Boolean(formik.errors.city)}
+                    helperText={formik.touched.city && formik.errors.city}
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <CssTextField
+                    id="zipCode"
+                    name="zipCode"
+                    label="Zip Code"
+                    variant="outlined"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.zipCode}
+                    error={
+                      formik.touched.zipCode && Boolean(formik.errors.zipCode)
+                    }
+                    helperText={formik.touched.zipCode && formik.errors.zipCode}
+                    style={{
+                      marginTop: "1rem",
+                      width: "20rem",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="form-button-div">
+              <button
+                className="signup-button"
+                type="submit"
+                disabled={
+                  Boolean(formik.errors.firstName) ||
+                  Boolean(formik.errors.lastName) ||
+                  Boolean(formik.errors.phone) ||
+                  Boolean(formik.errors.cpr) ||
+                  Boolean(formik.errors.email) ||
+                  Boolean(formik.errors.street) ||
+                  Boolean(formik.errors.city) ||
+                  Boolean(formik.errors.zipCode) ||
+                  !formik.values.firstName ||
+                  !formik.values.lastName ||
+                  !formik.values.cpr ||
+                  !formik.values.phone ||
+                  !formik.values.email ||
+                  !formik.values.street ||
+                  !formik.values.city ||
+                  !formik.values.zipCode
                 }
-                helperText={formik.touched.password && formik.errors.password}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
-
-            <div>
-              <CssTextField
-                id="firstName"
-                name="firstName"
-                label="First Name"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.firstName}
-                error={
-                  formik.touched.firstName && Boolean(formik.errors.firstName)
-                }
-                helperText={formik.touched.firstName && formik.errors.firstName}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
-            <div>
-              <CssTextField
-                id="lastName"
-                name="lastName"
-                label="Last Name"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.lastName}
-                error={
-                  formik.touched.lastName && Boolean(formik.errors.lastName)
-                }
-                helperText={formik.touched.lastName && formik.errors.lastName}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
-            <div>
-              <CssTextField
-                id="cpr"
-                name="cpr"
-                label="CPR"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.cpr}
-                error={formik.touched.cpr && Boolean(formik.errors.cpr)}
-                helperText={formik.touched.cpr && formik.errors.cpr}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
-            <div>
-              <CssTextField
-                id="phone"
-                name="phone"
-                label="Phone"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.phone}
-                error={formik.touched.phone && Boolean(formik.errors.phone)}
-                helperText={formik.touched.phone && formik.errors.phone}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
+              >
+                SIGN UP
+              </button>
             </div>
           </div>
-          <div className="mitid-column">
-            <div>
-              <CssTextField
-                id="email"
-                name="email"
-                label="Email"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.email}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
-            <div>
-              <CssTextField
-                id="street"
-                name="street"
-                label="Street"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.street}
-                error={formik.touched.street && Boolean(formik.errors.street)}
-                helperText={formik.touched.street && formik.errors.street}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
-            <div>
-              <CssTextField
-                id="city"
-                name="city"
-                label="City"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.city}
-                error={formik.touched.city && Boolean(formik.errors.city)}
-                helperText={formik.touched.city && formik.errors.city}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
-            <div>
-              <CssTextField
-                id="zipCode"
-                name="zipCode"
-                label="Zip Code"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.zipCode}
-                error={formik.touched.zipCode && Boolean(formik.errors.zipCode)}
-                helperText={formik.touched.zipCode && formik.errors.zipCode}
-                style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
-                  width: "20rem",
-                }}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="form-button-div">
-          <button
-            type="submit"
-            disabled={
-              Boolean(formik.errors.firstName) ||
-              Boolean(formik.errors.lastName) ||
-              Boolean(formik.errors.phone) ||
-              Boolean(formik.errors.cpr) ||
-              Boolean(formik.errors.email) ||
-              Boolean(formik.errors.street) ||
-              Boolean(formik.errors.city) ||
-              Boolean(formik.errors.zipCode) ||
-              !formik.values.firstName ||
-              !formik.values.lastName ||
-              !formik.values.cpr ||
-              !formik.values.phone ||
-              !formik.values.email ||
-              !formik.values.street ||
-              !formik.values.city ||
-              !formik.values.zipCode
-            }
-          >
-            SIGN UP
-          </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </>
   );
 }

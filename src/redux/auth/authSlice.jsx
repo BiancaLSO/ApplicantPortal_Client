@@ -11,6 +11,7 @@ const initialState = {
   token: undefined,
   credentialsId: null,
   error: null,
+  signupResponse: undefined,
 };
 
 // Thunk to handle login and save token
@@ -134,7 +135,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(signup.fulfilled, (state, action) => {
-      state.error = null;
+      state.signupResponse = action.payload;
       if (action.payload.id !== undefined) state.error = "Signup success!";
     });
 
