@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import GrantAPI from "./grantAPI";
 
 const initialState = {
-  grant: [],
+  grants: [],
 };
 
-export const getGrants = createAsyncThunk("grant", async ({ token }) => {
+export const getGrants = createAsyncThunk("grants", async ({ token }) => {
   try {
     const response = await GrantAPI.getGrants(token);
     return response;
@@ -16,16 +16,18 @@ export const getGrants = createAsyncThunk("grant", async ({ token }) => {
 });
 
 const grantSlice = createSlice({
-  name: "grant",
+  name: "grants",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getGrants.fulfilled, (state, action) => {
-      state.grant = action.payload;
+      state.grants = action.payload;
+      state.error = null;
     });
 
     builder.addCase(getGrants.rejected, (state, action) => {
-      state.error = "Fetching grants failed";
+      state.grants = [];
+      state.error = action.error.message || "Fetching grants failed";
     });
   },
 });

@@ -13,12 +13,13 @@ import { getCategories } from "../redux/category/categorySlice";
 
 const Grants = () => {
   const dispatch = useDispatch();
-  const grants = useSelector((state) => state.grants);
+  const grants = useSelector((state) => state.grants.grants);
   const categories = useSelector((state) => state.categories.categories);
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
     dispatch(getCategories({ token }));
+    dispatch(getGrants({ token }));
   }, [dispatch, token]);
 
   return (
