@@ -7,14 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "../css/layout.css"; // Import your custom styles
 import "../css/login.css"; // Import your custom styles
-import PhoneIcon from "../images/contact-us.svg";
+import PhoneIcon from "../images/phone.svg";
 import LogoIcon from "../images/logo2.svg";
 
 import { login } from "../redux/auth/authSlice";
 import { signup } from "../redux/auth/authSlice";
 
 import LoginForm from "../components/LoginForm";
-import SignUp from "../components/SignUpForm";
+import SignUpForm from "../components/SignUpForm";
 
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +22,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
+  const signupResponse = useSelector((state) => state.auth.signupResponse);
   const [selectedPage, setSelectedPage] = useState("User");
 
   const handleTabClick = (tabName) => {
@@ -39,6 +40,13 @@ const Login = () => {
       navigate("/applications");
     }
   }, [token]);
+
+  useEffect(() => {
+    console.log("signupResponse", signupResponse);
+    if (signupResponse) {
+      setSelectedPage("User");
+    }
+  }, [signupResponse]);
 
   const onSubmitSignUpForm = (values) => {
     dispatch(
@@ -60,7 +68,7 @@ const Login = () => {
   return (
     <div className="app-container">
       <Navbar />
-      <div className="content-container">
+      <div className="login-content-container">
         <div className="top-container">
           <div className="tabs">
             <div
@@ -125,12 +133,30 @@ const Login = () => {
                 <br />
               </div>
               <div className="contact-div-img-phone-text">
-                <img
-                  loading="lazy"
-                  src={PhoneIcon}
-                  alt="phone"
-                  className="img-phone"
-                />
+                <div
+                  style={{
+                    backgroundColor: "#c0002a",
+                    borderRadius: "100%",
+                    display: "inline-flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    marginBottom: "0.5rem",
+                    marginRight: "0.5rem",
+                  }}
+                >
+                  <img
+                    loading="lazy"
+                    src={PhoneIcon}
+                    alt="phone"
+                    style={{
+                      padding: "0.6rem",
+                      width: "2.3rem",
+                      height: "2rem",
+                      padding: "0.5rem",
+                      width: "2rem",
+                    }}
+                  />
+                </div>
                 <div className="contact-div-phone-text">+45 33 95 42 00</div>
               </div>
             </div>
@@ -139,7 +165,7 @@ const Login = () => {
             <LoginForm onSubmitLoginForm={onSubmitLoginForm} />
           )}
           {selectedPage === "MitID" && (
-            <SignUp onSubmitSignUpForm={onSubmitSignUpForm} />
+            <SignUpForm onSubmitSignUpForm={onSubmitSignUpForm} />
           )}
         </div>
       </div>
