@@ -6,13 +6,13 @@ import ArrowR from "../images/single_right.svg";
 import ArrowL from "../images/single_left.svg";
 
 const headers = [
-  { name: "JournalNr.", key: "journalNr" },
-  { name: "Application Name", key: "applicationName" },
-  { name: "Grant", key: "grant" },
-  { name: "Status", key: "status" },
-  { name: "Last Activity", key: "lastActivity" },
+  { name: "JournalNr.", key: "id" },
+  { name: "Grant Title", key: "grant" },
+  { name: "Status", key: "activities" },
+  { name: "Last Activity Date", key: "lastActivity" },
   { name: "", key: "iconColumn" },
 ];
+
 let itemsPerPageOptions = [5, 10, 20];
 
 export default function ApplicationTable({ data }) {
@@ -46,7 +46,7 @@ export default function ApplicationTable({ data }) {
         </div>
         <div className="tb-column-application">
           {currentItems.map((item, index) => (
-            <div className="tb-row-application" key={index}>
+            <div className="tb-row-application" key={item.id}>
               {headers.map((header) => (
                 <div className="tb-cell-application" key={header.key}>
                   {header.key === "iconColumn" ? (
@@ -55,9 +55,19 @@ export default function ApplicationTable({ data }) {
                     </span>
                   ) : (
                     <p className="tb-cell-text">
-                      {header.key !== "status"
+                      {header.key === "grant" && item.grant
+                        ? item.grant.title
+                        : header.key === "activities" && item.activities
+                        ? item.activities.length > 0
+                          ? item.activities[item.activities.length - 1].status
+                          : ""
+                        : header.key === "lastActivity" && item.activities
+                        ? item.activities.length > 0
+                          ? item.activities[item.activities.length - 1].date
+                          : ""
+                        : header.key !== "status"
                         ? item[header.key]
-                        : item[header.key]?.name}
+                        : ""}
                     </p>
                   )}
                 </div>

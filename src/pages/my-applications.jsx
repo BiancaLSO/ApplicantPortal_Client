@@ -12,33 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../redux/auth/authSlice";
 import { getApplicationByUserId } from "../redux/application/applicationSlice";
 
-const data = [
-  {
-    journalNr: "SKBP36W.2023-0155",
-    applicationName:
-      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
-    grant:
-      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
-    status: {
-      name: "Closed without submission",
-    },
-    lastActivity: "09-11-2023 at 20:02:57",
-    iconColumn: true,
-  },
-  {
-    journalNr: "SKBP36W.2023-0155",
-    applicationName:
-      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
-    grant:
-      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
-    status: {
-      name: "Closed without submission",
-    },
-    lastActivity: "09-11-2023 at 20:02:57",
-    iconColumn: true,
-  },
-];
-
 const MyApplications = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
@@ -101,7 +74,7 @@ const MyApplications = () => {
             </div>
           </div>
         </div>
-        <ApplicationTable data={data} />
+        <ApplicationTable data={applications} />
       </div>
       <Footer />
     </div>
