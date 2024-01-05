@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import "../css/layout.css";
@@ -16,11 +16,23 @@ const Grants = () => {
   const grants = useSelector((state) => state.grants.grants);
   const categories = useSelector((state) => state.categories.categories);
   const token = useSelector((state) => state.auth.token);
+  const [searchedGrants, setSearchedGrants] = useState(grants);
 
   useEffect(() => {
     dispatch(getCategories({ token }));
     dispatch(getGrants({ token }));
   }, [dispatch, token]);
+
+  useEffect(() => {
+    setSearchedGrants(grants);
+  }, [grants]);
+
+  const handleSearch = (searchQuery) => {
+    const searched = grants.filter((grant) =>
+      grant.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setSearchedGrants(searched);
+  };
 
   return (
     <div className="app-container">
@@ -37,13 +49,15 @@ const Grants = () => {
           Choose and apply for one of the currently active grants.
         </h2>
 
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
 
         <CategoryChips categories={categories} />
 
         <div className="grants-list">
-          {grants.length > 0 ? (
-            grants.map((grant) => <Grant key={grant.id} grant={grant} />)
+          {searchedGrants.length > 0 ? (
+            searchedGrants.map((grant) => (
+              <Grant key={grant.id} grant={grant} />
+            ))
           ) : (
             <p>No grants available.</p>
           )}
