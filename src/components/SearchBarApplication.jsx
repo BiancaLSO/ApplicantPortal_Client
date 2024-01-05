@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import "../css/search-bar.css";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 
-const SearchBarApplication = () => {
+const SearchBarApplication = ({ onSearch }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+    onSearch(event.target.value);
+  };
+
   return (
     <div className="search-application-container">
       <TextField
@@ -12,6 +19,8 @@ const SearchBarApplication = () => {
         placeholder="Search"
         fullWidth="true"
         variant="outlined"
+        value={searchQuery}
+        onChange={handleSearchChange}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

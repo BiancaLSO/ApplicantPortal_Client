@@ -144,12 +144,10 @@ class ApplicationAPI {
     }
   }
 
-  static async archiveApplication(applicationId, value, token) {
-    console.log(value);
+  static async getApplicationByUserId(userId, token) {
     try {
-      const result = await axios.put(
-        `http://localhost:3005/application/archive/${applicationId}`,
-        value,
+      const result = await axios.get(
+        `http://localhost:3005/application/user-applications/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

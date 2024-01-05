@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import "../css/layout.css";
@@ -8,20 +8,11 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import ApplicationTable from "../components/ApplicationTable";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserData } from "../redux/auth/authSlice";
+import { getApplicationByUserId } from "../redux/application/applicationSlice";
 
 const data = [
-  {
-    journalNr: "SKBP36W.2023-0155",
-    applicationName:
-      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
-    grant:
-      "Specialundervisningsstøtte til folkehøjskolerne (SPS): Ansøg om tilskud til specialundervisning 2023",
-    status: {
-      name: "Closed without submission",
-    },
-    lastActivity: "09-11-2023 at 20:02:57",
-    iconColumn: true,
-  },
   {
     journalNr: "SKBP36W.2023-0155",
     applicationName:
@@ -49,6 +40,27 @@ const data = [
 ];
 
 const MyApplications = () => {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const user = useSelector((state) => state.auth.user);
+  const applications = useSelector((state) => state.application.applications);
+
+  useEffect(() => {
+    dispatch(getUserData({ token }));
+  }, [dispatch, token]);
+
+  useEffect(() => {
+    if (user) {
+      const userId = user.id;
+      dispatch(getApplicationByUserId({ userId, token }));
+      console.log(applications);
+    }
+  }, [dispatch, user, token]);
+
+  const handleSearch = (searchQuery) => {
+    console.log(searchQuery);
+  };
+
   return (
     <div className="app-container" style={{ zIndex: 1 }}>
       <Navbar
@@ -73,7 +85,7 @@ const MyApplications = () => {
                 activity.
               </p>
             </div>
-            <SearchBarApplication />
+            <SearchBarApplication onSearch={handleSearch} />
             <div className="dropdown-container">
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                 <Select

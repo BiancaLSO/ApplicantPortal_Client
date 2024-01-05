@@ -10,6 +10,7 @@ import ApplicationAPI from "./applicationAPI";
 const initialState = {
   applicationId: undefined,
   application: null,
+  applications: [],
   applicationForm: null,
   hasBeenSubmitted: undefined,
   error: null,
@@ -224,6 +225,22 @@ export const setPopUpMsg = createAsyncThunk(
 );
 
 // Thunk to fetch user data based on userId
+export const getApplicationByUserId = createAsyncThunk(
+  "applicationByUserId",
+  async ({ userId, token }) => {
+    try {
+      const applications = await ApplicationAPI.getApplicationByUserId(
+        userId,
+        token
+      );
+
+      return applications;
+    } catch (error) {
+      // Handle errors here
+      throw new Error("Error fetching application form data");
+    }
+  }
+);
 
 // Create a slice to manage the state
 const applicationSlice = createSlice({
@@ -273,6 +290,10 @@ const applicationSlice = createSlice({
       state.applicationId = action.payload;
     });
 
+    builder.addCase(getApplicationByUserId.fulfilled, (state, action) => {
+      state.applications = action.payload;
+    });
+
     builder.addCase(getApplication.rejected, (state, action) => {
       state.error = "Fetching application failed";
     });
@@ -287,6 +308,10 @@ const applicationSlice = createSlice({
 
     builder.addCase(resubmitApplication.rejected, (state, action) => {
       state.error = "Error when resubmitting the form";
+    });
+
+    builder.addCase(getApplicationByUserId.rejected, (state, action) => {
+      state.error = "Error when fetching the applications by userId";
     });
   },
 });
