@@ -1,38 +1,35 @@
 import React, { useState, useEffect } from "react";
 import "../css/category-chips.css";
 
-const CategoryChips = ({ categories }) => {
-  const [selectedChip, setSelectedChip] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  console.log("Categories in CategoryChips:", categories);
+const CategoryChips = ({ categories, onCategorySelect }) => {
+  const [selectedChips, setSelectedChips] = useState([]);
+
+  const handleChipClick = (category) => {
+    setSelectedChips((prevSelectedChips) => {
+      const isSelected = prevSelectedChips.includes(category);
+      return isSelected
+        ? prevSelectedChips.filter((chip) => chip !== category)
+        : [...prevSelectedChips, category];
+    });
+
+    onCategorySelect(selectedChips);
+  };
 
   useEffect(() => {
-    setIsLoading(true);
-    if (categories && categories.length > 0) {
-      setIsLoading(false);
-    }
-  }, [categories]);
+    onCategorySelect(selectedChips);
+  }, [selectedChips, onCategorySelect]);
 
   return (
     <div className="category-chips">
       <span className="category">Categories:</span>
-      {isLoading ? (
-        <p>Loading categories...</p>
-      ) : categories && categories.length > 0 ? (
+      {categories && categories.length > 0 ? (
         categories.map((category) => (
           <span
             key={category.id}
             className={`chip ${
-              selectedChip.includes(category) ? "selected" : ""
+              selectedChips.includes(category) ? "selected" : ""
             }`}
-            onClick={() =>
-              setSelectedChip((prevSelectedChip) => {
-                const isSelected = prevSelectedChip.includes(category);
-                return isSelected
-                  ? prevSelectedChip.filter((chip) => chip !== category)
-                  : [...prevSelectedChip, category];
-              })
-            }
+            onClick={() => handleChipClick(category)}
           >
             {category.name}
           </span>

@@ -8,6 +8,7 @@ const initialState = {
 export const getGrants = createAsyncThunk("grants", async ({ token }) => {
   try {
     const response = await GrantAPI.getGrants(token);
+    console.log("grants from slice", response);
     return response;
   } catch (error) {
     console.error("Error fetching grants:", error);

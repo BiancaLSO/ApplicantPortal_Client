@@ -17,6 +17,8 @@ const Grants = () => {
   const categories = useSelector((state) => state.categories.categories);
   const token = useSelector((state) => state.auth.token);
   const [searchedGrants, setSearchedGrants] = useState(grants);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     dispatch(getCategories({ token }));
@@ -33,6 +35,31 @@ const Grants = () => {
     );
     setSearchedGrants(searched);
   };
+
+  const handleCategorySelect = (selectedChips) => {
+    setSelectedCategories(selectedChips);
+  };
+
+  useEffect(() => {
+    const filteredGrants = grants.filter((grant) => {
+      const matchesSearch =
+        grant.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        searchQuery === "";
+
+      const matchesCategories =
+        selectedCategories.length === 0 ||
+        (grant.category &&
+          selectedCategories.some((category) =>
+            grant.category.name
+              .toLowerCase()
+              .includes(category.name.toLowerCase())
+          ));
+
+      return matchesSearch && matchesCategories;
+    });
+
+    setSearchedGrants(filteredGrants);
+  }, [searchQuery, selectedCategories, grants]);
 
   return (
     <div className="app-container">
@@ -51,7 +78,10 @@ const Grants = () => {
 
         <SearchBar onSearch={handleSearch} />
 
-        <CategoryChips categories={categories} />
+        <CategoryChips
+          categories={categories}
+          onCategorySelect={handleCategorySelect}
+        />
 
         <div className="grants-list">
           {searchedGrants.length > 0 ? (
