@@ -4,6 +4,7 @@ import DoubleArrowR from "../images/double_right.svg";
 import DoubleArrowL from "../images/double_left.svg";
 import ArrowR from "../images/single_right.svg";
 import ArrowL from "../images/single_left.svg";
+import moment from "moment";
 
 const headers = [
   { name: "JournalNr.", key: "id" },
@@ -66,7 +67,9 @@ export default function ApplicationTable({ data }) {
                           : ""
                         : header.key === "lastActivity" && item.activities
                         ? item.activities.length > 0
-                          ? item.activities[item.activities.length - 1].date
+                          ? moment(
+                              item.activities[item.activities.length - 1].date
+                            ).format("DD/MM/YYYY [at] HH:mm")
                           : ""
                         : header.key !== "status"
                         ? item[header.key]

@@ -18,6 +18,7 @@ const MyApplications = () => {
   const user = useSelector((state) => state.auth.user);
   const applications = useSelector((state) => state.application.applications);
   const [filteredApplications, setFilteredApplications] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState(true);
 
   useEffect(() => {
     dispatch(getUserData({ token }));
@@ -37,16 +38,31 @@ const MyApplications = () => {
 
   const handleSearch = (searchQuery) => {
     const filteredApplications = applications.filter((application) => {
-      return (
+      const matchesSearch =
         application.id.toString().includes(searchQuery) ||
         (application.grant &&
           application.grant.title
             .toLowerCase()
             .includes(searchQuery.toLowerCase())) ||
         (application.status &&
-          application.status.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+          application.status.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      const matchesStatus = application.isActive === selectedStatus;
+
+      return matchesSearch && matchesStatus;
     });
+    setFilteredApplications(filteredApplications);
+  };
+
+  const handleStatusChange = (event) => {
+    const newStatus = event.target.value;
+    setSelectedStatus(newStatus);
+
+    // Filter applications based on the new status
+    const filteredApplications = applications.filter((application) => {
+      return application.isActive === newStatus;
+    });
+
     setFilteredApplications(filteredApplications);
   };
 
@@ -78,7 +94,7 @@ const MyApplications = () => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   defaultValue={true}
-                  // onChange={handleChange}
+                  onChange={handleStatusChange}
                 >
                   <MenuItem value={true}>Active</MenuItem>
                   <MenuItem value={false}>Completed</MenuItem>
