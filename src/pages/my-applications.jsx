@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import "../css/layout.css";
@@ -17,6 +17,7 @@ const MyApplications = () => {
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
   const applications = useSelector((state) => state.application.applications);
+  const [filteredApplications, setFilteredApplications] = useState([]);
 
   useEffect(() => {
     dispatch(getUserData({ token }));
@@ -30,8 +31,23 @@ const MyApplications = () => {
     }
   }, [dispatch, user, token]);
 
+  useEffect(() => {
+    setFilteredApplications(applications);
+  }, [applications]);
+
   const handleSearch = (searchQuery) => {
-    console.log(searchQuery);
+    const filteredApplications = applications.filter((application) => {
+      return (
+        application.id.toString().includes(searchQuery) ||
+        (application.grant &&
+          application.grant.title
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) ||
+        (application.status &&
+          application.status.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    });
+    setFilteredApplications(filteredApplications);
   };
 
   return (
@@ -53,10 +69,7 @@ const MyApplications = () => {
           <div className="text-and-search-container">
             <div className="texts">
               <p className="text-1">Search through applications</p>
-              <p className="text-2">
-                Search by journalnr., grant, application name, status, or last
-                activity.
-              </p>
+              <p className="text-2">Search by journalnr., grant, or status.</p>
             </div>
             <SearchBarApplication onSearch={handleSearch} />
             <div className="dropdown-container">
@@ -74,7 +87,7 @@ const MyApplications = () => {
             </div>
           </div>
         </div>
-        <ApplicationTable data={applications} />
+        <ApplicationTable data={filteredApplications} />
       </div>
       <Footer />
     </div>

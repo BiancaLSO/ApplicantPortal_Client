@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/application-table.css";
 import DoubleArrowR from "../images/double_right.svg";
 import DoubleArrowL from "../images/double_left.svg";
@@ -22,8 +22,11 @@ export default function ApplicationTable({ data }) {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-
   const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
