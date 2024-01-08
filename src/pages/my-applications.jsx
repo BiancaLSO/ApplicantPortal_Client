@@ -9,7 +9,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import ApplicationTable from "../components/ApplicationTable";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserData } from "../redux/auth/authSlice";
+import { getUserDetails } from "../redux/auth/authSlice";
 import { getApplicationByUserId } from "../redux/application/applicationSlice";
 
 const MyApplications = () => {
@@ -19,10 +19,6 @@ const MyApplications = () => {
   const applications = useSelector((state) => state.application.applications);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState(true);
-
-  useEffect(() => {
-    dispatch(getUserData({ token }));
-  }, [dispatch, token]);
 
   useEffect(() => {
     if (user) {

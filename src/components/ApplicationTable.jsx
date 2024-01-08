@@ -61,7 +61,7 @@ export default function ApplicationTable({ data }) {
           ))}
         </div>
         <div className="tb-column-application">
-          {currentItems.map((item, index) => (
+          {currentItems.map((item) => (
             <div
               className="tb-row-application"
               key={item.id}
@@ -70,16 +70,17 @@ export default function ApplicationTable({ data }) {
               {headers.map((header) => (
                 <div className="tb-cell-application" key={header.key}>
                   {header.key === "iconColumn" ? (
-                    <span class="material-symbols-outlined edit-icon-container">
+                    <span className="material-symbols-outlined edit-icon-container">
                       edit_square
                     </span>
                   ) : (
                     <p className="tb-cell-text">
                       {header.key === "grant" && item.grant
-                        ? item.grant.title
+                        ? item.grant.title // Ensure that item.grant.title is a string
                         : header.key === "activities" && item.activities
                         ? item.activities.length > 0
                           ? item.activities[item.activities.length - 1].status
+                              .name
                           : ""
                         : header.key === "lastActivity" && item.activities
                         ? item.activities.length > 0
@@ -88,7 +89,7 @@ export default function ApplicationTable({ data }) {
                             ).format("DD/MM/YYYY [at] HH:mm")
                           : ""
                         : header.key !== "status"
-                        ? item[header.key]
+                        ? item[header.key] // Ensure that item[header.key] is a string
                         : ""}
                     </p>
                   )}

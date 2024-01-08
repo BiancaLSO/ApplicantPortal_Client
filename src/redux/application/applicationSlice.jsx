@@ -158,7 +158,7 @@ export const saveApplication = createAsyncThunk(
   "application/saveApplication/update/id",
   async ({ applicationId, application, token }, { dispatch }) => {
     try {
-      console.log("helloooo");
+      console.log("helloooo", application);
       const response = await ApplicationAPI.saveApplication(
         applicationId,
         application,
@@ -234,7 +234,7 @@ export const archiveApplication = createAsyncThunk(
 export const setApplicationId = createAsyncThunk(
   "application/setApplicationId",
   async ({ applicationId, token }, { dispatch }) => {
-    console.log(applicationId);
+    console.log("the slice", applicationId);
     if (applicationId) {
       dispatch(
         getApplication({
@@ -277,6 +277,7 @@ export const resetIdState = createAsyncThunk(
 export const getApplicationByUserId = createAsyncThunk(
   "applicationByUserId",
   async ({ userId, token }) => {
+    console.log(userId);
     try {
       const applications = await ApplicationAPI.getApplicationByUserId(
         userId,

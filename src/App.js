@@ -11,7 +11,7 @@ import {
   Redirect,
   Navigate,
 } from "react-router-dom";
-import { getUserData, login } from "./redux/auth/authSlice";
+import { login } from "./redux/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Login from "./pages/login";
 import { getNotifications } from "./redux/notifications/notificationsSlice";

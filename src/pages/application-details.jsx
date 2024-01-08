@@ -8,7 +8,7 @@ import ApplicationForm from "../components/ApplicationForm1";
 import Modal from "react-modal";
 import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
-import { editUser, getUserData } from "../redux/auth/authSlice";
+import { editUser } from "../redux/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ApplicationForm1 from "../components/ApplicationForm1";
 import ApplicationForm4 from "../components/ApplicationForm4";
@@ -56,7 +56,9 @@ export default function ApplicationDetails({ deadline }) {
   );
 
   useEffect(() => {
+    console.log("the id", applicationId);
     if (applicationId && !grantId) {
+      console.log("hello");
       dispatch(setApplicationId({ applicationId, token }));
     }
   }, [dispatch, applicationId]);
@@ -134,7 +136,7 @@ export default function ApplicationDetails({ deadline }) {
     console.log(body);
     let applicationData;
 
-    if (grantId === 1) {
+    if (grant && grant.id === 1) {
       applicationData = {
         project_title: body.values?.projectTitle,
         experience_description: body.values?.experienceDescription,
@@ -145,7 +147,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 2) {
+    if (grant && grant.id === 2) {
       applicationData = {
         traveler_name_and_position: body.values?.travelerNameAndPosition,
         purpose_description: body.values?.purposeDescription,
@@ -161,7 +163,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 3) {
+    if (grant && grant.id === 3) {
       applicationData = {
         recedency_name: body.values?.recedencyName,
         project_description: body.values?.projectDescription,
@@ -174,7 +176,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 4) {
+    if (grant && grant.id === 4) {
       applicationData = {
         author_full: body.values?.authorFullName,
         event_location: body.values?.eventLocation,
@@ -282,7 +284,7 @@ export default function ApplicationDetails({ deadline }) {
     console.log("the resubmit");
     let applicationData;
 
-    if (grantId === 1) {
+    if (grant && grant.id === 1) {
       applicationData = {
         project_title: values.projectTitle,
         experience_description: values.experienceDescription,
@@ -293,7 +295,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 2) {
+    if (grant && grant.id === 2) {
       applicationData = {
         traveler_name_and_position: values.travelerNameAndPosition,
         purpose_description: values.purposeDescription,
@@ -309,7 +311,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 3) {
+    if (grant && grant.id === 3) {
       applicationData = {
         recedency_name: values.recedencyName,
         project_description: values.projectDescription,
@@ -322,7 +324,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 4) {
+    if (grant && grant.id === 4) {
       applicationData = {
         author_full: values.authorFullName,
         event_location: values.eventLocation,
@@ -382,7 +384,7 @@ export default function ApplicationDetails({ deadline }) {
   const onUpdateForm = (values) => {
     let applicationData;
 
-    if (grantId === 1) {
+    if (grant && grant.id === 1) {
       applicationData = {
         project_title: values.projectTitle,
         experience_description: values.experienceDescription,
@@ -393,7 +395,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 2) {
+    if (grant && grant.id === 2) {
       applicationData = {
         traveler_name_and_position: values.travelerNameAndPosition,
         purpose_description: values.purposeDescription,
@@ -409,7 +411,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 3) {
+    if (grant && grant.id === 3) {
       applicationData = {
         recedency_name: values.recedencyName,
         project_description: values.projectDescription,
@@ -422,7 +424,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 4) {
+    if (grant && grant.id === 4) {
       applicationData = {
         author_full: values.authorFullName,
         event_location: values.eventLocation,
@@ -483,7 +485,8 @@ export default function ApplicationDetails({ deadline }) {
     console.log("the resubmit");
     let applicationData;
 
-    if (grantId === 1) {
+    if (grant && grant.id === 1) {
+      console.log(values.projectTitle);
       applicationData = {
         project_title: values.projectTitle,
         experience_description: values.experienceDescription,
@@ -494,7 +497,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 2) {
+    if (grant && grant.id === 2) {
       applicationData = {
         traveler_name_and_position: values.travelerNameAndPosition,
         purpose_description: values.purposeDescription,
@@ -510,7 +513,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 3) {
+    if (grant && grant.id === 3) {
       console.log(values.projectDescription);
       applicationData = {
         recedency_name: values.recedencyName,
@@ -524,7 +527,7 @@ export default function ApplicationDetails({ deadline }) {
       };
     }
 
-    if (grantId === 4) {
+    if (grant && grant.id === 4) {
       applicationData = {
         author_full: values.authorFullName,
         event_location: values.eventLocation,
@@ -707,12 +710,14 @@ export default function ApplicationDetails({ deadline }) {
               <p>
                 <span style={{ fontWeight: "600" }}>Application status :</span>
                 <span style={{ marginLeft: "2rem" }}>
-                  {application
+                  {application &&
+                  application.activities &&
+                  application.activities.length > 0
                     ? application.activities[
                         application.activities.length > 1
                           ? application.activities.length - 1
-                          : 1
-                      ].status.name
+                          : 0
+                      ]?.status?.name || "Status not available"
                     : "Application not submitted"}
                 </span>
               </p>

@@ -33,7 +33,7 @@ export const signup = createAsyncThunk(
 
 export const getUserData = createAsyncThunk(
   "users/getUserData",
-  async (credentialsId) => {
+  async ({ credentialsId }) => {
     try {
       // Call your API to fetch user data using userId
       const user = await UsersAPI.getUser(credentialsId);
@@ -58,8 +58,9 @@ export const login = createAsyncThunk(
       // Save token to local storage
       localStorage.setItem("token", response.token);
 
+      console.log("the problme", response.id);
       // Dispatch another action after updating the state
-      dispatch(getUserData(response.id));
+      dispatch(getUserData({ credentialsId: response.id }));
 
       // Return both the token and credentialsId
       return response;
