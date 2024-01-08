@@ -1,0 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: 1fr auto; /* Create two rows, the first will take the available space, and the second will be the footer */
+  font-family: "Red Hat Display", sans-serif;
+}
