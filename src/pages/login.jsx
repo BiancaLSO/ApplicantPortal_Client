@@ -1,22 +1,19 @@
-import React, { useEffect } from "react";
-import Navbar from "../components/NavBar";
-import Footer from "../components/Footer";
-
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import "../css/layout.css"; // Import your custom styles
-import "../css/login.css"; // Import your custom styles
+import "../css/layout.css";
+import "../css/login.css";
+
 import PhoneIcon from "../images/phone.svg";
 import LogoIcon from "../images/logo2.svg";
 
 import { login } from "../redux/auth/authSlice";
 import { signup } from "../redux/auth/authSlice";
 
+import Navbar from "../components/NavBar";
 import LoginForm from "../components/LoginForm";
 import SignUpForm from "../components/SignUpForm";
-
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -26,7 +23,6 @@ const Login = () => {
   const [selectedPage, setSelectedPage] = useState("User");
 
   const handleTabClick = (tabName) => {
-    console.log(tabName);
     setSelectedPage(tabName);
   };
 
@@ -35,14 +31,12 @@ const Login = () => {
   };
 
   useEffect(() => {
-    console.log("token", token);
     if (token) {
       navigate("/applications");
     }
   }, [token]);
 
   useEffect(() => {
-    console.log("signupResponse", signupResponse);
     if (signupResponse) {
       setSelectedPage("User");
     }
@@ -122,13 +116,20 @@ const Login = () => {
 
             <div className="contact-div">
               <div className="contact-div-title">Write to us :</div>
-              <div className="contact-div-link">Tilskudsportal@slks.dk</div>
+              <div className="contact-div-link">
+                <a
+                  href="mailto:tilskudsportal@slks.dk"
+                  style={{ color: "#c0002a" }}
+                >
+                  Tilskudsportal@slks.dk
+                </a>
+              </div>
               <div className="contact-div-contact-us">Contact us :</div>
               <div className="contact-div-hours">
                 Mon - Fri : 08:00 - 17:00
                 <br />
               </div>
-              <div className="contact-div-hours-text">
+              <div className="contact-div-hours">
                 Sat - Sun : 09:00 - 13:00
                 <br />
               </div>
@@ -157,7 +158,11 @@ const Login = () => {
                     }}
                   />
                 </div>
-                <div className="contact-div-phone-text">+45 33 95 42 00</div>
+                <div className="contact-div-phone-text">
+                  <a href="tel:+45 33 95 42 00" style={{ color: "#c0002a" }}>
+                    +45 33 95 42 00
+                  </a>
+                </div>
               </div>
             </div>
           </div>

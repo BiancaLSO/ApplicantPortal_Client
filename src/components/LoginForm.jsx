@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-
-import { Checkbox, FormControlLabel, TextField, styled } from "@mui/material";
+import { TextField, styled } from "@mui/material";
 
 import "../css/login.css";
-import PhoneIcon from "../images/contact-us.svg";
-import LogoIcon from "../images/logo2.svg";
-import { login } from "../redux/auth/authSlice";
 
 const CssTextField = styled(TextField)(({ theme }) => ({
   "& label.Mui-focused": {
@@ -40,13 +35,7 @@ const CssTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export default function LoginForm({ onSubmitLoginForm, userDetails }) {
-  const [activeTab, setActiveTab] = useState("User");
-
-  const handleTabClick = (tabName) => {
-    setActiveTab(tabName);
-  };
-
+export default function LoginForm({ onSubmitLoginForm }) {
   const formik = useFormik({
     initialValues: {
       username: "",

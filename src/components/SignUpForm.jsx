@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { TextField, styled } from "@mui/material";
 
-import { Checkbox, FormControlLabel, TextField, styled } from "@mui/material";
-
-import "../css/login.css";
 import "../css/signup.css";
-import { login } from "../redux/auth/authSlice";
 
 const CssTextField = styled(TextField)(({ theme }) => ({
   "& label.Mui-focused": {
@@ -40,13 +36,6 @@ const CssTextField = styled(TextField)(({ theme }) => ({
 }));
 
 export default function SignUpForm({ onSubmitSignUpForm }) {
-  const dispatch = useDispatch();
-  const [activeTab, setActiveTab] = useState("MitID");
-
-  const handleTabClick = (tabName) => {
-    setActiveTab(tabName);
-  };
-
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -100,10 +89,8 @@ export default function SignUpForm({ onSubmitSignUpForm }) {
         .required("Required"),
     }),
     onSubmit: (values, { resetForm }) => {
-      console.log("hello", values);
       onSubmitSignUpForm(values);
       resetForm();
-      console.log(values);
     },
   });
 

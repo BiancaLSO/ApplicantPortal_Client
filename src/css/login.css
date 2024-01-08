@@ -147,7 +147,8 @@
 }
 .contact-div-contact-us {
   color: #282828;
-  margin-top: 52px;
+  margin-top: 45px;
+  margin-bottom: 20px;
   font: 500 16px Red Hat Display, -apple-system, Roboto, Helvetica, sans-serif;
 }
 @media (max-width: 991px) {
