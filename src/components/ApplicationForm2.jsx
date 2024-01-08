@@ -44,7 +44,6 @@ const CssTextField = styled(TextField)(({ theme }) => ({
 }));
 
 export default function ApplicationForm2({
-  grant,
   onSubmitForm,
   onResubmitForm,
   applicationDetails,
@@ -66,6 +65,7 @@ export default function ApplicationForm2({
     applicationDetails ? Number(applicationDetails.form_step) : 1
   );
   const application = useSelector((state) => state.application.application);
+  const grant = useSelector((state) => state.grants.grant);
 
   const isValidCountry = async (value) => {
     try {
@@ -138,11 +138,12 @@ export default function ApplicationForm2({
         .required("Required")
         .min(10, "Must be at least 10 characters")
         .max(100, "Must be at most 100 characters"),
+
       purposeDescription: Yup.string()
         .required("Required")
         .min(100, "Must be at least 100 characters")
         .max(1000, "Must be at most 1000 characters"),
-      // Then use this function in your Yup validation schema
+
       departureCountry: Yup.string()
         .required("Required")
         .min(3, "Must be at least 3 characters")
@@ -349,7 +350,7 @@ export default function ApplicationForm2({
       <h2 className="sec-title" style={{ fontWeight: "500" }}>
         Application form
       </h2>
-      <p className="sec-subtitle">{grant && grant}</p>
+      <p className="sec-subtitle">{grant && grant.title}</p>
       <form onSubmit={formik.handleSubmit} className="form">
         {currentStep === 1 && (
           <div className="form-row">

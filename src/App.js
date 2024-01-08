@@ -21,9 +21,6 @@ function App() {
   const token = useSelector((state) => state.auth.token);
   const credentialsId = useSelector((state) => state.credentialsId);
   const user = useSelector((state) => state.user);
-  const applicationIdRedux = useSelector(
-    (state) => state.application.applicationId
-  );
 
   useEffect(() => {
     if (user !== null && user !== undefined) {
@@ -34,22 +31,22 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route
-  path="/"
-  element={token ? <Navigate to="/applications" /> : <Navigate to="/auth/login" />}
-/>
+        <Route
+          path="/"
+          element={
+            token ? (
+              <Navigate to="/applications" />
+            ) : (
+              <Navigate to="/auth/login" />
+            )
+          }
+        />
         <Route path="/auth/login" element={<Login />} />
         <Route path="/applications" element={<MyApplications />} />
         <Route path="/grants" element={<Grants />} />
         <Route
           path="/applications/details"
-          element={
-            <ApplicationDetails
-              grantId={3}
-              deadline={"2023-12-20"}
-              applicationId={applicationIdRedux}
-            />
-          }
+          element={<ApplicationDetails deadline={"2023-12-20"} />}
         />
         <Route path="/profile" element={<MyProfile user={user} />} />
       </Routes>

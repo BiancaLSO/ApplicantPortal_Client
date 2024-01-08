@@ -3,6 +3,7 @@ import GrantAPI from "./grantAPI";
 
 const initialState = {
   grants: [],
+  grant: {},
 };
 
 export const getGrants = createAsyncThunk("grants", async ({ token }) => {
@@ -16,6 +17,27 @@ export const getGrants = createAsyncThunk("grants", async ({ token }) => {
   }
 });
 
+export const getGrantById = createAsyncThunk(
+  "grant/grantId",
+  async ({ grantId, token }) => {
+    console.log(grantId);
+    try {
+      const response = await GrantAPI.getGrant(grantId, token);
+      return response;
+    } catch (error) {
+      console.error("Error fetching a grant:", error);
+      throw new Error("Fetching a grant failed");
+    }
+  }
+);
+
+export const resetGrantState = createAsyncThunk(
+  "application/resetId",
+  async (type) => {
+    return type;
+  }
+);
+
 const grantSlice = createSlice({
   name: "grants",
   initialState,
@@ -26,9 +48,23 @@ const grantSlice = createSlice({
       state.error = null;
     });
 
+    builder.addCase(getGrantById.fulfilled, (state, action) => {
+      state.grant = action.payload;
+      state.error = null;
+    });
+
+    builder.addCase(resetGrantState.fulfilled, (state, action) => {
+      state.grant = action.payload;
+    });
+
     builder.addCase(getGrants.rejected, (state, action) => {
       state.grants = [];
       state.error = action.error.message || "Fetching grants failed";
+    });
+
+    builder.addCase(getGrantById.rejected, (state, action) => {
+      state.grant = {};
+      state.error = action.error.message || "Fetching a grant by id failed";
     });
   },
 });

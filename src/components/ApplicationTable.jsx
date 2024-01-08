@@ -5,6 +5,7 @@ import DoubleArrowL from "../images/double_left.svg";
 import ArrowR from "../images/single_right.svg";
 import ArrowL from "../images/single_left.svg";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const headers = [
   { name: "JournalNr.", key: "id" },
@@ -19,6 +20,7 @@ let itemsPerPageOptions = [5, 10, 20];
 export default function ApplicationTable({ data }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageOptions[0]);
+  const navigate = useNavigate();
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -38,6 +40,16 @@ export default function ApplicationTable({ data }) {
     setCurrentPage(1);
   };
 
+  const openApplication = (id) => {
+    navigate("/applications/details", {
+      state: {
+        grantId: undefined,
+        applicationId: id,
+        defaultPage: "overview",
+      },
+    });
+  };
+
   return (
     <div className="form-div">
       <div className="form-div-top">
@@ -50,7 +62,11 @@ export default function ApplicationTable({ data }) {
         </div>
         <div className="tb-column-application">
           {currentItems.map((item, index) => (
-            <div className="tb-row-application" key={item.id}>
+            <div
+              className="tb-row-application"
+              key={item.id}
+              onClick={() => openApplication(item.id)}
+            >
               {headers.map((header) => (
                 <div className="tb-cell-application" key={header.key}>
                   {header.key === "iconColumn" ? (

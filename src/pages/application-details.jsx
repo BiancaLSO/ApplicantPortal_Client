@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../components/NavBar"; // Import your Navbar component
 import Footer from "../components/Footer"; // Import your Navbar component
 import "../css/application-details.css";
@@ -17,30 +17,32 @@ import {
   getApplication,
   getApplicationForm,
   isApplicationSubmitted,
+  resetApplicationId,
+  resetIdState,
   resubmitApplication,
   saveApplication,
   setApplicationId,
   setPopUpMsg,
   updateApplication,
 } from "../redux/application/applicationSlice";
+import { useLocation } from "react-router-dom";
+import { getGrantById, resetGrantState } from "../redux/grant/grantSlice";
 
-export default function ApplicationDetails({
-  grantId,
-  deadline,
-  applicationId,
-}) {
+export default function ApplicationDetails({ deadline }) {
+  const location = useLocation();
+  const { grantId, applicationId, defaultPage } = location.state || {};
   const dispatch = useDispatch();
-  const [grantName, setGrantname] = useState("");
   const [journalnr, setJournalNr] = useState("");
-  const [selectedPage, setSelectedPage] = useState("overview");
+  const [selectedPage, setSelectedPage] = useState(defaultPage);
   const [today, setToday] = useState(new Date());
-  const [submitted, setSubmitted] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
   const [openSaveModal, setOpenSaveModal] = useState(false);
   const [openResubmitModal, setOpenResubmitModal] = useState(false);
   const [openSubmitModal, setOpenSubmitModal] = useState(false);
   const [hasFormChanged, setHasFormChanged] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const application = useSelector((state) => state.application.application);
+  const grant = useSelector((state) => state.grants.grant);
   const applicationForm = useSelector(
     (state) => state.application.applicationForm
   );
@@ -49,29 +51,51 @@ export default function ApplicationDetails({
   );
   const popUpMsg = useSelector((state) => state.application.error);
   const token = useSelector((state) => state.auth.token);
+  const applicationIdRedux = useSelector(
+    (state) => state.application.applicationId
+  );
 
   useEffect(() => {
-    if (applicationId) {
+    if (applicationId && !grantId) {
+      dispatch(setApplicationId({ applicationId, token }));
+    }
+  }, [dispatch, applicationId]);
+
+  useEffect(() => {
+    console.log("effin id", applicationIdRedux);
+    console.log("the deets", applicationForm);
+  }, [dispatch, applicationIdRedux, applicationForm]);
+
+  /*  useEffect(() => {
+    console.log("the redux id", applicationIdRedux);
+    if (applicationIdRedux !== null) {
+      console.log("not here", applicationIdRedux);
       dispatch(
         getApplication({
-          applicationId: applicationId,
+          applicationId: applicationIdRedux,
           token: token,
         })
       );
       dispatch(
         getApplicationForm({
-          applicationId: applicationId,
+          applicationId: applicationIdRedux,
           token: token,
         })
       );
       dispatch(
         isApplicationSubmitted({
-          applicationId: applicationId,
+          applicationId: applicationIdRedux,
           token: token,
         })
       );
     }
-  }, [dispatch, applicationId]);
+  }, [dispatch, applicationIdRedux]); */
+
+  useEffect(() => {
+    if (applicationId && application) {
+      dispatch(getGrantById({ grantId: application.grant.id, token: token }));
+    }
+  }, [dispatch, application, applicationId, token]);
 
   useEffect(() => {
     if (user) {
@@ -79,9 +103,32 @@ export default function ApplicationDetails({
     }
   }, [user]);
 
+  /* useEffect(() => {
+    if (grantId && !applicationId) {
+      console.log("not here");
+      dispatch(resetGrantState(undefined));
+      dispatch(resetIdState(undefined));
+    }
+  }, [grantId, applicationId]);
+
   useEffect(() => {
-    getGrantname();
-  }, []);
+    if (
+      grantId &&
+      !grant &&
+      !applicationForm &&
+      !applicationIdRedux &&
+      !application
+    )
+      dispatch(getGrantById({ grantId: grantId, token: token }));
+  }, [application, grant, applicationForm, applicationIdRedux, grantId]); */
+
+  useEffect(() => {
+    if (grantId && !applicationId) {
+      dispatch(resetGrantState(undefined));
+      dispatch(resetIdState(undefined));
+      dispatch(getGrantById({ grantId: grantId, token: token }));
+    }
+  }, [dispatch, grantId, applicationId, token]);
 
   const submitForm = (body) => {
     console.log(body);
@@ -314,7 +361,7 @@ export default function ApplicationDetails({
     );
     dispatch(
       resubmitApplication({
-        applicationId: applicationId,
+        applicationId: applicationIdRedux,
         application: applicationData,
         token: token,
       })
@@ -324,7 +371,7 @@ export default function ApplicationDetails({
 
     dispatch(
       getApplication({
-        applicationId: applicationId,
+        applicationId: applicationIdRedux,
         token: token,
       })
     );
@@ -414,7 +461,7 @@ export default function ApplicationDetails({
     );
     dispatch(
       updateApplication({
-        applicationId: applicationId,
+        applicationId: applicationIdRedux,
         application: applicationData,
         token: token,
       })
@@ -424,7 +471,7 @@ export default function ApplicationDetails({
 
     dispatch(
       getApplication({
-        applicationId: applicationId,
+        applicationId: applicationIdRedux,
         token: token,
       })
     );
@@ -516,7 +563,7 @@ export default function ApplicationDetails({
     );
     dispatch(
       saveApplication({
-        applicationId: applicationId,
+        applicationId: applicationIdRedux,
         application: applicationData,
         token: token,
       })
@@ -526,7 +573,7 @@ export default function ApplicationDetails({
 
     dispatch(
       getApplication({
-        applicationId: applicationId,
+        applicationId: applicationIdRedux,
         token: token,
       })
     );
@@ -534,24 +581,15 @@ export default function ApplicationDetails({
     setSubmitted(true);
   };
 
-  const getGrantname = () => {
-    if (grantId === 1)
-      setGrantname(
-        "International Climate Sustainable Collaborations for music and performing arts"
-      );
-    if (grantId === 2) setGrantname("Curatorial Research Trips");
-    if (grantId === 3) setGrantname("Stays At Foreign Residencies");
-    if (grantId === 4)
-      setGrantname("Literature Meetings for Children and Teens");
-  };
   const getJournalnr = () => {
     console.log(user);
     if (user && user.journalnr) {
       setJournalNr(user.journalnr);
     } else {
-      const initials = user
-        ? user.firstName.charAt(0) + user.lastName.charAt(0)
-        : "AB";
+      const initials =
+        user !== null
+          ? user.firstName.charAt(0) + user.lastName.charAt(0)
+          : "AB";
       const numberSer = generateRandomSequence(8);
 
       setJournalNr(initials + numberSer);
@@ -593,12 +631,12 @@ export default function ApplicationDetails({
         <div className="row">
           <p>Create application</p>
           <p>{">"}</p>
-          <p>{grantName && grantName}</p>
+          <p>{grant && grant.title}</p>
         </div>
         <div className="title">
           <div>
             <h1 style={{ fontWeight: "500", maxWidth: "75rem" }}>
-              {grantName && grantName}
+              {grant && grant.title}
             </h1>
             <div className="subtitle">
               <p>
@@ -615,7 +653,7 @@ export default function ApplicationDetails({
           <div className="tab-cards">
             <span
               onClick={() => {
-                if (applicationId && hasBeenSubmitted) {
+                if (applicationIdRedux && hasBeenSubmitted) {
                   if (hasFormChanged) {
                     setOpenResubmitModal(true);
                   } else setSelectedPage("overview");
@@ -669,7 +707,13 @@ export default function ApplicationDetails({
               <p>
                 <span style={{ fontWeight: "600" }}>Application status :</span>
                 <span style={{ marginLeft: "2rem" }}>
-                  Application not submitted
+                  {application
+                    ? application.activities[
+                        application.activities.length > 1
+                          ? application.activities.length - 1
+                          : 1
+                      ].status.name
+                    : "Application not submitted"}
                 </span>
               </p>
             </div>
@@ -677,7 +721,7 @@ export default function ApplicationDetails({
               <p>
                 <span style={{ fontWeight: "600" }}>Grant name :</span>
                 <span style={{ marginLeft: "2rem" }}>
-                  {grantName && grantName}
+                  {grant && grant.title}
                 </span>
               </p>
               <p>
@@ -688,13 +732,12 @@ export default function ApplicationDetails({
           </div>
         </div>
         <div>
-          {selectedPage === "form" && grantId === 1 && (
+          {selectedPage === "form" && grant && grant.id === 1 && (
             <ApplicationForm1
-              grant={grantName}
               onSubmitForm={submitForm}
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
-              applicationId={applicationId}
+              applicationId={applicationIdRedux}
               hasBeenSubmitted={hasBeenSubmitted}
               openResubmitModal={openResubmitModal}
               openSaveModal={openSaveModal}
@@ -709,13 +752,12 @@ export default function ApplicationDetails({
               userDetails={user}
             />
           )}
-          {selectedPage === "form" && grantId === 2 && (
+          {selectedPage === "form" && grant && grant.id === 2 && (
             <ApplicationForm2
-              grant={grantName}
               onSubmitForm={submitForm}
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
-              applicationId={applicationId}
+              applicationId={applicationIdRedux}
               hasBeenSubmitted={hasBeenSubmitted}
               openResubmitModal={openResubmitModal}
               openSaveModal={openSaveModal}
@@ -730,13 +772,12 @@ export default function ApplicationDetails({
               userDetails={user}
             />
           )}
-          {selectedPage === "form" && grantId === 3 && (
+          {selectedPage === "form" && grant && grant.id === 3 && (
             <ApplicationForm3
-              grant={grantName}
               onSubmitForm={submitForm}
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
-              applicationId={applicationId}
+              applicationId={applicationIdRedux}
               hasBeenSubmitted={hasBeenSubmitted}
               openResubmitModal={openResubmitModal}
               openSaveModal={openSaveModal}
@@ -751,13 +792,12 @@ export default function ApplicationDetails({
               userDetails={user}
             />
           )}
-          {selectedPage === "form" && grantId === 4 && (
+          {selectedPage === "form" && grant && grant.id === 4 && (
             <ApplicationForm4
-              grant={grantName}
               onSubmitForm={submitForm}
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
-              applicationId={applicationId}
+              applicationId={applicationIdRedux}
               hasBeenSubmitted={hasBeenSubmitted}
               openResubmitModal={openResubmitModal}
               openSaveModal={openSaveModal}
@@ -833,30 +873,30 @@ export default function ApplicationDetails({
           </h3>
           {popUpMsg === "Application successfully submitted!" && (
             <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
-              The application for {grantName && grantName} has been submitted.
-              It may take us a few days to review your application. If you have
-              any questions about the process or your application contact the
-              SLSK Portal.
+              The application for {grant && grant && grant?.title} has been
+              submitted. It may take us a few days to review your application.
+              If you have any questions about the process or your application
+              contact the SLSK Portal.
             </p>
           )}
           {popUpMsg === "Application successfully resubmitted!" && (
             <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
-              The application for {grantName && grantName} has been resubmitted.
-              The application processing time will be prolonged due to the
-              resubmission. The processing may take up to 14days, but if you
-              have any further questions, please contact the SLKS portal.
+              The application for {grant && grant && grant?.title} has been
+              resubmitted. The application processing time will be prolonged due
+              to the resubmission. The processing may take up to 14days, but if
+              you have any further questions, please contact the SLKS portal.
             </p>
           )}
           {popUpMsg === "Your progress has been saved!" && (
             <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
-              The changes in the form for the {grantName && grantName}{" "}
+              The changes in the form for the {grant && grant && grant?.title}{" "}
               application have been saved. The application needs to be submitted
               by {deadline}.
             </p>
           )}
           {popUpMsg === "The application has now been archived." && (
             <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
-              The application for {grantName && grantName} has been made
+              The application for {grant && grant && grant?.title} has been made
               inactive and is now archived in our database. The application will
               be deleted and all of the information will be removed
               automatically in 6 months.
@@ -864,9 +904,9 @@ export default function ApplicationDetails({
           )}
           {popUpMsg === "Application successfully created!" && (
             <p style={{ fontSize: "1.4rem", marginBottom: "3rem" }}>
-              The application for {grantName && grantName} has now been created.
-              The application needs to be filled out and submitted by {deadline}
-              .
+              The application for {grant && grant && grant?.title} has now been
+              created. The application needs to be filled out and submitted by{" "}
+              {deadline}.
             </p>
           )}
           <button
