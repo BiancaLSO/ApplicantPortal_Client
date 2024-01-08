@@ -5,6 +5,7 @@ import { applicationReducer } from "./redux/application/applicationSlice";
 import { notificationReducer } from "./redux/notifications/notificationsSlice";
 import { grantReducer } from "./redux/grant/grantSlice";
 import { categoryReducer } from "./redux/category/categorySlice";
+import { thunk } from "redux-thunk";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     categories: categoryReducer,
     // Add other reducers if needed
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
 });
 
 export default store;

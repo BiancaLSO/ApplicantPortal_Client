@@ -3,16 +3,18 @@ import {
   configureStore,
   createSlice,
   createAsyncThunk,
+  createAction,
 } from "@reduxjs/toolkit";
 import ApplicationAPI from "./applicationAPI";
 
 // Define your initial state
 const initialState = {
-  applicationId: undefined,
+  applicationId: null,
   application: null,
   applicationForm: null,
   hasBeenSubmitted: undefined,
   error: null,
+  msg: null,
 };
 
 // Thunk to handle login and save token
@@ -20,12 +22,13 @@ export const getApplication = createAsyncThunk(
   "application",
   async ({ applicationId, token }) => {
     try {
-      // Call your login API here and return the response
-      const response = await ApplicationAPI.getApplication(
-        applicationId,
-        token
-      );
-      return response;
+      if (applicationId) {
+        const response = await ApplicationAPI.getApplication(
+          applicationId,
+          token
+        );
+        return response;
+      }
     } catch (error) {
       // Handle errors here
       throw new Error("Fetching application failed");
@@ -38,12 +41,14 @@ export const getApplicationForm = createAsyncThunk(
   async ({ applicationId, token }) => {
     console.log(token);
     try {
-      const applicationForm = await ApplicationAPI.getApplicationForm(
-        applicationId,
-        token
-      );
+      if (applicationId) {
+        const applicationForm = await ApplicationAPI.getApplicationForm(
+          applicationId,
+          token
+        );
 
-      return applicationForm;
+        return applicationForm;
+      }
     } catch (error) {
       // Handle errors here
       throw new Error("Error fetching application form data");
@@ -56,12 +61,13 @@ export const isApplicationSubmitted = createAsyncThunk(
   "activity/status",
   async ({ applicationId, token }) => {
     try {
-      // Call your login API here and return the response
-      const response = await ApplicationAPI.isApplicationSubmitted(
-        applicationId,
-        token
-      );
-      return response;
+      if (applicationId) {
+        const response = await ApplicationAPI.isApplicationSubmitted(
+          applicationId,
+          token
+        );
+        return response;
+      }
     } catch (error) {
       // Handle errors here
       throw new Error("Getting application activity status failed");
@@ -131,6 +137,13 @@ export const updateApplication = createAsyncThunk(
           token: token,
         })
       );
+
+      dispatch(
+        getApplicationForm({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
       // Return both the token and credentialsId
       return response;
     } catch (error) {
@@ -163,6 +176,13 @@ export const saveApplication = createAsyncThunk(
           token: token,
         })
       );
+
+      dispatch(
+        getApplicationForm({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
       // Return both the token and credentialsId
       return response;
     } catch (error) {
@@ -174,12 +194,32 @@ export const saveApplication = createAsyncThunk(
 
 export const archiveApplication = createAsyncThunk(
   "application/archive/id",
-  async ({ applicationId, value, token }) => {
+  async ({ applicationId, value, token }, { dispatch }) => {
     try {
       const response = await ApplicationAPI.archiveApplication(
         applicationId,
         value,
         token
+      );
+
+      dispatch(
+        getApplication({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
+      dispatch(
+        isApplicationSubmitted({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
+
+      dispatch(
+        getApplicationForm({
+          applicationId: applicationId,
+          token: token,
+        })
       );
       // Return both the token and credentialsId
       return response;
@@ -193,25 +233,27 @@ export const archiveApplication = createAsyncThunk(
 export const setApplicationId = createAsyncThunk(
   "application/setApplicationId",
   async ({ applicationId, token }, { dispatch }) => {
-    // Your logic to update applicationId
-    dispatch(
-      getApplication({
-        applicationId: applicationId,
-        token: token,
-      })
-    );
-    dispatch(
-      getApplicationForm({
-        applicationId: applicationId,
-        token: token,
-      })
-    );
-    dispatch(
-      isApplicationSubmitted({
-        applicationId: applicationId,
-        token: token,
-      })
-    );
+    console.log(applicationId);
+    if (applicationId) {
+      dispatch(
+        getApplication({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
+      dispatch(
+        getApplicationForm({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
+      dispatch(
+        isApplicationSubmitted({
+          applicationId: applicationId,
+          token: token,
+        })
+      );
+    }
     return applicationId;
   }
 );
@@ -220,6 +262,13 @@ export const setPopUpMsg = createAsyncThunk(
   "application/popup-msg",
   async (msg) => {
     return msg;
+  }
+);
+
+export const resetIdState = createAsyncThunk(
+  "application/resetId",
+  async (type) => {
+    return type;
   }
 );
 
@@ -267,6 +316,12 @@ const applicationSlice = createSlice({
 
     builder.addCase(setPopUpMsg.fulfilled, (state, action) => {
       state.error = action.payload;
+    });
+
+    builder.addCase(resetIdState.fulfilled, (state, action) => {
+      state.applicationId = action.payload;
+      state.applicationForm = action.payload;
+      state.application = action.payload;
     });
 
     builder.addCase(setApplicationId.fulfilled, (state, action) => {

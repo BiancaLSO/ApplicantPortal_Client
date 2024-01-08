@@ -44,7 +44,6 @@ const CssTextField = styled(TextField)(({ theme }) => ({
 }));
 
 export default function ApplicationForm3({
-  grant,
   onSubmitForm,
   onResubmitForm,
   applicationDetails,
@@ -66,6 +65,7 @@ export default function ApplicationForm3({
     applicationDetails ? Number(applicationDetails.form_step) : 1
   );
   const application = useSelector((state) => state.application.application);
+  const grant = useSelector((state) => state.grants.grant);
 
   const isValidCountry = async (value) => {
     try {
@@ -313,7 +313,7 @@ export default function ApplicationForm3({
       <h2 className="sec-title" style={{ fontWeight: "500" }}>
         Application form
       </h2>
-      <p className="sec-subtitle">{grant && grant}</p>
+      <p className="sec-subtitle">{grant && grant.title}</p>
       <form onSubmit={formik.handleSubmit} className="form">
         {currentStep === 1 && (
           <div className="form-row">
