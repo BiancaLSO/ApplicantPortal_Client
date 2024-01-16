@@ -48,6 +48,7 @@ class ApplicationAPI {
 
   static async isApplicationSubmitted(applicationId, token) {
     try {
+      console.log("the shitty problem", applicationId);
       const result = await axios.get(
         `http://localhost:3005/activity/status/${applicationId}`,
         {

@@ -59,13 +59,13 @@ export default function ApplicationForm3({
   setOpenSubmitModal,
   onSaveApplication,
   userDetails,
+  applicationId,
 }) {
   const [currentStep, setCurrentStep] = useState(
     applicationDetails ? Number(applicationDetails.form_step) : 1
   );
   const application = useSelector((state) => state.application.application);
   const grant = useSelector((state) => state.grants.grant);
-  const applicationId = useSelector((state) => state.application.id);
 
   const isValidCountry = async (value) => {
     try {
@@ -839,11 +839,13 @@ export default function ApplicationForm3({
             </button>
           )}
 
-          {currentStep === 3 && applicationId === undefined && (
-            <button className="btn submit" type="submit">
-              SUBMIT
-            </button>
-          )}
+          {currentStep === 3 &&
+            applicationId === undefined &&
+            !hasBeenSubmitted && (
+              <button className="btn submit" type="submit">
+                SUBMIT
+              </button>
+            )}
           {currentStep === 3 && !hasBeenSubmitted && applicationId && (
             <button className="btn submit" type="submit">
               SUBMIT

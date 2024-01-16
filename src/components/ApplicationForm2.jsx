@@ -59,13 +59,13 @@ export default function ApplicationForm2({
   setOpenSubmitModal,
   onSaveApplication,
   userDetails,
+  applicationId,
 }) {
   const [currentStep, setCurrentStep] = useState(
     applicationDetails ? Number(applicationDetails.form_step) : 1
   );
   const application = useSelector((state) => state.application.application);
   const grant = useSelector((state) => state.grants.grant);
-  const applicationId = useSelector((state) => state.application.id);
 
   const isValidCountry = async (value) => {
     try {

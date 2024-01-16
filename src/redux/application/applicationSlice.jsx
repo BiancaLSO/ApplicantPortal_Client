@@ -57,11 +57,11 @@ export const isApplicationSubmitted = createAsyncThunk(
   async ({ applicationId, token }) => {
     try {
       if (applicationId) {
-        const response = await ApplicationAPI.isApplicationSubmitted(
+        console.log("do you even get here", applicationId);
+        return await ApplicationAPI.isApplicationSubmitted(
           applicationId,
           token
         );
-        return response;
       }
     } catch (error) {
       throw new Error("Getting application activity status failed");
@@ -294,6 +294,7 @@ const applicationSlice = createSlice({
     });
 
     builder.addCase(resubmitApplication.fulfilled, (state, action) => {
+      console.log("resubmitApplication.fulfilled response:", action.payload);
       state.applicationForm = action.payload;
       state.error = "Application succesfully resubmitted!";
     });
@@ -321,7 +322,7 @@ const applicationSlice = createSlice({
       state.applicationId = action.payload;
       state.applicationForm = action.payload;
       state.application = action.payload;
-      state.resetHasBeenSubmittedState = state.payload;
+      state.hasBeenSubmitted = action.payload;
     });
 
     builder.addCase(setApplicationId.fulfilled, (state, action) => {

@@ -55,10 +55,43 @@ export default function ApplicationDetails({ deadline }) {
   );
 
   useEffect(() => {
+    console.log("the id", applicationId);
     if (applicationId && !grantId) {
+      console.log("hello");
       dispatch(setApplicationId({ applicationId, token }));
     }
   }, [dispatch, applicationId]);
+
+  useEffect(() => {
+    console.log("effin id", applicationIdRedux);
+    console.log("the deets", applicationForm);
+    console.log("the submitted", hasBeenSubmitted);
+  }, [dispatch, applicationIdRedux, applicationForm, hasBeenSubmitted]);
+
+  /*  useEffect(() => {
+    console.log("the redux id", applicationIdRedux);
+    if (applicationIdRedux !== null) {
+      console.log("not here", applicationIdRedux);
+      dispatch(
+        getApplication({
+          applicationId: applicationIdRedux,
+          token: token,
+        })
+      );
+      dispatch(
+        getApplicationForm({
+          applicationId: applicationIdRedux,
+          token: token,
+        })
+      );
+      dispatch(
+        isApplicationSubmitted({
+          applicationId: applicationIdRedux,
+          token: token,
+        })
+      );
+    }
+  }, [dispatch, applicationIdRedux]); */
 
   useEffect(() => {
     if (applicationId && application) {
@@ -72,6 +105,25 @@ export default function ApplicationDetails({ deadline }) {
     }
   }, [user]);
 
+  /* useEffect(() => {
+    if (grantId && !applicationId) {
+      console.log("not here");
+      dispatch(resetGrantState(undefined));
+      dispatch(resetIdState(undefined));
+    }
+  }, [grantId, applicationId]);
+
+  useEffect(() => {
+    if (
+      grantId &&
+      !grant &&
+      !applicationForm &&
+      !applicationIdRedux &&
+      !application
+    )
+      dispatch(getGrantById({ grantId: grantId, token: token }));
+  }, [application, grant, applicationForm, applicationIdRedux, grantId]); */
+
   useEffect(() => {
     if (grantId && !applicationId) {
       dispatch(resetGrantState(undefined));
@@ -81,6 +133,7 @@ export default function ApplicationDetails({ deadline }) {
   }, [dispatch, grantId, applicationId, token]);
 
   const submitForm = (body) => {
+    console.log(body);
     let applicationData;
 
     if (grant && grant.id === 1) {
@@ -160,12 +213,15 @@ export default function ApplicationDetails({ deadline }) {
         token: token,
       })
     );
+
+    console.log("this is the probelm", token);
     fetch(
       `http://localhost:3005/application-form/call-stored-procedure/${user.id}/${grantId}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          // Include additional headers if needed
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -181,6 +237,8 @@ export default function ApplicationDetails({ deadline }) {
         return response.json();
       })
       .then((data) => {
+        // Handle the response data
+        console.log("Success:", data);
         dispatch(
           getApplication({
             applicationId: data,
@@ -205,6 +263,8 @@ export default function ApplicationDetails({ deadline }) {
             token: token,
           })
         );
+        dispatch(getNotifications({ userId: user.id, token: token }));
+        console.log("thhe body", body.submission);
         dispatch(
           setPopUpMsg(
             body.submission === false
@@ -212,9 +272,9 @@ export default function ApplicationDetails({ deadline }) {
               : "Application successfully submitted!"
           )
         );
-        dispatch(getNotifications({ userId: user.id, token: token }));
       })
       .catch((error) => {
+        // Handle errors during the fetch
         console.error("Error:", error);
       });
     setSelectedPage("overview");
@@ -222,6 +282,7 @@ export default function ApplicationDetails({ deadline }) {
   };
 
   const resubmitForm = (values) => {
+    console.log("the resubmit");
     let applicationData;
 
     if (grant && grant.id === 1) {
@@ -309,6 +370,8 @@ export default function ApplicationDetails({ deadline }) {
         token: token,
       })
     );
+
+    console.log("Action dispatched");
 
     dispatch(
       getApplication({
@@ -409,6 +472,8 @@ export default function ApplicationDetails({ deadline }) {
       })
     );
 
+    console.log("Action dispatched again");
+
     dispatch(
       getApplication({
         applicationId: applicationIdRedux,
@@ -420,9 +485,11 @@ export default function ApplicationDetails({ deadline }) {
   };
 
   const onSaveApplication = (values) => {
+    console.log("the resubmit");
     let applicationData;
 
     if (grant && grant.id === 1) {
+      console.log(values.projectTitle);
       applicationData = {
         project_title: values.projectTitle,
         experience_description: values.experienceDescription,
@@ -450,6 +517,7 @@ export default function ApplicationDetails({ deadline }) {
     }
 
     if (grant && grant.id === 3) {
+      console.log(values.projectDescription);
       applicationData = {
         recedency_name: values.recedencyName,
         project_description: values.projectDescription,
@@ -508,6 +576,8 @@ export default function ApplicationDetails({ deadline }) {
       })
     );
 
+    console.log("Action dispatched");
+
     dispatch(
       getApplication({
         applicationId: applicationIdRedux,
@@ -519,6 +589,7 @@ export default function ApplicationDetails({ deadline }) {
   };
 
   const getJournalnr = () => {
+    console.log(user);
     if (user && user.journalnr) {
       setJournalNr(user.journalnr);
     } else {
@@ -687,6 +758,7 @@ export default function ApplicationDetails({ deadline }) {
               setOpenSubmitModal={setOpenSubmitModal}
               onSaveApplication={onSaveApplication}
               userDetails={user}
+              applicationId={applicationIdRedux}
             />
           )}
           {selectedPage === "form" && grant && grant.id === 2 && (
@@ -706,6 +778,7 @@ export default function ApplicationDetails({ deadline }) {
               setOpenSubmitModal={setOpenSubmitModal}
               onSaveApplication={onSaveApplication}
               userDetails={user}
+              applicationId={applicationIdRedux}
             />
           )}
           {selectedPage === "form" && grant && grant.id === 3 && (
@@ -725,6 +798,7 @@ export default function ApplicationDetails({ deadline }) {
               setOpenSubmitModal={setOpenSubmitModal}
               onSaveApplication={onSaveApplication}
               userDetails={user}
+              applicationId={applicationIdRedux}
             />
           )}
           {selectedPage === "form" && grant && grant.id === 4 && (
@@ -744,6 +818,7 @@ export default function ApplicationDetails({ deadline }) {
               setOpenSubmitModal={setOpenSubmitModal}
               onSaveApplication={onSaveApplication}
               userDetails={user}
+              applicationId={applicationIdRedux}
             />
           )}
           {selectedPage === "overview" && (
