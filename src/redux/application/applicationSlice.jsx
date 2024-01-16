@@ -321,6 +321,7 @@ const applicationSlice = createSlice({
       state.applicationId = action.payload;
       state.applicationForm = action.payload;
       state.application = action.payload;
+      state.resetHasBeenSubmittedState = state.payload;
     });
 
     builder.addCase(setApplicationId.fulfilled, (state, action) => {

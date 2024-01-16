@@ -40,7 +40,6 @@ export default function ApplicationForm1({
   onSubmitForm,
   onResubmitForm,
   applicationDetails,
-  applicationId,
   hasBeenSubmitted,
   setHasFormChanged,
   openSaveModal,
@@ -59,6 +58,7 @@ export default function ApplicationForm1({
   );
   const application = useSelector((state) => state.application.application);
   const grant = useSelector((state) => state.grants.grant);
+  const applicationId = useSelector((state) => state.application.id);
 
   const formik = useFormik({
     initialValues: {

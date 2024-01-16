@@ -47,7 +47,6 @@ export default function ApplicationForm2({
   onSubmitForm,
   onResubmitForm,
   applicationDetails,
-  applicationId,
   hasBeenSubmitted,
   setHasFormChanged,
   openSaveModal,
@@ -66,6 +65,7 @@ export default function ApplicationForm2({
   );
   const application = useSelector((state) => state.application.application);
   const grant = useSelector((state) => state.grants.grant);
+  const applicationId = useSelector((state) => state.application.id);
 
   const isValidCountry = async (value) => {
     try {

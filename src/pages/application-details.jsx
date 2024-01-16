@@ -675,7 +675,6 @@ export default function ApplicationDetails({ deadline }) {
               onSubmitForm={submitForm}
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
-              applicationId={applicationIdRedux}
               hasBeenSubmitted={hasBeenSubmitted}
               openResubmitModal={openResubmitModal}
               openSaveModal={openSaveModal}
@@ -695,7 +694,6 @@ export default function ApplicationDetails({ deadline }) {
               onSubmitForm={submitForm}
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
-              applicationId={applicationIdRedux}
               hasBeenSubmitted={hasBeenSubmitted}
               openResubmitModal={openResubmitModal}
               openSaveModal={openSaveModal}
@@ -715,7 +713,6 @@ export default function ApplicationDetails({ deadline }) {
               onSubmitForm={submitForm}
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
-              applicationId={applicationIdRedux}
               hasBeenSubmitted={hasBeenSubmitted}
               openResubmitModal={openResubmitModal}
               openSaveModal={openSaveModal}
@@ -735,7 +732,6 @@ export default function ApplicationDetails({ deadline }) {
               onSubmitForm={submitForm}
               onResubmitForm={resubmitForm}
               applicationDetails={applicationForm}
-              applicationId={applicationIdRedux}
               hasBeenSubmitted={hasBeenSubmitted}
               openResubmitModal={openResubmitModal}
               openSaveModal={openSaveModal}
