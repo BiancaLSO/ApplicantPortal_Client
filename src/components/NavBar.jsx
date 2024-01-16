@@ -35,7 +35,6 @@ const Navbar = ({
   const hideButtons = routesWithoutButtons.includes(location.pathname);
 
   const navigateTo = (e, route) => {
-    console.log("helloop 1");
     if (
       setOpenResubmitModal !== undefined &&
       setOpenSaveModal !== undefined &&
@@ -43,16 +42,12 @@ const Navbar = ({
       hasFormChanged !== undefined &&
       selectedPage !== undefined
     ) {
-      console.log("im here");
       if (selectedPage === "form") {
         if (applicationId && hasBeenSubmitted) {
-          console.log("here");
           if (hasFormChanged) {
-            console.log("helloop 5");
             e.preventDefault();
             setOpenResubmitModal(true);
           } else {
-            console.log("helloop 2");
             navigate(route);
           }
         } else if (applicationId === undefined) {
@@ -67,11 +62,9 @@ const Navbar = ({
             setOpenSaveModal(true);
           }
         } else {
-          console.log("helloop3");
           navigate(route);
         }
       } else {
-        console.log("helloop 4");
         navigate(route);
       }
     } else {
@@ -169,11 +162,13 @@ const Navbar = ({
         >
           <div
             style={{
+              overflow: "auto",
+              maxHeight: "78vh",
               padding: "2rem",
             }}
           >
             {notifications && notifications.length > 0 ? (
-              notifications
+              [...notifications]
                 .sort((a, b) => b.id - a.id)
                 .map((item, index) => (
                   <div
@@ -183,6 +178,7 @@ const Navbar = ({
                       padding: "0 2rem 0 2rem",
                       outlineWidth: 2,
                       borderRadius: 10,
+                      marginBottom: "2rem",
                     }}
                     key={index}
                   >

@@ -82,7 +82,6 @@ export default function MyProfileForm({ onSubmitForm, userDetails }) {
     onSubmit: (values, { resetForm }) => {
       onSubmitForm(values);
       resetForm();
-      console.log(values);
     },
   });
 

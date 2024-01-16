@@ -3,7 +3,6 @@ import axios from "axios";
 
 class ApplicationAPI {
   static async getApplication(applicationId, token) {
-    console.log(applicationId, token);
     try {
       const result = await axios.get(
         `http://localhost:3005/application/${applicationId}`,
@@ -14,7 +13,6 @@ class ApplicationAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -37,7 +35,6 @@ class ApplicationAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -60,7 +57,6 @@ class ApplicationAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -84,7 +80,6 @@ class ApplicationAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -108,7 +103,6 @@ class ApplicationAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -116,6 +110,29 @@ class ApplicationAPI {
       const errorMessage =
         errorResponse.message ||
         "Updating an application form failed. Please try again.";
+      throw new Error(errorMessage);
+    }
+  }
+
+  static async archiveApplication(applicationId, value, token) {
+    try {
+      const result = await axios.put(
+        `http://localhost:3005/application/archive/${applicationId}`,
+        value,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return result.data;
+    } catch (error) {
+      const errorResponse = error.response.data;
+      const errorMessage =
+        errorResponse.message ||
+        "Archiving an application failed. Please try again.";
       throw new Error(errorMessage);
     }
   }
@@ -132,7 +149,6 @@ class ApplicationAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -155,7 +171,6 @@ class ApplicationAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {

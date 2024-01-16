@@ -12,7 +12,6 @@ class NotificationsAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -25,7 +24,6 @@ class NotificationsAPI {
   }
 
   static async readNotification(notificationId, value, token) {
-    console.log(value);
     try {
       const body = { isRead: value };
       const result = await axios.patch(
@@ -38,7 +36,6 @@ class NotificationsAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -61,7 +58,6 @@ class NotificationsAPI {
           },
         }
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {

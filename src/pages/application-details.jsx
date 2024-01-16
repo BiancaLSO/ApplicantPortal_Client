@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import Navbar from "../components/NavBar"; // Import your Navbar component
-import Footer from "../components/Footer"; // Import your Navbar component
+import Navbar from "../components/NavBar";
+import Footer from "../components/Footer";
 import "../css/application-details.css";
-import "../css/layout.css"; // Import your custom styles
+import "../css/layout.css";
 import DeleteButton from "../components/DeleteButton";
-import ApplicationForm from "../components/ApplicationForm1";
 import Modal from "react-modal";
 import ActivityTable from "../components/ActivityTable";
 import ApplicationForm3 from "../components/ApplicationForm3";
@@ -17,7 +16,6 @@ import {
   getApplication,
   getApplicationForm,
   isApplicationSubmitted,
-  resetApplicationId,
   resetIdState,
   resubmitApplication,
   saveApplication,
@@ -27,6 +25,7 @@ import {
 } from "../redux/application/applicationSlice";
 import { useLocation } from "react-router-dom";
 import { getGrantById, resetGrantState } from "../redux/grant/grantSlice";
+import { getNotifications } from "../redux/notifications/notificationsSlice";
 
 export default function ApplicationDetails({ deadline }) {
   const location = useLocation();
@@ -56,42 +55,10 @@ export default function ApplicationDetails({ deadline }) {
   );
 
   useEffect(() => {
-    console.log("the id", applicationId);
     if (applicationId && !grantId) {
-      console.log("hello");
       dispatch(setApplicationId({ applicationId, token }));
     }
   }, [dispatch, applicationId]);
-
-  useEffect(() => {
-    console.log("effin id", applicationIdRedux);
-    console.log("the deets", applicationForm);
-  }, [dispatch, applicationIdRedux, applicationForm]);
-
-  /*  useEffect(() => {
-    console.log("the redux id", applicationIdRedux);
-    if (applicationIdRedux !== null) {
-      console.log("not here", applicationIdRedux);
-      dispatch(
-        getApplication({
-          applicationId: applicationIdRedux,
-          token: token,
-        })
-      );
-      dispatch(
-        getApplicationForm({
-          applicationId: applicationIdRedux,
-          token: token,
-        })
-      );
-      dispatch(
-        isApplicationSubmitted({
-          applicationId: applicationIdRedux,
-          token: token,
-        })
-      );
-    }
-  }, [dispatch, applicationIdRedux]); */
 
   useEffect(() => {
     if (applicationId && application) {
@@ -105,25 +72,6 @@ export default function ApplicationDetails({ deadline }) {
     }
   }, [user]);
 
-  /* useEffect(() => {
-    if (grantId && !applicationId) {
-      console.log("not here");
-      dispatch(resetGrantState(undefined));
-      dispatch(resetIdState(undefined));
-    }
-  }, [grantId, applicationId]);
-
-  useEffect(() => {
-    if (
-      grantId &&
-      !grant &&
-      !applicationForm &&
-      !applicationIdRedux &&
-      !application
-    )
-      dispatch(getGrantById({ grantId: grantId, token: token }));
-  }, [application, grant, applicationForm, applicationIdRedux, grantId]); */
-
   useEffect(() => {
     if (grantId && !applicationId) {
       dispatch(resetGrantState(undefined));
@@ -133,7 +81,6 @@ export default function ApplicationDetails({ deadline }) {
   }, [dispatch, grantId, applicationId, token]);
 
   const submitForm = (body) => {
-    console.log(body);
     let applicationData;
 
     if (grant && grant.id === 1) {
@@ -213,15 +160,12 @@ export default function ApplicationDetails({ deadline }) {
         token: token,
       })
     );
-
-    console.log("this is the probelm", token);
     fetch(
       `http://localhost:3005/application-form/call-stored-procedure/${user.id}/${grantId}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Include additional headers if needed
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -237,8 +181,6 @@ export default function ApplicationDetails({ deadline }) {
         return response.json();
       })
       .then((data) => {
-        // Handle the response data
-        console.log("Success:", data);
         dispatch(
           getApplication({
             applicationId: data,
@@ -263,7 +205,6 @@ export default function ApplicationDetails({ deadline }) {
             token: token,
           })
         );
-        console.log("thhe body", body.submission);
         dispatch(
           setPopUpMsg(
             body.submission === false
@@ -271,9 +212,9 @@ export default function ApplicationDetails({ deadline }) {
               : "Application successfully submitted!"
           )
         );
+        dispatch(getNotifications({ userId: user.id, token: token }));
       })
       .catch((error) => {
-        // Handle errors during the fetch
         console.error("Error:", error);
       });
     setSelectedPage("overview");
@@ -281,7 +222,6 @@ export default function ApplicationDetails({ deadline }) {
   };
 
   const resubmitForm = (values) => {
-    console.log("the resubmit");
     let applicationData;
 
     if (grant && grant.id === 1) {
@@ -365,11 +305,10 @@ export default function ApplicationDetails({ deadline }) {
       resubmitApplication({
         applicationId: applicationIdRedux,
         application: applicationData,
+        user: user,
         token: token,
       })
     );
-
-    console.log("Action dispatched");
 
     dispatch(
       getApplication({
@@ -465,11 +404,10 @@ export default function ApplicationDetails({ deadline }) {
       updateApplication({
         applicationId: applicationIdRedux,
         application: applicationData,
+        user: user,
         token: token,
       })
     );
-
-    console.log("Action dispatched again");
 
     dispatch(
       getApplication({
@@ -482,11 +420,9 @@ export default function ApplicationDetails({ deadline }) {
   };
 
   const onSaveApplication = (values) => {
-    console.log("the resubmit");
     let applicationData;
 
     if (grant && grant.id === 1) {
-      console.log(values.projectTitle);
       applicationData = {
         project_title: values.projectTitle,
         experience_description: values.experienceDescription,
@@ -514,7 +450,6 @@ export default function ApplicationDetails({ deadline }) {
     }
 
     if (grant && grant.id === 3) {
-      console.log(values.projectDescription);
       applicationData = {
         recedency_name: values.recedencyName,
         project_description: values.projectDescription,
@@ -568,11 +503,10 @@ export default function ApplicationDetails({ deadline }) {
       saveApplication({
         applicationId: applicationIdRedux,
         application: applicationData,
+        user: user,
         token: token,
       })
     );
-
-    console.log("Action dispatched");
 
     dispatch(
       getApplication({
@@ -585,7 +519,6 @@ export default function ApplicationDetails({ deadline }) {
   };
 
   const getJournalnr = () => {
-    console.log(user);
     if (user && user.journalnr) {
       setJournalNr(user.journalnr);
     } else {
@@ -613,9 +546,9 @@ export default function ApplicationDetails({ deadline }) {
 
   const customStyles = {
     content: {
-      width: "50%", // Set your desired width
-      height: "25rem", // Set your desired height
-      margin: "auto", // Center the modal
+      width: "50%",
+      height: "25rem",
+      margin: "auto",
       zIndex: 50,
       borderRadius: "10px",
     },

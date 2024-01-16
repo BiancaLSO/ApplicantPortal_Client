@@ -7,7 +7,6 @@ class UsersAPI {
         `http://localhost:3005/auth/signup`,
         userCredentials
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -25,7 +24,6 @@ class UsersAPI {
         `http://localhost:3005/auth/login`,
         userCredentials
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -41,7 +39,6 @@ class UsersAPI {
       const result = await axios.get(
         `http://localhost:3005/user/credentials/${credentialsId}/user`
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -56,7 +53,6 @@ class UsersAPI {
   static async getUserDetails(userId) {
     try {
       const result = await axios.get(`http://localhost:3005/user/${userId}`);
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -74,7 +70,6 @@ class UsersAPI {
         `http://localhost:3005/user/${userId}`,
         body
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -88,12 +83,10 @@ class UsersAPI {
 
   static async editUserAddress(userAddressId, body) {
     try {
-      console.log(userAddressId);
       const result = await axios.patch(
         `http://localhost:3005/address/${userAddressId}`,
         body
       );
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {

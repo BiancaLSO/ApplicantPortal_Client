@@ -1,7 +1,7 @@
 import React from "react";
 import Trashcan from "../images/trash_can.svg";
 
-import "../css/delete-button.css"; // Import your custom styles
+import "../css/delete-button.css";
 import { useDispatch, useSelector } from "react-redux";
 import { archiveApplication } from "../redux/application/applicationSlice";
 
@@ -9,12 +9,14 @@ export default function DeleteButton() {
   const dispatch = useDispatch();
   const applicationId = useSelector((state) => state.application.applicationId);
   const token = useSelector((state) => state.auth.token);
+  const user = useSelector((state) => state.auth.user);
   const archive = (id) => {
     const body = { value: false };
     dispatch(
       archiveApplication({
         applicationId: id,
         value: body,
+        user: user,
         token,
       })
     );

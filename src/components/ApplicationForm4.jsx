@@ -148,12 +148,12 @@ export default function ApplicationForm4({
       eventDate: Yup.date()
         .required("Required")
         .min(
-          new Date("2023-01-01"),
-          "Date must be after or on January 01, 2023"
+          new Date("2024-01-01"),
+          "Date must be after or on January 01, 2024"
         )
         .max(
-          new Date("2023-12-31"),
-          "Date must be before or on December 31, 2023"
+          new Date("2024-12-31"),
+          "Date must be before or on December 31, 2024"
         ),
 
       requestedAmount: Yup.number()
@@ -188,7 +188,6 @@ export default function ApplicationForm4({
       }
       resetForm();
       setCurrentStep(1);
-      console.log(values);
     },
   });
 
@@ -303,9 +302,9 @@ export default function ApplicationForm4({
 
   const customStyles = {
     content: {
-      width: "50%", // Set your desired width
-      height: "25rem", // Set your desired height
-      margin: "auto", // Center the modal
+      width: "50%",
+      height: "25rem",
+      margin: "auto",
       zIndex: 50,
       borderRadius: "10px",
     },
@@ -557,7 +556,7 @@ export default function ApplicationForm4({
                   id="requestedAmount"
                   name="requestedAmount"
                   label="Requested amount"
-                  type="number" // Add this line
+                  type="number"
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -575,7 +574,7 @@ export default function ApplicationForm4({
                     width: "35rem",
                   }}
                   inputProps={{
-                    step: 1, // Add this line to enforce whole numbers
+                    step: 1,
                   }}
                 />
 
@@ -583,7 +582,7 @@ export default function ApplicationForm4({
                   id="overallAmount"
                   name="overallAmount"
                   label="Overall amount"
-                  type="number" // Add this line
+                  type="number"
                   variant="outlined"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -600,7 +599,7 @@ export default function ApplicationForm4({
                     width: "35rem",
                   }}
                   inputProps={{
-                    step: 1, // Add this line to enforce whole numbers
+                    step: 1,
                   }}
                 />
 
@@ -624,8 +623,8 @@ export default function ApplicationForm4({
                     formik.touched.eventDate && formik.errors.eventDate
                   }
                   inputProps={{
-                    min: new Date("2023-01-01").toISOString().split("T")[0], // Set the minimum date
-                    max: "2023-12-31", // Set the maximum date
+                    min: new Date("2024-01-01").toISOString().split("T")[0],
+                    max: "2024-12-31",
                   }}
                   style={{ margin: "1rem", width: "35rem" }}
                 />

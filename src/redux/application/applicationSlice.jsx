@@ -1,4 +1,3 @@
-// store.js
 import {
   configureStore,
   createSlice,
@@ -6,8 +5,8 @@ import {
   createAction,
 } from "@reduxjs/toolkit";
 import ApplicationAPI from "./applicationAPI";
+import { getNotifications } from "../notifications/notificationsSlice";
 
-// Define your initial state
 const initialState = {
   applicationId: null,
   application: null,
@@ -18,7 +17,6 @@ const initialState = {
   msg: null,
 };
 
-// Thunk to handle login and save token
 export const getApplication = createAsyncThunk(
   "application",
   async ({ applicationId, token }) => {
@@ -31,7 +29,6 @@ export const getApplication = createAsyncThunk(
         return response;
       }
     } catch (error) {
-      // Handle errors here
       throw new Error("Fetching application failed");
     }
   }
@@ -40,7 +37,6 @@ export const getApplication = createAsyncThunk(
 export const getApplicationForm = createAsyncThunk(
   "application-form",
   async ({ applicationId, token }) => {
-    console.log(token);
     try {
       if (applicationId) {
         const applicationForm = await ApplicationAPI.getApplicationForm(
@@ -51,13 +47,11 @@ export const getApplicationForm = createAsyncThunk(
         return applicationForm;
       }
     } catch (error) {
-      // Handle errors here
       throw new Error("Error fetching application form data");
     }
   }
 );
 
-// Thunk to handle login and save token
 export const isApplicationSubmitted = createAsyncThunk(
   "activity/status",
   async ({ applicationId, token }) => {
@@ -70,7 +64,6 @@ export const isApplicationSubmitted = createAsyncThunk(
         return response;
       }
     } catch (error) {
-      // Handle errors here
       throw new Error("Getting application activity status failed");
     }
   }
@@ -78,9 +71,8 @@ export const isApplicationSubmitted = createAsyncThunk(
 
 export const resubmitApplication = createAsyncThunk(
   "application/id/application",
-  async ({ applicationId, application, token }, { dispatch }) => {
+  async ({ applicationId, application, user, token }, { dispatch }) => {
     try {
-      // Call your login API here and return the response
       const response = await ApplicationAPI.resubmitApplication(
         applicationId,
         application,
@@ -105,11 +97,9 @@ export const resubmitApplication = createAsyncThunk(
           token: token,
         })
       );
-
-      // Return both the token and credentialsId
+      dispatch(getNotifications({ userId: user.id, token: token }));
       return response;
     } catch (error) {
-      // Handle errors here
       throw new Error("Application resubmission failed");
     }
   }
@@ -117,9 +107,8 @@ export const resubmitApplication = createAsyncThunk(
 
 export const updateApplication = createAsyncThunk(
   "application/saveApplication/submit/id",
-  async ({ applicationId, application, token }, { dispatch }) => {
+  async ({ applicationId, application, user, token }, { dispatch }) => {
     try {
-      console.log("helloooo");
       const response = await ApplicationAPI.updateApplication(
         applicationId,
         application,
@@ -145,10 +134,10 @@ export const updateApplication = createAsyncThunk(
           token: token,
         })
       );
-      // Return both the token and credentialsId
+
+      dispatch(getNotifications({ userId: user.id, token: token }));
       return response;
     } catch (error) {
-      // Handle errors here
       throw new Error("Application resubmission failed");
     }
   }
@@ -156,9 +145,8 @@ export const updateApplication = createAsyncThunk(
 
 export const saveApplication = createAsyncThunk(
   "application/saveApplication/update/id",
-  async ({ applicationId, application, token }, { dispatch }) => {
+  async ({ applicationId, application, user, token }, { dispatch }) => {
     try {
-      console.log("helloooo", application);
       const response = await ApplicationAPI.saveApplication(
         applicationId,
         application,
@@ -184,10 +172,9 @@ export const saveApplication = createAsyncThunk(
           token: token,
         })
       );
-      // Return both the token and credentialsId
+      dispatch(getNotifications({ userId: user.id, token: token }));
       return response;
     } catch (error) {
-      // Handle errors here
       throw new Error("Application resubmission failed");
     }
   }
@@ -195,7 +182,7 @@ export const saveApplication = createAsyncThunk(
 
 export const archiveApplication = createAsyncThunk(
   "application/archive/id",
-  async ({ applicationId, value, token }, { dispatch }) => {
+  async ({ applicationId, value, user, token }, { dispatch }) => {
     try {
       const response = await ApplicationAPI.archiveApplication(
         applicationId,
@@ -222,10 +209,10 @@ export const archiveApplication = createAsyncThunk(
           token: token,
         })
       );
-      // Return both the token and credentialsId
+
+      dispatch(getNotifications({ userId: user.id, token: token }));
       return response;
     } catch (error) {
-      // Handle errors here
       throw new Error("Application archiving failed");
     }
   }
@@ -234,7 +221,6 @@ export const archiveApplication = createAsyncThunk(
 export const setApplicationId = createAsyncThunk(
   "application/setApplicationId",
   async ({ applicationId, token }, { dispatch }) => {
-    console.log("the slice", applicationId);
     if (applicationId) {
       dispatch(
         getApplication({
@@ -273,11 +259,9 @@ export const resetIdState = createAsyncThunk(
   }
 );
 
-// Thunk to fetch user data based on userId
 export const getApplicationByUserId = createAsyncThunk(
   "applicationByUserId",
   async ({ userId, token }) => {
-    console.log(userId);
     try {
       const applications = await ApplicationAPI.getApplicationByUserId(
         userId,
@@ -286,19 +270,16 @@ export const getApplicationByUserId = createAsyncThunk(
 
       return applications;
     } catch (error) {
-      // Handle errors here
       throw new Error("Error fetching application form data");
     }
   }
 );
 
-// Create a slice to manage the state
 const applicationSlice = createSlice({
   name: "application",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getApplication.fulfilled, (state, action) => {
       state.application = action.payload;
       state.applicationId = action.payload.id;

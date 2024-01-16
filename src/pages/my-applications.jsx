@@ -11,6 +11,7 @@ import ApplicationTable from "../components/ApplicationTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "../redux/auth/authSlice";
 import { getApplicationByUserId } from "../redux/application/applicationSlice";
+import { getNotifications } from "../redux/notifications/notificationsSlice";
 
 const MyApplications = () => {
   const dispatch = useDispatch();
@@ -24,13 +25,18 @@ const MyApplications = () => {
     if (user) {
       const userId = user.id;
       dispatch(getApplicationByUserId({ userId, token }));
-      console.log(applications);
     }
   }, [dispatch, user, token]);
 
   useEffect(() => {
     setFilteredApplications(applications);
   }, [applications]);
+
+  useEffect(() => {
+    if (user && user.id) {
+      dispatch(getNotifications({ userId: user.id, token: token }));
+    }
+  }, [dispatch, user]);
 
   const handleSearch = (searchQuery) => {
     const filteredApplications = applications.filter((application) => {
@@ -53,8 +59,6 @@ const MyApplications = () => {
   const handleStatusChange = (event) => {
     const newStatus = event.target.value;
     setSelectedStatus(newStatus);
-
-    // Filter applications based on the new status
     const filteredApplications = applications.filter((application) => {
       return application.isActive === newStatus;
     });

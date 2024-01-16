@@ -76,7 +76,7 @@ export default function ApplicationTable({ data }) {
                   ) : (
                     <p className="tb-cell-text">
                       {header.key === "grant" && item.grant
-                        ? item.grant.title // Ensure that item.grant.title is a string
+                        ? item.grant.title
                         : header.key === "activities" && item.activities
                         ? item.activities.length > 0
                           ? item.activities[item.activities.length - 1].status
@@ -89,7 +89,7 @@ export default function ApplicationTable({ data }) {
                             ).format("DD/MM/YYYY [at] HH:mm")
                           : ""
                         : header.key !== "status"
-                        ? item[header.key] // Ensure that item[header.key] is a string
+                        ? item[header.key]
                         : ""}
                     </p>
                   )}

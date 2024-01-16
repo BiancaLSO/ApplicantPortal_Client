@@ -14,19 +14,12 @@ import {
 import { login } from "./redux/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Login from "./pages/login";
-import { getNotifications } from "./redux/notifications/notificationsSlice";
 
 function App() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const credentialsId = useSelector((state) => state.credentialsId);
   const user = useSelector((state) => state.user);
-
-  useEffect(() => {
-    if (user !== null && user !== undefined) {
-      dispatch(getNotifications({ userId: user.id, token: token }));
-    }
-  }, [dispatch, user]);
 
   return (
     <Router>

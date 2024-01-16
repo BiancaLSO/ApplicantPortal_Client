@@ -72,10 +72,9 @@
 }
 
 .btn:disabled {
-  background-color: #2b2b2b; /* Change the background color */
-  color: #666; /* Change the text color */
-  cursor: not-allowed; /* Change the cursor */
-  /* Add any other styles for the disabled state */
+  background-color: #2b2b2b;
+  color: #666;
+  cursor: not-allowed;
 }
 
 .previous {

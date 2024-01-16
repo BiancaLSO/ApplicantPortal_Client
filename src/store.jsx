@@ -1,4 +1,3 @@
-// store.jsx
 import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "./redux/auth/authSlice";
 import { applicationReducer } from "./redux/application/applicationSlice";
@@ -14,7 +13,6 @@ const store = configureStore({
     notifications: notificationReducer,
     grants: grantReducer,
     categories: categoryReducer,
-    // Add other reducers if needed
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
 });

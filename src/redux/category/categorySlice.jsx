@@ -10,9 +10,7 @@ export const getCategories = createAsyncThunk(
   "categories",
   async ({ token }) => {
     try {
-      console.log("Fetching categories...");
       const response = await CategoryAPI.getCategories(token);
-      console.log("Received response from server:", response);
       return response;
     } catch (error) {
       console.error("Error fetching categories:", error);

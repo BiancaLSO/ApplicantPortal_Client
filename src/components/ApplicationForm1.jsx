@@ -147,7 +147,6 @@ export default function ApplicationForm1({
       }
       resetForm();
       setCurrentStep(1);
-      console.log(values);
     },
   });
 
@@ -250,9 +249,9 @@ export default function ApplicationForm1({
 
   const customStyles = {
     content: {
-      width: "50%", // Set your desired width
-      height: "25rem", // Set your desired height
-      margin: "auto", // Center the modal
+      width: "50%",
+      height: "25rem",
+      margin: "auto",
       zIndex: 50,
       borderRadius: "10px",
     },

@@ -9,7 +9,6 @@ class GrantAPI {
           "Content-Type": "application/json",
         },
       });
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {
@@ -21,7 +20,6 @@ class GrantAPI {
   }
 
   static async getGrant(grantId, token) {
-    console.log(grantId);
     try {
       const result = await axios.get(`http://localhost:3005/grant/${grantId}`, {
         headers: {
@@ -29,7 +27,6 @@ class GrantAPI {
           "Content-Type": "application/json",
         },
       });
-      console.log("back from server", result.data);
 
       return result.data;
     } catch (error) {

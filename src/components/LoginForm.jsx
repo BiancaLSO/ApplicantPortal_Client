@@ -50,10 +50,8 @@ export default function LoginForm({ onSubmitLoginForm }) {
     }),
 
     onSubmit: (values, { resetForm }) => {
-      console.log("hello", values);
       onSubmitLoginForm(values);
       resetForm();
-      console.log(values);
     },
   });
 

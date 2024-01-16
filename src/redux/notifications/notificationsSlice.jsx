@@ -1,4 +1,3 @@
-// store.js
 import {
   configureStore,
   createSlice,
@@ -6,22 +5,18 @@ import {
 } from "@reduxjs/toolkit";
 import NotificationsAPI from "./notificationsAPI";
 
-// Define your initial state
 const initialState = {
   notifications: null,
   error: null,
 };
 
-// Thunk to handle login and save token
 export const getNotifications = createAsyncThunk(
   "notification",
   async ({ userId, token }) => {
     try {
-      // Call your login API here and return the response
       const response = await NotificationsAPI.getNotifications(userId, token);
       return response;
     } catch (error) {
-      // Handle errors here
       throw new Error("Fetching notifications failed");
     }
   }
@@ -30,7 +25,6 @@ export const getNotifications = createAsyncThunk(
 export const readNotification = createAsyncThunk(
   "notification/isRead",
   async ({ notificationId, userId, token }, { dispatch }) => {
-    console.log("the id", userId);
     try {
       const response = await NotificationsAPI.readNotification(
         notificationId,
@@ -40,7 +34,6 @@ export const readNotification = createAsyncThunk(
       dispatch(getNotifications({ userId, token }));
       return response;
     } catch (error) {
-      // Handle errors here
       throw new Error("Error updating the isRead notification column.");
     }
   }
@@ -49,7 +42,6 @@ export const readNotification = createAsyncThunk(
 export const deleteNotification = createAsyncThunk(
   "notification/delete",
   async ({ notificationId, userId, token }, { dispatch }) => {
-    console.log("the id", userId);
     try {
       const response = await NotificationsAPI.deleteNotification(
         notificationId,
@@ -58,7 +50,6 @@ export const deleteNotification = createAsyncThunk(
       dispatch(getNotifications({ userId, token }));
       return response;
     } catch (error) {
-      // Handle errors here
       throw new Error("Error deleting notification.");
     }
   }
@@ -69,7 +60,6 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getNotifications.fulfilled, (state, action) => {
       state.notifications = action.payload;
       state.error = null;
