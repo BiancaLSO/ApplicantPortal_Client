@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import "../css/layout.css";
 import "../css/login.css";
-
 import PhoneIcon from "../images/phone.svg";
 import LogoIcon from "../images/logo2.svg";
-
 import { login } from "../redux/auth/authSlice";
 import { signup } from "../redux/auth/authSlice";
-
 import Navbar from "../components/NavBar";
 import LoginForm from "../components/LoginForm";
 import SignUpForm from "../components/SignUpForm";
@@ -34,7 +30,7 @@ const Login = () => {
     if (token) {
       navigate("/applications");
     }
-  }, [token]);
+  }, [token, navigate]);
 
   useEffect(() => {
     if (signupResponse) {
@@ -153,8 +149,6 @@ const Login = () => {
                       padding: "0.6rem",
                       width: "2.3rem",
                       height: "2rem",
-                      padding: "0.5rem",
-                      width: "2rem",
                     }}
                   />
                 </div>

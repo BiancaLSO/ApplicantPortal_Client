@@ -1,9 +1,4 @@
-import {
-  configureStore,
-  createSlice,
-  createAsyncThunk,
-  createAction,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import ApplicationAPI from "./applicationAPI";
 import { getNotifications } from "../notifications/notificationsSlice";
 
@@ -57,7 +52,6 @@ export const isApplicationSubmitted = createAsyncThunk(
   async ({ applicationId, token }) => {
     try {
       if (applicationId) {
-        console.log("do you even get here", applicationId);
         return await ApplicationAPI.isApplicationSubmitted(
           applicationId,
           token
@@ -294,7 +288,6 @@ const applicationSlice = createSlice({
     });
 
     builder.addCase(resubmitApplication.fulfilled, (state, action) => {
-      console.log("resubmitApplication.fulfilled response:", action.payload);
       state.applicationForm = action.payload;
       state.error = "Application succesfully resubmitted!";
     });

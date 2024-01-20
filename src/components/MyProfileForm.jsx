@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "../css/my-profile.css";
-import { Checkbox, FormControlLabel, TextField, styled } from "@mui/material";
+import { TextField, styled } from "@mui/material";
 import ProfileIcon from "../images/profile.svg";
 import PhoneIcon from "../images/phone.svg";
 

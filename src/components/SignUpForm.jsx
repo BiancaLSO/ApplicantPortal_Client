@@ -77,8 +77,7 @@ export default function SignUpForm({ onSubmitSignUpForm }) {
 
       password: Yup.string()
         .required("No password provided.")
-        .min(8, "Password is too short - should be 8 chars minimum.")
-        .matches(/^[A-Za-z]+$/, "Alphabetical characters only"),
+        .min(8, "Password is too short - should be 8 chars minimum."),
 
       street: Yup.string().required("Required"),
       city: Yup.string()
@@ -129,6 +128,7 @@ export default function SignUpForm({ onSubmitSignUpForm }) {
                     name="password"
                     label="Password"
                     variant="outlined"
+                    type="password"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.password}

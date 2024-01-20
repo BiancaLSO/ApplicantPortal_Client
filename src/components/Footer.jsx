@@ -26,7 +26,7 @@ const Footer = () => {
         <div className="text-scedule">Sat - Sun : 09:00 - 13:00</div>
         <div className="phone-info">
           <div className="phone-icon-container">
-            <span class="material-symbols-outlined">phone_in_talk</span>
+            <span className="material-symbols-outlined">phone_in_talk</span>
           </div>
           <a href="+45 33 95 42 00" className="phone-number">
             +45 33 95 42 00

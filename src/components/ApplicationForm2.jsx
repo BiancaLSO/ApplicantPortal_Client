@@ -157,7 +157,7 @@ export default function ApplicationForm2({
 
       destinationCountry: Yup.string()
         .required("Required")
-        .min(3, "Must be at least 3 characters")
+        .min(2, "Must be at least 2 characters")
         .max(100, "Must be at most 100 characters")
         .test("isValidCountry", "Invalid country", isValidCountry),
 
@@ -996,6 +996,7 @@ export default function ApplicationForm2({
         onRequestClose={() => setOpenSaveModal(false)}
         contentLabel="Save Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{
@@ -1063,6 +1064,7 @@ export default function ApplicationForm2({
         onRequestClose={() => setOpenResubmitModal(false)}
         contentLabel="Resubmit Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{
@@ -1119,6 +1121,7 @@ export default function ApplicationForm2({
         onRequestClose={() => setOpenSubmitModal(false)}
         contentLabel="Submit Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{

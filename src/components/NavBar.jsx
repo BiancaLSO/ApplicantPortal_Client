@@ -9,6 +9,7 @@ import {
   readNotification,
 } from "../redux/notifications/notificationsSlice";
 import { Drawer } from "@mui/material";
+import { resetTokenState } from "../redux/auth/authSlice";
 
 const Navbar = ({
   setOpenResubmitModal,
@@ -136,7 +137,12 @@ const Navbar = ({
             </div>
             <NavLink
               to={"/auth/login"}
-              onClick={(e) => navigateTo(e, "/auth/login")}
+              onClick={(e) => {
+                dispatch(resetTokenState(undefined));
+                if (token === undefined) {
+                  navigateTo(e, "/auth/login");
+                }
+              }}
               activeClassName="selected"
               className="logout-link"
             >
@@ -193,7 +199,7 @@ const Navbar = ({
                       >
                         <h4>{item.title}</h4>
                         <span
-                          class="material-symbols-outlined"
+                          className="material-symbols-outlined"
                           style={{
                             color: "#C0002A",
                             cursor: "pointer",

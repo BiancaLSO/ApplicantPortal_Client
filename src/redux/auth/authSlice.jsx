@@ -92,6 +92,10 @@ export const editAddress = createAsyncThunk(
   }
 );
 
+export const resetTokenState = createAsyncThunk("auth/logout", async (type) => {
+  return type;
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -115,6 +119,11 @@ const authSlice = createSlice({
 
     builder.addCase(getUserDetails.fulfilled, (state, action) => {
       state.user = action.payload;
+      state.error = null;
+    });
+
+    builder.addCase(resetTokenState.fulfilled, (state, action) => {
+      state.token = action.payload;
       state.error = null;
     });
 

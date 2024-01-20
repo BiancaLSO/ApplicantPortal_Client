@@ -135,11 +135,9 @@ export default function ApplicationForm1({
         values.formStep = currentStep;
         onResubmitForm(values);
       } else if (!hasBeenSubmitted && applicationId) {
-        console.log("uh hello?");
         values.formStep = currentStep;
         onUpdateForm(values);
       } else {
-        console.log("uh hello?", applicationId);
         values.formStep = currentStep;
         const body = {
           values,
@@ -716,6 +714,7 @@ export default function ApplicationForm1({
         onRequestClose={() => setOpenSaveModal(false)}
         contentLabel="Save Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{
@@ -783,6 +782,7 @@ export default function ApplicationForm1({
         onRequestClose={() => setOpenResubmitModal(false)}
         contentLabel="Resubmit Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{
@@ -839,6 +839,7 @@ export default function ApplicationForm1({
         onRequestClose={() => setOpenSubmitModal(false)}
         contentLabel="Submit Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{

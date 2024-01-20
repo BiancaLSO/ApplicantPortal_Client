@@ -925,6 +925,7 @@ export default function ApplicationForm4({
         onRequestClose={() => setOpenSaveModal(false)}
         contentLabel="Save Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{
@@ -992,6 +993,7 @@ export default function ApplicationForm4({
         onRequestClose={() => setOpenResubmitModal(false)}
         contentLabel="Resubmit Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{
@@ -1048,6 +1050,7 @@ export default function ApplicationForm4({
         onRequestClose={() => setOpenSubmitModal(false)}
         contentLabel="Submit Modal"
         style={customStyles}
+        ariaHideApp={false}
       >
         <div
           style={{

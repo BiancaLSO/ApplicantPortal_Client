@@ -17,7 +17,7 @@ const SearchBarApplication = ({ onSearch }) => {
         label=""
         size="small"
         placeholder="Search"
-        fullWidth="true"
+        fullWidth={true}
         variant="outlined"
         value={searchQuery}
         onChange={handleSearchChange}

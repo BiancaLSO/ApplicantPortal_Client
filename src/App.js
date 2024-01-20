@@ -1,5 +1,4 @@
 import "./App.css";
-import { useEffect, useState } from "react";
 import MyProfile from "./pages/my-profile";
 import Grants from "./pages/grants";
 import MyApplications from "./pages/my-applications";
@@ -8,18 +7,14 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Redirect,
   Navigate,
 } from "react-router-dom";
-import { login } from "./redux/auth/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Login from "./pages/login";
 
 function App() {
-  const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const credentialsId = useSelector((state) => state.credentialsId);
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.auth.user);
 
   return (
     <Router>
