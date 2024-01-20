@@ -864,7 +864,13 @@ export default function ApplicationDetails({ deadline }) {
         </div>
       </Modal>
 
-      <Footer />
+      <Footer
+        setOpenResubmitModal={setOpenResubmitModal}
+        setOpenSaveModal={setOpenSaveModal}
+        setOpenSubmitModal={setOpenSubmitModal}
+        hasFormChanged={hasFormChanged}
+        selectedPage={selectedPage}
+      />
     </div>
   );
 }

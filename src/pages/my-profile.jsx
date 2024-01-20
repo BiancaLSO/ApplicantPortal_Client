@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 
@@ -49,7 +49,13 @@ export default function MyProfile({ user }) {
         <MyProfileForm onSubmitForm={submitForm} userDetails={user} />
       </div>
 
-      <Footer />
+      <Footer
+        setOpenResubmitModal={undefined}
+        setOpenSaveModal={undefined}
+        setOpenSubmitModal={undefined}
+        hasFormChanged={undefined}
+        selectedPage={undefined}
+      />
     </div>
   );
 }

@@ -1,9 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "../css/footer.css";
 import logo2 from "../assests/icons/logo2.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { resetTokenState } from "../redux/auth/authSlice";
 
-const Footer = () => {
+const Footer = ({
+  setOpenResubmitModal,
+  setOpenSaveModal,
+  setOpenSubmitModal,
+  hasFormChanged,
+  selectedPage,
+}) => {
+  const navigate = useNavigate();
+  const applicationId = useSelector((state) => state.application.applicationId);
+  const user = useSelector((state) => state.auth.user);
+  const hasBeenSubmitted = useSelector(
+    (state) => state.application.hasBeenSubmitted
+  );
+  const application = useSelector((state) => state.application.application);
+  const token = useSelector((state) => state.auth.token);
+  const notifications = useSelector(
+    (state) => state.notifications.notifications
+  );
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const routesWithoutButtons = ["/auth/signup", "/auth/login"];
+  const hideButtons = routesWithoutButtons.includes(location.pathname);
+
+  const navigateTo = (e, route) => {
+    if (
+      setOpenResubmitModal !== undefined &&
+      setOpenSaveModal !== undefined &&
+      setOpenSubmitModal !== undefined &&
+      hasFormChanged !== undefined &&
+      selectedPage !== undefined
+    ) {
+      if (selectedPage === "form") {
+        if (applicationId && hasBeenSubmitted) {
+          if (hasFormChanged) {
+            e.preventDefault();
+            setOpenResubmitModal(true);
+          } else {
+            navigate(route);
+          }
+        } else if (applicationId === undefined) {
+          e.preventDefault();
+          setOpenSaveModal(true);
+        } else if (!hasBeenSubmitted && hasFormChanged) {
+          if (application?.activities && application?.activities.length > 0) {
+            e.preventDefault();
+            setOpenSubmitModal(true);
+          } else {
+            e.preventDefault();
+            setOpenSaveModal(true);
+          }
+        } else {
+          navigate(route);
+        }
+      } else {
+        navigate(route);
+      }
+    } else {
+      navigate(route);
+    }
+  };
+
+  useEffect(() => {
+    if (token === undefined) {
+      navigate("/auth/login");
+    }
+  }, [token, navigate]);
+
   return (
     <div className="footer">
       <div className="footer-logo-links">
@@ -41,16 +110,35 @@ const Footer = () => {
         <button className="send-button">SEND</button>
       </div>
       <div className="footer-menu-links">
-        <NavLink to="/applications" activeClassName="selected">
+        <NavLink
+          to={"/applications"}
+          onClick={(e) => navigateTo(e, "/applications")}
+          activeclassname="selected"
+        >
           MY APPLICATIONS
         </NavLink>
-        <NavLink to="/grants" activeClassName="selected">
+        <NavLink
+          to={"/grants"}
+          onClick={(e) => navigateTo(e, "/grants")}
+          activeclassname="selected"
+        >
           CREATE APPLICATIONS
         </NavLink>
-        <NavLink to="/profile" activeClassName="selected">
+        <NavLink
+          to={"/profile"}
+          onClick={(e) => navigateTo(e, "/profile")}
+          activeclassname="selected"
+        >
           MY PROFILE
         </NavLink>
-        <NavLink to="/login" activeClassName="selected" className="logout-link">
+        <NavLink
+          to={"/auth/login"}
+          onClick={(e) => {
+            dispatch(resetTokenState(undefined));
+          }}
+          activeclassname="selected"
+          className="logout-link"
+        >
           <span className="material-symbols-outlined logout-icon-container">
             logout
           </span>

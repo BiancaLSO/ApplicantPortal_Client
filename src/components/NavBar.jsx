@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/navbar.css";
 import logo from "../assests/icons/logo.svg";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
@@ -73,6 +73,12 @@ const Navbar = ({
     }
   };
 
+  useEffect(() => {
+    if (token === undefined) {
+      navigateTo("/auth/login");
+    }
+  }, [token, navigate]);
+
   return (
     <div style={{ gridColumn: "1 / -1", height: "1fr" }}>
       <nav className="navbar">
@@ -84,21 +90,21 @@ const Navbar = ({
             <NavLink
               to={"/applications"}
               onClick={(e) => navigateTo(e, "/applications")}
-              activeClassName="selected"
+              activeclassname="selected"
             >
               MY APPLICATIONS
             </NavLink>
             <NavLink
               to={"/grants"}
               onClick={(e) => navigateTo(e, "/grants")}
-              activeClassName="selected"
+              activeclassname="selected"
             >
               CREATE APPLICATIONS
             </NavLink>
             <NavLink
               to={"/profile"}
               onClick={(e) => navigateTo(e, "/profile")}
-              activeClassName="selected"
+              activeclassname="selected"
             >
               MY PROFILE
             </NavLink>
@@ -139,11 +145,8 @@ const Navbar = ({
               to={"/auth/login"}
               onClick={(e) => {
                 dispatch(resetTokenState(undefined));
-                if (token === undefined) {
-                  navigateTo(e, "/auth/login");
-                }
               }}
-              activeClassName="selected"
+              activeclassname="selected"
               className="logout-link"
             >
               <span className="material-symbols-outlined logout-icon-container">

@@ -105,7 +105,13 @@ const MyApplications = () => {
         </div>
         <ApplicationTable data={filteredApplications} />
       </div>
-      <Footer />
+      <Footer
+        setOpenResubmitModal={undefined}
+        setOpenSaveModal={undefined}
+        setOpenSubmitModal={undefined}
+        hasFormChanged={undefined}
+        selectedPage={undefined}
+      />
     </div>
   );
 };

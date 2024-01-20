@@ -93,7 +93,13 @@ const Grants = () => {
           )}
         </div>
       </div>
-      <Footer />
+      <Footer
+        setOpenResubmitModal={undefined}
+        setOpenSaveModal={undefined}
+        setOpenSubmitModal={undefined}
+        hasFormChanged={undefined}
+        selectedPage={undefined}
+      />
     </div>
   );
 };
