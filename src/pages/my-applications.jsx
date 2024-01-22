@@ -46,13 +46,16 @@ const MyApplications = () => {
           application.grant.title
             .toLowerCase()
             .includes(searchQuery.toLowerCase())) ||
-        (application.status &&
-          application.status.toLowerCase().includes(searchQuery.toLowerCase()));
-
+        (application.activities.length > 0 &&
+          application.activities[application.activities.length - 1].status.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()));
+      console.log(searchQuery.toLowerCase());
       const matchesStatus = application.isActive === selectedStatus;
-
       return matchesSearch && matchesStatus;
     });
+    console.log(filteredApplications);
+
     setFilteredApplications(filteredApplications);
   };
 
