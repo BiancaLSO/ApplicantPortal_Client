@@ -125,7 +125,7 @@ export default function MyProfileForm({ onSubmitForm, userDetails }) {
           <div style={{ marginBottom: "3rem" }}>
             <p style={{ fontSize: "1.1rem" }}>Write to us :</p>
             <a href="mailto:tilskudsportal@slks.dk" className="a">
-              Tilskudsportal@slks.dk
+              tilskudsportal@slks.dk
             </a>
           </div>
           <div>

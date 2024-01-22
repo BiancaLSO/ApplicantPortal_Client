@@ -103,7 +103,13 @@ export default function LoginForm({ onSubmitLoginForm }) {
             </div>
           </div>
           <div className="form-button-div">
-            <button className="login-button" type="submit">
+            <button
+              className={`login-button ${
+                !formik.isValid ? "btn-disabled" : ""
+              }`}
+              type="submit"
+              disabled={!formik.isValid}
+            >
               LOG IN
             </button>
           </div>

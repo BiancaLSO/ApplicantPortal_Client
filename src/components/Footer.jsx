@@ -87,7 +87,7 @@ const Footer = ({
       </div>
       <div className="footer-basic-info">
         <div className="text-write">Write to us: </div>
-        <a href="tilskudsportal@slks.dk" className="email">
+        <a href="mailto:tilskudsportal@slks.dk" className="email">
           tilskudsportal@slks.dk
         </a>
         <div className="text-contact">Contact us:</div>
@@ -97,7 +97,7 @@ const Footer = ({
           <div className="phone-icon-container">
             <span className="material-symbols-outlined">phone_in_talk</span>
           </div>
-          <a href="+45 33 95 42 00" className="phone-number">
+          <a href="tel:+45 33 95 42 00" className="phone-number">
             +45 33 95 42 00
           </a>
         </div>

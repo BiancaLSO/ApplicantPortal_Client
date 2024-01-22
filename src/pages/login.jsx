@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 import "../css/layout.css";
 import "../css/login.css";
+
 import PhoneIcon from "../images/phone.svg";
 import LogoIcon from "../images/logo2.svg";
+
 import { login } from "../redux/auth/authSlice";
 import { signup } from "../redux/auth/authSlice";
+
 import Navbar from "../components/NavBar";
 import LoginForm from "../components/LoginForm";
 import SignUpForm from "../components/SignUpForm";
@@ -82,7 +86,15 @@ const Login = () => {
               your application, please use a 'USER LOGIN' to the Grant Portal if
               you are already registered, otherwise to register use MitID LOGIN
               (Denmark's national authentication service), for example, if you
-              are a foreign applicant. Order the login on SLKS.dk
+              are a foreign applicant.{" "}
+              <a
+                href="https://slks.dk/"
+                style={{ color: "#c0002a" }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Order the login on SLKS.dk
+              </a>
             </p>
             <p className="text-box-paragraph">
               Remember to close your internet browser when logging out, to
@@ -117,7 +129,7 @@ const Login = () => {
                   href="mailto:tilskudsportal@slks.dk"
                   style={{ color: "#c0002a" }}
                 >
-                  Tilskudsportal@slks.dk
+                  tilskudsportal@slks.dk
                 </a>
               </div>
               <div className="contact-div-contact-us">Contact us :</div>
@@ -146,8 +158,8 @@ const Login = () => {
                     src={PhoneIcon}
                     alt="phone"
                     style={{
-                      padding: "0.6rem",
-                      width: "2.3rem",
+                      padding: "0.4rem",
+                      width: "2rem",
                       height: "2rem",
                     }}
                   />

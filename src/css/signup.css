@@ -51,3 +51,9 @@
   border-style: none;
   cursor: pointer;
 }
+
+.signup-button.btn-disabled:disabled {
+  background-color: #2b2b2b;
+  color: #666;
+  cursor: not-allowed;
+}

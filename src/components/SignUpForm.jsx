@@ -300,26 +300,11 @@ export default function SignUpForm({ onSubmitSignUpForm }) {
             </div>
             <div className="form-button-div">
               <button
-                className="signup-button"
+                className={`signup-button ${
+                  !formik.isValid ? "btn-disabled" : ""
+                }`}
                 type="submit"
-                disabled={
-                  Boolean(formik.errors.firstName) ||
-                  Boolean(formik.errors.lastName) ||
-                  Boolean(formik.errors.phone) ||
-                  Boolean(formik.errors.cpr) ||
-                  Boolean(formik.errors.email) ||
-                  Boolean(formik.errors.street) ||
-                  Boolean(formik.errors.city) ||
-                  Boolean(formik.errors.zipCode) ||
-                  !formik.values.firstName ||
-                  !formik.values.lastName ||
-                  !formik.values.cpr ||
-                  !formik.values.phone ||
-                  !formik.values.email ||
-                  !formik.values.street ||
-                  !formik.values.city ||
-                  !formik.values.zipCode
-                }
+                disabled={!formik.isValid}
               >
                 SIGN UP
               </button>
