@@ -135,8 +135,8 @@ export default function ApplicationForm4({
 
       targetGroup: Yup.string()
         .required("Required")
-        .min(100, "Must be at least 10 characters")
-        .max(1000, "Must be at most 100 characters"),
+        .min(100, "Must be at least 100 characters")
+        .max(1000, "Must be at most 1000 characters"),
 
       purposeDescription: Yup.string()
         .required("Required")
